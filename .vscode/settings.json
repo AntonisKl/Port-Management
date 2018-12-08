@@ -1,6 +1,8 @@
 {
     "files.associations": {
-        "utils.h": "c"
+        "utils.h": "c",
+        "time.h": "c",
+        "shm.h": "c"
     },
     "C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

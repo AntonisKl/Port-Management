@@ -1,7 +1,7 @@
 #include "monitor.h"
 
-void handleFlags(int argc, char** argv, suseconds_t* statusPrintTime, suseconds_t* statsPrintTime, int* shmId) {
-    if (argc != 7) {
+void handleFlags(int argc, char** argv, suseconds_t* statusPrintTime, suseconds_t* statsPrintTime, int* shmId, char** logFileName) {
+    if (argc != 9) {
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
@@ -46,4 +46,21 @@ void handleFlags(int argc, char** argv, suseconds_t* statusPrintTime, suseconds_
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
+
+    if (strcmp(argv[7], "-lf") == 0) {
+        (*logFileName) = argv[8];
+    } else {
+        printf("Invalid flags\nExiting...\n");
+        exit(1);
+    }
+}
+
+int main(int argc, char** argv) {
+    suseconds_t statusPrintTime, statsPrintTime;
+    int shmId;
+    char* logFileName;
+
+    handleFlags(argc, argv, &statusPrintTime, &statsPrintTime, &shmId, &logFileName);
+
+    return 0;
 }

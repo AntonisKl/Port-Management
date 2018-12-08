@@ -3,6 +3,6 @@
 
 #include "../utils/utils.h"
 
-void handleFlags(int argc, char** argv, char** chargesFileName, int* shmId);
+void handleFlags(int argc, char** argv,/* char** chargesFileName,*/ int* shmId, char** logFileName);
 
 #endif

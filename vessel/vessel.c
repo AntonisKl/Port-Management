@@ -1,7 +1,7 @@
 #include "vessel.h"
 
-void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds_t* parkTime, suseconds_t* manTime, int* shmId) {
-    if (argc != 11) {
+void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds_t* parkTime, suseconds_t* manTime, int* shmId, char** logFileName) {
+    if (argc != 13) {
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
@@ -69,4 +69,14 @@ void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
+
+    if (strcmp(argv[11], "-lf") == 0) {
+        (*logFileName) = argv[12];
+    } else {
+        printf("Invalid flags\nExiting...\n");
+        exit(1);
+    }
+}
+
+int main(int argc, char** argv) {
 }

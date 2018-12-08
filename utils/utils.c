@@ -1,45 +1,58 @@
 #include "utils.h"
 
-// void handleFlags(int argc, char** argv, unsigned int* height, char** dataFileName, char** pattern, char* skewFlag) {
-//     if (argc == 7 || argc == 8) {
-//         if (strcmp(argv[1], "-h") == 0) {
-//             int heightArg = atoi(argv[2]);
-//             if (heightArg < 1 || heightArg > 5) {
-//                 printf("Invalid height parameter\nExiting...\n");
-//                 exit(1);
-//             }
+void initParkingSpot(ParkingSpot* parkingSpot, char type, unsigned int capacity, float cost) {
+    parkingSpot->capacity = capacity;
+    parkingSpot->costPer30Min = cost;
+    parkingSpot->parkingSpotType = type;
+    parkingSpot->occupied = 0;
+}
 
-//             (*height) = (unsigned int)heightArg;
-//         } else {
-//             printf("Invalid flags\nExiting...\n");
-//             exit(1);
-//         }
+void initPublicLedger(PublicLedger* publicLedger, char* parkingSpotTypes, unsigned int* capacities, float* costs) {
+    for (unsigned int i = 0; i < 3; i++) {
+        initParkingSpot(&(publicLedger->parkingSpots[i]), parkingSpotTypes[i], capacities[i], costs[i]);
+    }
+}
 
-//         if (strcmp(argv[3], "-d") == 0) {
-//             (*dataFileName) = argv[4];
-//         } else {
-//             printf("Invalid flags\nExiting...\n");
-//             exit(1);
-//         }
+void doShifts(PublicLedger* publicLedger) {
+    publicLedger->parkingSpots = (ParkingSpot*)publicLedger + sizeof(PublicLedger);
+    publicLedger->shipNodes = (ShipNode*)publicLedger + sizeof(PublicLedger) + 3 * sizeof(ParkingSpot);
+}
 
-//         if (strcmp(argv[5], "-p") == 0) {
-//             (*pattern) = argv[6];
-//         } else {
-//             printf("Invalid flags\nExiting...\n");
-//             exit(1);
-//         }
+void execPortMaster(int shmId, char* logFileName) {
+    char shmIdS[MAX_STRING_INT_SIZE];
 
-//         if (argc == 8) {
-//             if (strcmp(argv[7], "-s") == 0) {
-//                 (*skewFlag) = 1;
-//             } else {
-//                 printf("Invalid flags\nExiting...\n");
-//                 exit(1);
-//             }
-//         } else
-//             (*skewFlag) = 0;
-//     } else {
-//         printf("Invalid flags\nExiting...\n");
-//         exit(1);
-//     }
-// }
+    sprintf(shmIdS, "%d", shmId);
+
+    char* args[] = {"executables/port-master", "-s", shmIdS, "-lf", logFileName};
+    if (execvp(args[0], args) < 0) {
+        printf("Exec port-master failed\n");
+    }
+}
+
+void execMonitor(suseconds_t statusPrintTime, suseconds_t statsPrintTime, int shmId, char* logFileName) {
+    char statusPrintTimeS[MAX_STRING_INT_SIZE], statsPrintTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
+
+    sprintf(statusPrintTimeS, "%ld", statusPrintTime);
+    sprintf(statsPrintTimeS, "%ld", statsPrintTime);
+    sprintf(shmIdS, "%d", shmId);
+
+    char* args[] = {"executables/port-master", "-d", statusPrintTimeS, "-t", statsPrintTimeS, "-s", shmIdS, "-lf", logFileName};
+    if (execvp(args[0], args) < 0) {
+        printf("Exec port-master failed\n");
+    }
+}
+
+void execVessel(char shipType, char upgradeFlag /* 0 or 1 */, suseconds_t parkTime, suseconds_t manTime, int shmId, char* logFileName) {
+    char shipTypeS[2], upgradeFlagS[2], parkTimeS[MAX_STRING_INT_SIZE], manTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
+
+    sprintf(shipTypeS, "%c", shipType);
+    sprintf(upgradeFlagS, "%c", upgradeFlag);
+    sprintf(parkTimeS, "%ld", parkTime);
+    sprintf(manTimeS, "%ld", manTime);
+    sprintf(shmIdS, "%d", shmId);
+
+    char* args[] = {"executables/port-master", "-t", shipTypeS, "-u", upgradeFlagS, "-p", parkTimeS, "-m", manTimeS, "-s", shmIdS, "-lf", logFileName};
+    if (execvp(args[0], args) < 0) {
+        printf("Exec port-master failed\n");
+    }
+}
