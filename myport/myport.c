@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
 
     unsigned int index = 0;
 
+    // read from configuration file
     while (fgets(line, sizeof(line), configFileP) != NULL && index < 9) {
         line[strlen(line) - 1] = '\0';  // cut newline character
         printf("%s\n", line);
@@ -60,7 +61,6 @@ int main(int argc, char** argv) {
 
             costsPer30minutes[index - 6] = cost;
         }
-
         index++;
     }
     printf("%s\n", line);
@@ -70,22 +70,39 @@ int main(int argc, char** argv) {
 
     char* logFileName = token;
 
-    int sizeOfParkingSpots = 3 * sizeof(ParkingSpot);
+    int sizeOfParkingSpotGroups = 3 * sizeof(ParkingSpotGroup);
     int sizeOfShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(ShipNode);
+    int sizeOfLedgerShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(LedgerShipNode);
 
     // ftok to generate unique key
     key_t key = ftok("shm", 65);
 
     // shmget returns an identifier in shmid
-    int shmid = shmget(key, sizeof(PublicLedger) + sizeOfParkingSpots + sizeOfShipNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
+    int shmid = shmget(key, sizeof(SharedMemory) + sizeof(PublicLedger) + sizeOfParkingSpotGroups + sizeOfShipNodes + sizeOfLedgerShipNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
     if (shmid == -1) {
         perror("shmget failed");
         return 1;
     }
 
-    PublicLedger* publicLedger = (PublicLedger*)shmat(shmid, NULL, 0);
-    doShifts(publicLedger); // do necessary shifts
-    initPublicLedger(publicLedger, parkingSpotTypes, parkingSpotCapacities, costsPer30minutes);
+    sem_t inOutSem, shipTypesSem[3];
+
+    if (sem_init(&inOutSem, 1, 1) == -1) {
+        perror("sem_init failed");
+        return 1;
+    }
+
+    for (unsigned int i = 0; i < 3; i++) {
+        if (sem_init(&shipTypesSem[i], 1, 1) == -1) {
+            perror("sem_init failed");
+            return 1;
+        }
+    }
+
+    SharedMemory* sharedMemory = (SharedMemory*)shmat(shmid, NULL, 0);
+    doShifts(sharedMemory, sizeOfShipNodes);  // do necessary shifts
+    initPublicLedger(sharedMemory, parkingSpotTypes, parkingSpotCapacities, costsPer30minutes, inOutSem, shipTypesSem, sizeOfShipNodes, sizeOfLedgerShipNodes);
+
+    // start monitor and port-master
 
     fclose(configFileP);
 }

@@ -78,5 +78,53 @@ void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds
     }
 }
 
+sem_t* getShipTypeSem(SharedMemory* sharedMemory, char shipType) {
+    for (unsigned int i = 0; i < 3; i++) {
+        if (shipType == sharedMemory->parkingSpotGroups[i].type) {
+            return &sharedMemory->shipTypesSem[i];
+        }
+    }
+    printf("Oops\n");
+    return SEM_FAILED;
+}
+
+void addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime) {
+    unsigned int nextShipNodeIndex = sharedMemory->nextShipNodeIndex;
+
+    //  NEED SEMAPHORE FOR WRITING TO SHARED MEMORY <--------------------------------------------------------------------------
+
+    sharedMemory->shipNodes[nextShipNodeIndex].shipType = shipType;
+    sharedMemory->shipNodes[nextShipNodeIndex].parkTimePeriod = parkTime;
+    // sharedMemory->shipNodes[nextShipNodeIndex].arrivalTime = //now ?????????????? or when it parks--- maybe when it parks
+    sharedMemory->shipNodes[nextShipNodeIndex].shipId = getpid();
+    sharedMemory->shipNodes[nextShipNodeIndex].manTimePeriod = manTime;
+    sharedMemory->shipNodes[nextShipNodeIndex].upgradeFlag = upgradeFlag;
+
+    sharedMemory->nextShipNodeIndex++;
+    // sharedMemory->shipNodes[nextShipNodeIndex].stayCost
+}
+
 int main(int argc, char** argv) {
+    char shipType, upgradeFlag, *logFileName;
+    int shmId;
+    suseconds_t parkTimePeriod, manTimePeriod;
+
+    handleFlags(argc, argv, &shipType, &upgradeFlag, &parkTimePeriod, &manTimePeriod, &shmId, &logFileName);
+
+    SharedMemory* sharedMemory = (SharedMemory*)shmat(shmId, NULL, 0);
+    doShifts(sharedMemory, sharedMemory->sizeOfShipNodes);  // do necessary shifts
+
+    sem_t shipTypeSem = *getShipTypeSem(sharedMemory, shipType);
+
+    // add a ship node to shared memory
+    addShipNodeToShm(sharedMemory, shipType, upgradeFlag, parkTimePeriod, manTimePeriod);
+
+    sem_wait(&shipTypeSem);
+
+    //sleep(); // sleep for manTimePeriod + parkTimePeriod
+
+
+    // maybe destroy local semaphore ???????
+
+    return 0;
 }

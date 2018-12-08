@@ -1,6 +1,6 @@
 #include "port-master.h"
 
-void handleFlags(int argc, char** argv,/* char** chargesFileName,*/ int* shmId, char** logFileName) {
+void handleFlags(int argc, char** argv, /* char** chargesFileName,*/ int* shmId, char** logFileName) {
     if (argc != 5) {
         printf("Invalid flags\nExiting...\n");
         exit(1);
@@ -36,5 +36,9 @@ void handleFlags(int argc, char** argv,/* char** chargesFileName,*/ int* shmId, 
 }
 
 int main(int argc, char** argv) {
-    
+    int shmId;
+    char* logFileName;
+    handleFlags(argc, argv, &shmId, &logFileName);
+
+
 }
