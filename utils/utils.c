@@ -8,9 +8,9 @@ void initParkingSpotGroup(ParkingSpotGroup* parkingSpot, char type, unsigned int
     // parkingSpot->occupied = 0;
 }
 
-void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsigned int* capacities, float* costs, sem_t inOutSem, sem_t shipTypesSemIn[3], sem_t shipTypesSemOut[3], int sizeOfShipNodes, int sizeOfLedgerShipNodes, sem_t writeSem) {
+void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsigned int* capacities, float* costs, sem_t inOutSem, sem_t shipTypesSemIn[3], sem_t shipTypesSemOut[3], int sizeOfShipNodes, int sizeOfLedgerShipNodes, sem_t shmWriteSem) {
     sharedMemory->inOutSem = inOutSem;
-    sharedMemory->writeSem = writeSem;
+    sharedMemory->shmWriteSem = shmWriteSem;
     sharedMemory->sizeOfShipNodes = sizeOfShipNodes;
     sharedMemory->sizeOfLedgerShipNodes = sizeOfLedgerShipNodes;
     // maybe provide sizeOfOutShipNodes as well ....................
@@ -41,7 +41,27 @@ void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes, int sizeOfLedgerS
     sharedMemory->parkingSpotGroups = (ParkingSpotGroup*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger);
     sharedMemory->shipNodes = (ShipNode*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup);
     sharedMemory->publicLedger->ledgerShipNodes = (LedgerShipNode*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes;
-    sharedMemory->outShipNodes = (ShipNode**)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes + sizeOfLedgerShipNodes;
+    sharedMemory->shipNodesOut = (ShipNode**)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes + sizeOfLedgerShipNodes;
+}
+
+sem_t* getShipTypeSem(ParkingSpotGroup parkingSpotGroups[3], sem_t shipTypesSem[3], char shipType) {
+    for (unsigned int i = 0; i < 3; i++) {
+        if (shipType == parkingSpotGroups[i].type) {
+            return &shipTypesSem[i];;
+        }
+    }
+    printf("Oops\n");
+    return;
+}
+
+ParkingSpotGroup* getShipParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3], char shipType) {
+    for (unsigned int i = 0; i < 3; i++) {
+        if (shipType == parkingSpotGroups[i].type) {
+            return &parkingSpotGroups[i];
+        }
+    }
+    printf("Oops\n");
+    return;
 }
 
 void execPortMaster(int shmId, char* logFileName) {

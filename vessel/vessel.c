@@ -93,7 +93,7 @@ void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeS
 ShipNode* addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime) {
     unsigned int nextShipNodeIndex = sharedMemory->nextShipNodeIndex;
 
-    sem_wait(&sharedMemory->writeSem);
+    sem_wait(&sharedMemory->shmWriteSem);
 
     ShipNode* shipNode = &sharedMemory->shipNodes[nextShipNodeIndex];
 
@@ -106,14 +106,14 @@ ShipNode* addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgra
 
     sharedMemory->nextShipNodeIndex++;
 
-    sem_post(&sharedMemory->writeSem);
+    sem_post(&sharedMemory->shmWriteSem);
 
     return shipNode;
     // sharedMemory->shipNodes[nextShipNodeIndex].stayCost
 }
 
 void addOutShipNodeToShm(SharedMemory* sharedMemory, ShipNode* shipNode) {
-    sharedMemory->outShipNodes[sharedMemory->nextOutShipNodeIndex] = shipNode;
+    sharedMemory->shipNodesOut[sharedMemory->nextOutShipNodeIndex] = shipNode;
     sharedMemory->nextOutShipNodeIndex++;
 
     return;
@@ -153,10 +153,12 @@ int main(int argc, char** argv) {
     addOutShipNodeToShm(sharedMemory, shipNode);
     sem_wait(shipTypeSemOut);
 
+    usleep(manTimePeriodUsecs);
+    sem_post(inOutSem);
+
     shipNode->state = Completed;
 
-
-    // maybe destroy local semaphore ???????
+    // maybe destroy local semaphores ???????
 
     return 0;
 }
