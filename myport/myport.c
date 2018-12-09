@@ -6,7 +6,7 @@ void handleFlags(int argc, char** argv, char** configFileName) {
         exit(1);
     }
 
-    char* ptr;
+    // char* ptr;
 
     if (strcmp(argv[1], "-l") == 0) {
         (*configFileName) = argv[2];
@@ -24,7 +24,7 @@ int main(int argc, char** argv) {
 
     handleFlags(argc, argv, &configFileName);
 
-    FILE* configFileP;
+    FILE *configFileP, *logFileP;
     char line[30];
 
     if ((configFileP = fopen(configFileName, "r")) == NULL) {
@@ -70,21 +70,27 @@ int main(int argc, char** argv) {
 
     char* logFileName = token;
 
+    if ((logFileP = fopen(logFileName, "a+")) == NULL) {
+        perror("fopen config file");
+        return 1;
+    }
+
     int sizeOfParkingSpotGroups = 3 * sizeof(ParkingSpotGroup);
     int sizeOfShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(ShipNode);
     int sizeOfLedgerShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(LedgerShipNode);
+    int sizeOfOutShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(ShipNode*);
 
     // ftok to generate unique key
     key_t key = ftok("shm", 65);
 
     // shmget returns an identifier in shmid
-    int shmid = shmget(key, sizeof(SharedMemory) + sizeof(PublicLedger) + sizeOfParkingSpotGroups + sizeOfShipNodes + sizeOfLedgerShipNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
+    int shmid = shmget(key, sizeof(SharedMemory) + sizeof(PublicLedger) + sizeOfParkingSpotGroups + sizeOfShipNodes + sizeOfLedgerShipNodes + sizeOfOutShipNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
     if (shmid == -1) {
         perror("shmget failed");
         return 1;
     }
 
-    sem_t inOutSem, shipTypesSem[3];
+    sem_t inOutSem, shipTypesSemIn[3], shipTypesSemOut[3], writeSem;
 
     if (sem_init(&inOutSem, 1, 1) == -1) {
         perror("sem_init failed");
@@ -92,17 +98,27 @@ int main(int argc, char** argv) {
     }
 
     for (unsigned int i = 0; i < 3; i++) {
-        if (sem_init(&shipTypesSem[i], 1, 1) == -1) {
+        if (sem_init(&shipTypesSemIn[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
+            perror("sem_init failed");
+            return 1;
+        }
+        if (sem_init(&shipTypesSemOut[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
             perror("sem_init failed");
             return 1;
         }
     }
 
+    if (sem_init(&writeSem, 1, 1) == -1) {
+        perror("sem_init failed");
+        return 1;
+    }
+
     SharedMemory* sharedMemory = (SharedMemory*)shmat(shmid, NULL, 0);
-    doShifts(sharedMemory, sizeOfShipNodes);  // do necessary shifts
-    initPublicLedger(sharedMemory, parkingSpotTypes, parkingSpotCapacities, costsPer30minutes, inOutSem, shipTypesSem, sizeOfShipNodes, sizeOfLedgerShipNodes);
+    doShifts(sharedMemory, sizeOfShipNodes, sizeOfLedgerShipNodes);  // do necessary shifts
+    initPublicLedger(sharedMemory, parkingSpotTypes, parkingSpotCapacities, costsPer30minutes, inOutSem, shipTypesSemIn, shipTypesSemOut, sizeOfShipNodes, sizeOfLedgerShipNodes, writeSem);
 
     // start monitor and port-master
 
+    fclose(logFileP);
     fclose(configFileP);
 }

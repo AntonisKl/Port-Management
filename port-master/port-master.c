@@ -6,7 +6,7 @@ void handleFlags(int argc, char** argv, /* char** chargesFileName,*/ int* shmId,
         exit(1);
     }
 
-    char* ptr;
+    // char* ptr;
 
     // if (strcmp(argv[1], "-c") == 0) {
     //     (*chargesFileName) = argv[2];

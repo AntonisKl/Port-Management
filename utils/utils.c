@@ -8,15 +8,22 @@ void initParkingSpotGroup(ParkingSpotGroup* parkingSpot, char type, unsigned int
     // parkingSpot->occupied = 0;
 }
 
-void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsigned int* capacities, float* costs, sem_t inOutSem, sem_t shipTypesSem[3], int sizeOfShipNodes, int sizeOfLedgerShipNodes) {
+void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsigned int* capacities, float* costs, sem_t inOutSem, sem_t shipTypesSemIn[3], sem_t shipTypesSemOut[3], int sizeOfShipNodes, int sizeOfLedgerShipNodes, sem_t writeSem) {
     sharedMemory->inOutSem = inOutSem;
+    sharedMemory->writeSem = writeSem;
     sharedMemory->sizeOfShipNodes = sizeOfShipNodes;
     sharedMemory->sizeOfLedgerShipNodes = sizeOfLedgerShipNodes;
+    // maybe provide sizeOfOutShipNodes as well ....................
 
-    sharedMemory->shipTypesSem[0] = shipTypesSem[0];
-    sharedMemory->shipTypesSem[1] = shipTypesSem[1];
-    sharedMemory->shipTypesSem[2] = shipTypesSem[2];
+    sharedMemory->shipTypesSemIn[0] = shipTypesSemIn[0];
+    sharedMemory->shipTypesSemIn[1] = shipTypesSemIn[1];
+    sharedMemory->shipTypesSemIn[2] = shipTypesSemIn[2];
 
+    sharedMemory->shipTypesSemOut[0] = shipTypesSemOut[0];
+    sharedMemory->shipTypesSemOut[1] = shipTypesSemOut[1];
+    sharedMemory->shipTypesSemOut[2] = shipTypesSemOut[2];
+
+    sharedMemory->nextOutShipNodeIndex = 0;
     sharedMemory->nextShipNodeIndex = 0;
     sharedMemory->publicLedger->nextShipNodeIndex = 0;
 
@@ -29,11 +36,12 @@ void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsign
     }
 }
 
-void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes) {
+void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes, int sizeOfLedgerShipNodes) {
     sharedMemory->publicLedger = (PublicLedger*)sharedMemory + sizeof(SharedMemory);
     sharedMemory->parkingSpotGroups = (ParkingSpotGroup*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger);
     sharedMemory->shipNodes = (ShipNode*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup);
     sharedMemory->publicLedger->ledgerShipNodes = (LedgerShipNode*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes;
+    sharedMemory->outShipNodes = (ShipNode**)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes + sizeOfLedgerShipNodes;
 }
 
 void execPortMaster(int shmId, char* logFileName) {

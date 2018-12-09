@@ -7,4 +7,8 @@ void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds
 
 sem_t* getShipTypeSem(SharedMemory* sharedMemory, char shipType);
 
+ShipNode* addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime);
+
+void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn, sem_t* shipTypeSemOut);
+
 #endif
