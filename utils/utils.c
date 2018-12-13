@@ -23,9 +23,9 @@ void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsign
     sharedMemory->shipTypesSemOut[1] = shipTypesSemOut[1];
     sharedMemory->shipTypesSemOut[2] = shipTypesSemOut[2];
 
-    sharedMemory->nextOutShipNodeIndex = 0;
-    sharedMemory->nextShipNodeIndex = 0;
-    sharedMemory->publicLedger->nextShipNodeIndex = 0;
+    sharedMemory->sizeOut = 0;
+    sharedMemory->sizeIn = 0;
+    sharedMemory->publicLedger->size = 0;
 
     // sharedMemory->shipTypes[0] = parkingSpotTypes[0];
     // sharedMemory->shipTypes[1] = parkingSpotTypes[1];

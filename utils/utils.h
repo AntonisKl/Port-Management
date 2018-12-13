@@ -62,7 +62,7 @@ typedef struct ShipNode {
 
 typedef struct PublicLedger {
     LedgerShipNode* ledgerShipNodes;  // dynamic array with fixed starting size
-    unsigned int nextShipNodeIndex;
+    unsigned int size;
 
 } PublicLedger;
 
@@ -74,7 +74,7 @@ typedef struct SharedMemory {
     ParkingSpotGroup* parkingSpotGroups;  // this will be of size 3 according to the excersize description <-- wrong
     ShipNode* shipNodes;
     ShipNode** shipNodesOut;
-    unsigned int nextShipNodeIndex, nextOutShipNodeIndex;
+    unsigned int sizeIn, sizeOut;
 
 } SharedMemory;
 

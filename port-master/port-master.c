@@ -36,7 +36,7 @@ void handleFlags(int argc, char** argv, /* char** chargesFileName,*/ int* shmId,
 }
 
 void getValuesFromShm(SharedMemory* sharedMemory, sem_t* shipTypesSemIn[3], sem_t* shipTypesSemOut[3], sem_t* inOutSem, sem_t* shmWriteSem,
-                      LedgerShipNode** ledgerShipNodes, ShipNode** shipNodesIn, ShipNode** shipNodesOut, unsigned int* nextShipNodeInIndex, unsigned int* nextShipNodeOutIndex,
+                      LedgerShipNode** ledgerShipNodes, ShipNode** shipNodesIn, ShipNode** shipNodesOut, unsigned int* nextInIndex, unsigned int* nextOutIndex,
                       unsigned int* nextLedgerShipNodeIndex, ParkingSpotGroup* parkingSpotGroups[3]) {
     shipTypesSemIn = &sharedMemory->shipTypesSemIn;
     shipTypesSemOut = &sharedMemory->shipTypesSemOut;
@@ -47,16 +47,16 @@ void getValuesFromShm(SharedMemory* sharedMemory, sem_t* shipTypesSemIn[3], sem_
     shipNodesIn = &sharedMemory->shipNodes;
     shipNodesOut = &sharedMemory->shipNodesOut;  // maybe "&" ????????
 
-    nextShipNodeInIndex = &sharedMemory->nextShipNodeIndex;
-    nextShipNodeOutIndex = &sharedMemory->nextOutShipNodeIndex;
-    nextLedgerShipNodeIndex = &sharedMemory->publicLedger->nextShipNodeIndex;
+    nextInIndex = &sharedMemory->sizeIn;
+    nextOutIndex = &sharedMemory->sizeOut;
+    nextLedgerShipNodeIndex = &sharedMemory->publicLedger->size;
 }
 
 LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode, ParkingSpotGroup* curParkingSpotGroup) {
     struct timeval curTime;
     gettimeofday(&curTime, NULL);
 
-    unsigned int nextLedgerNodeIndex = publicLedger->nextShipNodeIndex;
+    unsigned int nextLedgerNodeIndex = publicLedger->size;
     publicLedger->ledgerShipNodes[nextLedgerNodeIndex].shipId = shipNode->shipId;
     publicLedger->ledgerShipNodes[nextLedgerNodeIndex].upgradeFlag = shipNode->upgradeFlag;
     publicLedger->ledgerShipNodes[nextLedgerNodeIndex].shipType = shipNode->shipType;
@@ -70,20 +70,20 @@ LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode
 
     shipNode->ledgerShipNode = &publicLedger->ledgerShipNodes[nextLedgerNodeIndex];  /// point to ledger node
 
-    publicLedger->nextShipNodeIndex++;
+    publicLedger->size++;
 }
 
-void handleIncomingShip(ShipNode** shipNodesIn, unsigned int nextShipNodeRequestIndex, ParkingSpotGroup* parkingSpotGroups[3], unsigned int* nextPendingShipNodeRequestInsertIndex,
-                        sem_t* shipTypesSemIn[3], sem_t inOutSem, unsigned int* nextShipNodeInIndex) {
-    ShipNode* curShipNodeRequest = shipNodesIn[nextShipNodeRequestIndex];
+void handleIncomingShip(SharedMemory* sharedMemory, ShipNode** shipNodesIn, ParkingSpotGroup* parkingSpotGroups[3], unsigned int* sizePendingShipNodes,
+                        sem_t* shipTypesSemIn[3], sem_t* inOutSem, unsigned int* nextInIndex, ShipNode* pendingShipNodeRequests[100]) {
+    ShipNode* curShipNodeRequest = shipNodesIn[*nextInIndex];
     char curShipType = curShipNodeRequest->shipType;
     sem_t* curShipTypeSem = getShipTypeSem(parkingSpotGroups, shipTypesSemIn, curShipType);
     ParkingSpotGroup* curParkingSpotGroup = getShipParkingSpotGroup(parkingSpotGroups, curShipType);
 
     // check for available place
     if (curParkingSpotGroup->curCapacity == 0) {
-        pendingShipNodeRequests[*nextPendingShipNodeRequestInsertIndex] = &curShipNodeRequest;  // without "&" ???????????????????????
-        (*nextPendingShipNodeRequestInsertIndex)++;
+        pendingShipNodeRequests[*sizePendingShipNodes] = &curShipNodeRequest;  // without "&" ???????????????????????
+        (*sizePendingShipNodes)++;
     } else {
         curParkingSpotGroup->curCapacity--;
         LedgerShipNode* curLedgerShipNode = addLedgerShipNode(sharedMemory->publicLedger, curShipNodeRequest, curParkingSpotGroup);
@@ -92,7 +92,24 @@ void handleIncomingShip(ShipNode** shipNodesIn, unsigned int nextShipNodeRequest
         sem_post(curShipTypeSem);
     }
 
-    (*nextShipNodeInIndex)++;
+    (*nextInIndex)++;
+}
+
+void handleOutGoingShip(ShipNode** shipNodesOut, unsigned int* nextOutIndex, ParkingSpotGroup* parkingSpotGroups[3], sem_t* inOutSem, sem_t* shipTypesSemOut[3]) {
+    // handle outgoing ship
+    ShipNode* curShipNodeRequest = shipNodesOut[*nextOutIndex];
+    char curShipType = curShipNodeRequest->shipType;
+    sem_t* curShipTypeSem = getShipTypeSem(parkingSpotGroups, shipTypesSemOut, curShipType);
+    ParkingSpotGroup* curParkingSpotGroup = getShipParkingSpotGroup(parkingSpotGroups, curShipType);
+    LedgerShipNode* curLedgerShipNode = curShipNodeRequest->ledgerShipNode;
+
+    sem_wait(inOutSem);
+    sem_post(curShipTypeSem);
+    usleep(curShipNodeRequest->manTimePeriod);
+
+    curParkingSpotGroup->curCapacity++;
+    curLedgerShipNode->state = Completed;
+    (*nextOutIndex)++;
 }
 
 int main(int argc, char** argv) {
@@ -110,36 +127,36 @@ int main(int argc, char** argv) {
     LedgerShipNode* ledgerShipNodes[3];
     ShipNode **shipNodesIn, **shipNodesOut;
     ParkingSpotGroup* parkingSpotGroups[3];
-    unsigned int *nextShipNodeInInsertIndex, *nextShipNodeOutInsertIndex, *nextLedgerNodeIndex;
+    unsigned int *sizeIn, *sizeOut, *ledgerSize;
 
     getValuesFromShm(sharedMemory, shipTypesSemIn, shipTypesSemOut, inOutSem, shmWriteSem, ledgerShipNodes,
-                     shipNodesIn, shipNodesOut, nextShipNodeInInsertIndex, nextShipNodeOutInsertIndex, nextLedgerNodeIndex, parkingSpotGroups);
+                     shipNodesIn, shipNodesOut, sizeIn, sizeOut, ledgerSize, parkingSpotGroups);
 
     ShipNode* pendingShipNodeRequests[100];  // this will have something relevant with sizeOfShipNodes
-    unsigned int nextShipNodeInIndex = 0, nextShipNodeOutIndex = 0, nextPendingShipNodeRequestInsertIndex = 0, nextPendingShipNodeRequestIndex = 0;
-    // nextPendingShipNodeRequestIndex: used for scanning
-    // nextPendingShipNodeRequestInsertIndex: used for insertion
+    unsigned int nextInIndex = 0, nextOutIndex = 0, sizePendingShipNodes = 0, nextPendingShipNodeIndex = 0;
+    // nextPendingShipNodeIndex: used for scanning
+    // sizePendingShipNodes: used for insertion
 
-    while (nextShipNodeInIndex < sharedMemory->sizeOfShipNodes && nextShipNodeOutIndex < sharedMemory->sizeOfShipNodes) {
+    // wait for a ship to wake the port-master up !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // unsigned int sizeIn, sizeOut;
+    while (nextInIndex < (*sizeIn) || nextOutIndex < (*sizeOut)) {
         // FIRST HANDLE PENDING REQUESTS <------------------ to be implemented
 
-        handleIncomingShip();
+        if (nextInIndex < (*sizeIn)) {
+            handleIncomingShip(sharedMemory, shipNodesIn, parkingSpotGroups, &sizePendingShipNodes,
+                               shipTypesSemIn, inOutSem, &nextInIndex, pendingShipNodeRequests);
+        }
 
-        // handle outgoing ship
-        ShipNode* curShipNodeRequest = shipNodesOut[nextShipNodeOutIndex];
-        char curShipType = curShipNodeRequest->shipType;
-        sem_t* curShipTypeSem = getShipTypeSem(parkingSpotGroups, shipTypesSemOut, curShipType);
-        ParkingSpotGroup* curParkingSpotGroup = getShipParkingSpotGroup(parkingSpotGroups, curShipType);
-        LedgerShipNode* curLedgerShipNode = curShipNodeRequest->ledgerShipNode;
+        if (nextOutIndex < (*sizeOut)) {
+            handleOutGoingShip(shipNodesOut, &nextOutIndex, parkingSpotGroups, inOutSem, shipTypesSemOut);
+        }
 
-        curParkingSpotGroup->curCapacity++;
-
-        sem_wait(inOutSem);
-        sem_post(curShipTypeSem);
-        usleep(curShipNodeRequest->manTimePeriod);
-
-        curLedgerShipNode->state = Completed;
-        nextShipNodeOutIndex++;
+        // hanlde pending ships
+        // ShipNode* curShipNodeRequest = shipNodesOut[*nextOutIndex];
+        // char curShipType = curShipNodeRequest->shipType;
+        // sem_t* curShipTypeSem = getShipTypeSem(parkingSpotGroups, shipTypesSemOut, curShipType);
+        // ParkingSpotGroup* curParkingSpotGroup = getShipParkingSpotGroup(parkingSpotGroups, curShipType);
+        // LedgerShipNode* curLedgerShipNode = curShipNodeRequest->ledgerShipNode;
 
         // nextShipNodeRequestIndex++;
     }
