@@ -78,11 +78,11 @@ void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds
     }
 }
 
-void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn, sem_t* shipTypeSemOut) {
+void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn /*, sem_t* shipTypeSemOut*/) {
     for (unsigned int i = 0; i < 3; i++) {
         if (shipType == sharedMemory->parkingSpotGroups[i].type) {
             shipTypeSemIn = &sharedMemory->shipTypesSemIn[i];
-            shipTypeSemOut = &sharedMemory->shipTypesSemOut[i];
+            // shipTypeSemOut = &sharedMemory->shipTypesSemOut[i];
             break;
         }
     }
@@ -90,34 +90,87 @@ void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeS
     return;
 }
 
-ShipNode* addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime) {
-    unsigned int nextShipNodeIndex = sharedMemory->nextShipNodeIndex;
+ShipNode* addShipNodeToShmByShipNode(SharedMemory* sharedMemory, ShipNode* shipNode) {
+    unsigned int nextShipNodeIndex = sharedMemory->sizeIn;
 
     sem_wait(&sharedMemory->shmWriteSem);
 
-    ShipNode* shipNode = &sharedMemory->shipNodes[nextShipNodeIndex];
+    ShipNode* newShipNode = &sharedMemory->shipNodes[nextShipNodeIndex];
 
-    shipNode->shipType = shipType;
-    shipNode->parkTimePeriod = parkTime;
+    newShipNode->shipType = shipNode->shipType;
+    newShipNode->parkTimePeriod = shipNode->parkTimePeriod;
     // sharedMemory->shipNodes[nextShipNodeIndex].arrivalTime = //now ?????????????? or when it parks--- maybe when it parks
-    shipNode->shipId = getpid();
-    shipNode->manTimePeriod = manTime;
-    shipNode->upgradeFlag = upgradeFlag;
+    newShipNode->shipId = getpid();
+    newShipNode->manTimePeriod = shipNode->manTimePeriod;
+    newShipNode->upgradeFlag = shipNode->upgradeFlag;
+    newShipNode->state = shipNode->state;
+    if (shipNode->ledgerShipNode != NULL)
+        newShipNode->ledgerShipNode = &shipNode->ledgerShipNode;  // without "&" ???????????????????????????????????????
+    else
+        newShipNode->ledgerShipNode = NULL;
 
-    sharedMemory->nextShipNodeIndex++;
+    sharedMemory->sizeIn++;
 
     sem_post(&sharedMemory->shmWriteSem);
 
-    return shipNode;
+    return newShipNode;
     // sharedMemory->shipNodes[nextShipNodeIndex].stayCost
 }
 
-void addOutShipNodeToShm(SharedMemory* sharedMemory, ShipNode* shipNode) {
-    sharedMemory->shipNodesOut[sharedMemory->nextOutShipNodeIndex] = shipNode;
-    sharedMemory->nextOutShipNodeIndex++;
+ShipNode* addShipNodeToShmByValues(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTimePeriod, suseconds_t manTimePeriod, State state) {
+    unsigned int nextShipNodeIndex = sharedMemory->sizeIn;
 
-    return;
+    sem_wait(&sharedMemory->shmWriteSem);
+
+    ShipNode* newShipNode = &sharedMemory->shipNodes[nextShipNodeIndex];
+
+    newShipNode->shipType = shipType;
+    newShipNode->parkTimePeriod = parkTimePeriod;
+    // sharedMemory->shipNodes[nextShipNodeIndex].arrivalTime = //now ?????????????? or when it parks--- maybe when it parks
+    newShipNode->shipId = getpid();
+    newShipNode->manTimePeriod = manTimePeriod;
+    newShipNode->upgradeFlag = upgradeFlag;
+    newShipNode->state = state;
+    // if (shipNode->ledgerShipNode != NULL)
+    //     newShipNode->ledgerShipNode = &shipNode->ledgerShipNode;  // without "&" ???????????????????????????????????????
+    // else
+
+    // first time adding vessel to queue so ledgerShipNode is NULL
+    newShipNode->ledgerShipNode = NULL;
+
+    sharedMemory->sizeIn++;
+
+    sem_post(&sharedMemory->shmWriteSem);
+
+    return newShipNode;
+    // sharedMemory->shipNodes[nextShipNodeIndex].stayCost
 }
+
+// void addOutShipNodeToShm(SharedMemory* sharedMemory, ShipNode* shipNode) {
+//     sharedMemory->shipNodesOut[sharedMemory->nextOutShipNodeIndex] = shipNode;
+//     sharedMemory->nextOutShipNodeIndex++;
+
+//     return;
+// }
+
+// void addShipNodeToShm(SharedMemory* sharedMemory, ShipNode* shipNode, State state) {
+//     unsigned int nextShipNodeIndex = sharedMemory->sizeIn;
+
+//     sem_wait(&sharedMemory->shmWriteSem);
+
+//     ShipNode* shipNode = &sharedMemory->shipNodes[nextShipNodeIndex];
+
+//     shipNode->shipType = shipNode->shipType;
+//     shipNode->parkTimePeriod = shipNode;
+//     // sharedMemory->shipNodes[nextShipNodeIndex].arrivalTime = //now ?????????????? or when it parks--- maybe when it parks
+//     shipNode->shipId = getpid();
+//     shipNode->manTimePeriod = manTime;
+//     shipNode->upgradeFlag = upgradeFlag;
+//     shipNode->state = state;
+//     sharedMemory->sizeIn++;
+
+//     sem_post(&sharedMemory->shmWriteSem);
+// }
 
 int main(int argc, char** argv) {
     char shipType, upgradeFlag, *logFileName;
@@ -131,14 +184,14 @@ int main(int argc, char** argv) {
     SharedMemory* sharedMemory = (SharedMemory*)shmat(shmId, NULL, 0);
     doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
-    sem_t *shipTypeSemIn = SEM_FAILED, *shipTypeSemOut = SEM_FAILED;
-    getShipTypeSems(sharedMemory, shipType, shipTypeSemIn, shipTypeSemOut);
+    sem_t* shipTypeSemIn = SEM_FAILED /*, *shipTypeSemOut = SEM_FAILED*/;
+    getShipTypeSems(sharedMemory, shipType, shipTypeSemIn /*, shipTypeSemOut*/);
     sem_t* inOutSem = &sharedMemory->inOutSem;
 
     // add a ship node to shared memory
-    ShipNode* shipNode = addShipNodeToShm(sharedMemory, shipType, upgradeFlag, parkTimePeriodUsecs, manTimePeriodUsecs);
+    ShipNode* shipNode = addShipNodeToShmByValues(sharedMemory, shipType, upgradeFlag, parkTimePeriodUsecs, manTimePeriodUsecs, WaitingToEnter);
 
-    shipNode->state = WaitingToEnter;
+    // shipNode->state = WaitingToEnter;
     sem_wait(shipTypeSemIn);
 
     usleep(manTimePeriodUsecs);  // sleep for manTimePeriod + parkTimePeriod
@@ -146,12 +199,14 @@ int main(int argc, char** argv) {
     sem_post(inOutSem);
     shipNode->state = Parked;
 
-    usleep(parkTimePeriodUsecs);  // here maybe ask for the cost ????????????????????????????????
+    usleep(parkTimePeriodUsecs);  // here maybe ask the port-master for the cost ????????????????????????????????
 
+    // shipNode->state = WaitingToLeave;
+    // go to queue again
+    // same shipNode pointer as above
     shipNode->state = WaitingToLeave;
-    // go to out-queue
-    addOutShipNodeToShm(sharedMemory, shipNode);
-    sem_wait(shipTypeSemOut);
+    shipNode = addShipNodeToShmByShipNode(sharedMemory, shipNode);
+    sem_wait(shipTypeSemIn);
 
     usleep(manTimePeriodUsecs);
     sem_post(inOutSem);

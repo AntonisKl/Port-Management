@@ -5,10 +5,14 @@
 
 void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds_t* parkTime, suseconds_t* manTime, int* shmId, char** logFileName);
 
-sem_t* getShipTypeSem(SharedMemory* sharedMemory, char shipType);
+void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn /*, sem_t* shipTypeSemOut*/);
 
-ShipNode* addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime);
+// ShipNode* addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime);
 
-void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn, sem_t* shipTypeSemOut);
+// void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn, sem_t* shipTypeSemOut);
+
+ShipNode* addShipNodeToShmByShipNode(SharedMemory* sharedMemory, ShipNode* shipNode);
+
+ShipNode* addShipNodeToShmByValues(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTimePeriod, suseconds_t manTimePeriod, State state);
 
 #endif

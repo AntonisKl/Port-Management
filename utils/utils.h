@@ -69,12 +69,12 @@ typedef struct PublicLedger {
 typedef struct SharedMemory {
     // char shipTypes[3];
     int sizeOfShipNodes, sizeOfLedgerShipNodes;
-    sem_t inOutSem, shipTypesSemIn[3], shipTypesSemOut[3], shmWriteSem;
+    sem_t inOutSem, shipTypesSemIn[3]/*, shipTypesSemOut[3]*/, shmWriteSem;
     PublicLedger* publicLedger;
     ParkingSpotGroup* parkingSpotGroups;  // this will be of size 3 according to the excersize description <-- wrong
     ShipNode* shipNodes;
-    ShipNode** shipNodesOut;
-    unsigned int sizeIn, sizeOut;
+    // ShipNode** shipNodesOut;
+    unsigned int sizeIn/*, sizeOut*/;
 
 } SharedMemory;
 

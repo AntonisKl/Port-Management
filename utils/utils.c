@@ -19,11 +19,11 @@ void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsign
     sharedMemory->shipTypesSemIn[1] = shipTypesSemIn[1];
     sharedMemory->shipTypesSemIn[2] = shipTypesSemIn[2];
 
-    sharedMemory->shipTypesSemOut[0] = shipTypesSemOut[0];
-    sharedMemory->shipTypesSemOut[1] = shipTypesSemOut[1];
-    sharedMemory->shipTypesSemOut[2] = shipTypesSemOut[2];
+    // sharedMemory->shipTypesSemOut[0] = shipTypesSemOut[0];
+    // sharedMemory->shipTypesSemOut[1] = shipTypesSemOut[1];
+    // sharedMemory->shipTypesSemOut[2] = shipTypesSemOut[2];
 
-    sharedMemory->sizeOut = 0;
+    // sharedMemory->sizeOut = 0;
     sharedMemory->sizeIn = 0;
     sharedMemory->publicLedger->size = 0;
 
@@ -41,7 +41,7 @@ void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes, int sizeOfLedgerS
     sharedMemory->parkingSpotGroups = (ParkingSpotGroup*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger);
     sharedMemory->shipNodes = (ShipNode*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup);
     sharedMemory->publicLedger->ledgerShipNodes = (LedgerShipNode*)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes;
-    sharedMemory->shipNodesOut = (ShipNode**)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes + sizeOfLedgerShipNodes;
+    // sharedMemory->shipNodesOut = (ShipNode**)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes + sizeOfLedgerShipNodes;
 }
 
 sem_t* getShipTypeSem(ParkingSpotGroup parkingSpotGroups[3], sem_t shipTypesSem[3], char shipType) {
@@ -51,7 +51,7 @@ sem_t* getShipTypeSem(ParkingSpotGroup parkingSpotGroups[3], sem_t shipTypesSem[
         }
     }
     printf("Oops\n");
-    return;
+    return NULL;
 }
 
 ParkingSpotGroup* getShipParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3], char shipType) {
@@ -61,7 +61,7 @@ ParkingSpotGroup* getShipParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3],
         }
     }
     printf("Oops\n");
-    return;
+    return NULL;
 }
 
 void execPortMaster(int shmId, char* logFileName) {
