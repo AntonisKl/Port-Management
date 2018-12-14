@@ -38,7 +38,10 @@ void handleFlags(int argc, char** argv, /* char** chargesFileName,*/ int* shmId,
 void getValuesFromShm(SharedMemory* sharedMemory, sem_t* shipTypesSemIn[3] /*, sem_t* shipTypesSemOut[3]*/, sem_t* inOutSem, sem_t* shmWriteSem,
                       LedgerShipNode** ledgerShipNodes, ShipNode** shipNodesIn /*, ShipNode** shipNodesOut*/, unsigned int* nextInIndex /*, unsigned int* nextOutIndex*/,
                       unsigned int* nextLedgerShipNodeIndex, ParkingSpotGroup* parkingSpotGroups[3]) {
-    shipTypesSemIn = &sharedMemory->shipTypesSemIn;
+    // shipTypesSemIn = &sharedMemory->shipTypesSemIn;
+    shipTypesSemIn[0] = &sharedMemory->shipTypesSemIn[0];
+    shipTypesSemIn[1] = &sharedMemory->shipTypesSemIn[1];
+    shipTypesSemIn[2] = &sharedMemory->shipTypesSemIn[2];
     // shipTypesSemOut = &sharedMemory->shipTypesSemOut;
     inOutSem = &sharedMemory->inOutSem;
 
@@ -50,6 +53,15 @@ void getValuesFromShm(SharedMemory* sharedMemory, sem_t* shipTypesSemIn[3] /*, s
     nextInIndex = &sharedMemory->sizeIn;
     // nextOutIndex = &sharedMemory->sizeOut;
     nextLedgerShipNodeIndex = &sharedMemory->publicLedger->size;
+}
+
+State getNextPendingShipState(State state) {
+    if (state == WaitingToEnter)
+        return PendingEnter;
+    else if (state == WaitingToLeave)
+        return PendingLeave;
+    else
+        return state;  // this will not happen
 }
 
 LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode, ParkingSpotGroup* curParkingSpotGroup) {
@@ -71,33 +83,42 @@ LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode
     shipNode->ledgerShipNode = &publicLedger->ledgerShipNodes[nextLedgerNodeIndex];  /// point to ledger node
 
     publicLedger->size++;
+
+    return shipNode->ledgerShipNode;
 }
 
-void handleNextShip(SharedMemory* sharedMemory, ShipNode** shipNodesIn, unsigned int* sizeOfPendingShipNodes,
-                    unsigned int* nextInIndex, ShipNode* pendingShipNodeRequests[100]) {
-    ShipNode* curShipNode = shipNodesIn[*nextInIndex];
+void handleNextShip(SharedMemory* sharedMemory, ShipNode** shipNodes, unsigned int* sizeOfPendingShipNodes,
+                    unsigned int* nextIndex, ShipNode* pendingShipNodeRequests[100]) {
+    ShipNode* curShipNode = shipNodes[*nextIndex];
     State curState = curShipNode->state;
-    if (curState == WaitingToEnter) {
-        handleIncomingShip(sharedMemory, curShipNode, nextInIndex, pendingShipNodeRequests, sizeOfPendingShipNodes);
-    } else if (curState == WaitingToLeave) {
-        handleOutGoingShip(sharedMemory, curShipNode, nextInIndex);
+    if (curState == WaitingToEnter || curState == PendingEnter) {
+        handleIncomingShip(sharedMemory, curShipNode, nextIndex, pendingShipNodeRequests, sizeOfPendingShipNodes);
+    } else if (curState == WaitingToLeave || curState == PendingLeave) {
+        handleOutGoingShip(sharedMemory, curShipNode, nextIndex);
     }
 
-    (*nextInIndex)++;
+    (*nextIndex)++;
 }
 
 void handleOutGoingShip(SharedMemory* sharedMemory, ShipNode* shipNode, unsigned int* nextIndex) {
     char curShipType = shipNode->shipType;
-    sem_t* curShipTypeSem = getShipTypeSem(sharedMemory->parkingSpotGroups, sharedMemory->shipTypesSemIn, curShipType);
+    sem_t *curShipTypeSem = SEM_FAILED, *curShipTypeSemPending = SEM_FAILED;
+    getShipTypeSems(sharedMemory, curShipTypeSem, curShipTypeSemPending, curShipType);
     ParkingSpotGroup* curParkingSpotGroup = getShipParkingSpotGroup(sharedMemory->parkingSpotGroups, curShipType);
     LedgerShipNode* curLedgerShipNode = shipNode->ledgerShipNode;
+    State curState = shipNode->state;
 
     sem_wait(&sharedMemory->inOutSem);
-    sem_post(curShipTypeSem);
+
+    if (curState == WaitingToLeave)
+        sem_post(curShipTypeSem);
+    else if (curState == PendingLeave)
+        sem_post(curShipTypeSemPending);
+
     usleep(shipNode->manTimePeriod);
 
-    curParkingSpotGroup->curCapacity++;
     curLedgerShipNode->state = Completed;
+    curParkingSpotGroup->curCapacity++;
     // (*nextIndex)++;
 }
 
@@ -105,19 +126,27 @@ void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, unsigned
                         ShipNode* pendingShipNodeRequests[100], unsigned int* sizeOfPendingShipNodes) {
     // ShipNode* curShipNodeRequest = &shipNodesIn[*nextInIndex];
     char curShipType = shipNode->shipType;
-    sem_t* curShipTypeSem = getShipTypeSem(sharedMemory->parkingSpotGroups, sharedMemory->shipTypesSemIn, curShipType);
+    sem_t *curShipTypeSem = SEM_FAILED, *curShipTypeSemPending = SEM_FAILED;
+    getShipTypeSems(sharedMemory, curShipTypeSem, curShipTypeSemPending, curShipType);
     ParkingSpotGroup* curParkingSpotGroup = getShipParkingSpotGroup(sharedMemory->parkingSpotGroups, curShipType);
-    State* curState = &shipNode->state;
+    State curState = shipNode->state;
     // check for available place
-    if (curParkingSpotGroup->curCapacity == 0) {
-        pendingShipNodeRequests[*sizeOfPendingShipNodes] = &shipNode;  // without "&" ???????????????????????
+    if (curParkingSpotGroup->curCapacity == 0 && curState != PendingEnter) {
+        shipNode->state = getNextPendingShipState(curState);
+
+        pendingShipNodeRequests[*sizeOfPendingShipNodes] = shipNode;  // without "&" ???????????????????????
         (*sizeOfPendingShipNodes)++;
-    } else {
+
+        sem_post(curShipTypeSem);  // vessel will then wait for pending semapohore
+    } else if (curParkingSpotGroup->curCapacity > 0) {
         curParkingSpotGroup->curCapacity--;
         LedgerShipNode* curLedgerShipNode = addLedgerShipNode(sharedMemory->publicLedger, shipNode, curParkingSpotGroup);
 
         sem_wait(&sharedMemory->inOutSem);
-        sem_post(curShipTypeSem);
+        if (curState == WaitingToEnter)
+            sem_post(curShipTypeSem);
+        else if (curState == PendingEnter)
+            sem_post(curShipTypeSemPending);
     }
     // (*nextIndex)++;
 }
@@ -150,29 +179,35 @@ int main(int argc, char** argv) {
     // sem_t *shipTypesSemIn[3] = &sharedMemory->shipTypesSemIn, *shipTypesSemOut[3] = &sharedMemory->shipTypesSemOut, *inOutSem = &sharedMemory->inOutSem;
     // LedgerShipNode** ledgerShipNodes = sharedMemory->publicLedger->ledgerShipNodes;
 
-    sem_t *shipTypesSemIn[3] /*, *shipTypesSemOut[3]*/, *inOutSem, *shmWriteSem;
+    sem_t *shipTypesSemIn[3] /*, *shipTypesSemOut[3]*/, *inOutSem = SEM_FAILED, *shmWriteSem = SEM_FAILED;
     LedgerShipNode* ledgerShipNodes[3];
-    ShipNode** shipNodesIn /*, **shipNodesOut*/;
+    ShipNode** shipNodesIn = NULL /*, **shipNodesOut*/;
     ParkingSpotGroup* parkingSpotGroups[3];
-    unsigned int *sizeIn /*, *sizeOut*/, *ledgerSize;
+    unsigned int *sizeIn = NULL /*, *sizeOut*/, *ledgerSize = NULL;
 
     getValuesFromShm(sharedMemory, shipTypesSemIn, inOutSem, shmWriteSem, ledgerShipNodes,
                      shipNodesIn, sizeIn, ledgerSize, parkingSpotGroups);
 
     ShipNode* pendingShipNodeRequests[100];  // this will have something relevant with sizeOfShipNodes
-    unsigned int nextInIndex = 0, nextOutIndex = 0, sizeOfPendingShipNodes = 0, nextPendingShipNodeIndex = 0;
+    unsigned int nextInIndex = 0, nextPendingIndex = 0, sizeOfPendingShipNodes = 0;
     // nextPendingShipNodeIndex: used for scanning
     // sizeOfPendingShipNodes: used for insertion
 
     // wait for a ship to wake the port-master up !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // unsigned int sizeIn, sizeOut;
-    while (nextInIndex < (*sizeIn) /*|| nextOutIndex < (*sizeOut)*/) {
+    while (nextInIndex < (*sizeIn) || nextPendingIndex < sizeOfPendingShipNodes /*|| nextOutIndex < (*sizeOut)*/) {
         // FIRST HANDLE PENDING REQUESTS <------------------ to be implemented
 
         // handleIncomingShip(sharedMemory, shipNodesIn, parkingSpotGroups, &sizeOfPendingShipNodes,
         //                    shipTypesSemIn, inOutSem, &nextInIndex, pendingShipNodeRequests);
 
-        handleNextShip(sharedMemory, shipNodesIn, sizeOfPendingShipNodes, &nextInIndex, pendingShipNodeRequests);
+        // ShipNode curShipNode = sharedMemory->shipNodes[nextInIndex];
+        State curState = sharedMemory->shipNodes[nextInIndex].state;
+        if (curState == WaitingToEnter || curState == WaitingToLeave) {
+            handleNextShip(sharedMemory, shipNodesIn, &sizeOfPendingShipNodes, &nextInIndex, pendingShipNodeRequests);
+        } else if (curState == PendingEnter || curState == PendingLeave) {
+            handleNextShip(sharedMemory, pendingShipNodeRequests, NULL, &nextPendingIndex, NULL);
+        }
         // if (nextOutIndex < (*sizeOut)) {
         //     handleOutGoingShip(shipNodesOut, &nextOutIndex, parkingSpotGroups, inOutSem, shipTypesSemOut);
         // }

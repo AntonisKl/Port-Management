@@ -19,9 +19,9 @@ void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsign
     sharedMemory->shipTypesSemIn[1] = shipTypesSemIn[1];
     sharedMemory->shipTypesSemIn[2] = shipTypesSemIn[2];
 
-    // sharedMemory->shipTypesSemOut[0] = shipTypesSemOut[0];
-    // sharedMemory->shipTypesSemOut[1] = shipTypesSemOut[1];
-    // sharedMemory->shipTypesSemOut[2] = shipTypesSemOut[2];
+    sharedMemory->shipTypesSemPending[0] = shipTypesSemOut[0];
+    sharedMemory->shipTypesSemPending[1] = shipTypesSemOut[1];
+    sharedMemory->shipTypesSemPending[2] = shipTypesSemOut[2];
 
     // sharedMemory->sizeOut = 0;
     sharedMemory->sizeIn = 0;
@@ -44,10 +44,21 @@ void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes, int sizeOfLedgerS
     // sharedMemory->shipNodesOut = (ShipNode**)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes + sizeOfLedgerShipNodes;
 }
 
-sem_t* getShipTypeSem(ParkingSpotGroup parkingSpotGroups[3], sem_t shipTypesSem[3], char shipType) {
+void getShipTypeSems(SharedMemory* sharedMemory, sem_t* shipTypeSem, sem_t* shipTypeSemPending, char shipType) {
     for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == parkingSpotGroups[i].type) {
-            return &shipTypesSem[i];;
+        if (shipType == sharedMemory->parkingSpotGroups[i].type) {
+            shipTypeSem = &sharedMemory->shipTypesSemIn[i]; /// maybe remove "&" ????????????????? here and below
+            shipTypeSemPending = &sharedMemory->shipTypesSemPending[i];
+            break;
+        }
+    }
+    printf("Oops\n");
+}
+
+sem_t* getShipTypeSem(SharedMemory* sharedMemory, char shipType) {
+    for (unsigned int i = 0; i < 3; i++) {
+        if (shipType == sharedMemory->parkingSpotGroups[i].type) {
+            return &sharedMemory->shipTypesSemIn[i];
         }
     }
     printf("Oops\n");

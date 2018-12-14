@@ -9,6 +9,8 @@ void getValuesFromShm(SharedMemory* sharedMemory, sem_t* shipTypesSemIn[3] /*, s
                       LedgerShipNode** ledgerShipNodes, ShipNode** shipNodesIn /*, ShipNode** shipNodesOut*/, unsigned int* nextInIndex /*, unsigned int* nextOutIndex*/,
                       unsigned int* nextLedgerShipNodeIndex, ParkingSpotGroup* parkingSpotGroups[3]);
 
+State getNextPendingShipState(State state);
+
 LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode, ParkingSpotGroup* curParkingSpotGroup);
 
 void handleNextShip(SharedMemory* sharedMemory, ShipNode** shipNodesIn, unsigned int* sizeOfPendingShipNodes,

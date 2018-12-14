@@ -78,17 +78,17 @@ void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds
     }
 }
 
-void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn /*, sem_t* shipTypeSemOut*/) {
-    for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == sharedMemory->parkingSpotGroups[i].type) {
-            shipTypeSemIn = &sharedMemory->shipTypesSemIn[i];
-            // shipTypeSemOut = &sharedMemory->shipTypesSemOut[i];
-            break;
-        }
-    }
-    printf("Oops\n");
-    return;
-}
+// void getShipTypeSem(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn /*, sem_t* shipTypeSemOut*/) {
+//     for (unsigned int i = 0; i < 3; i++) {
+//         if (shipType == sharedMemory->parkingSpotGroups[i].type) {
+//             shipTypeSemIn = &sharedMemory->shipTypesSemIn[i];
+//             // shipTypeSemOut = &sharedMemory->shipTypesSemOut[i];
+//             break;
+//         }
+//     }
+//     printf("Oops\n");
+//     return;
+// }
 
 ShipNode* addShipNodeToShmByShipNode(SharedMemory* sharedMemory, ShipNode* shipNode) {
     unsigned int nextShipNodeIndex = sharedMemory->sizeIn;
@@ -105,7 +105,7 @@ ShipNode* addShipNodeToShmByShipNode(SharedMemory* sharedMemory, ShipNode* shipN
     newShipNode->upgradeFlag = shipNode->upgradeFlag;
     newShipNode->state = shipNode->state;
     if (shipNode->ledgerShipNode != NULL)
-        newShipNode->ledgerShipNode = &shipNode->ledgerShipNode;  // without "&" ???????????????????????????????????????
+        newShipNode->ledgerShipNode = shipNode->ledgerShipNode;  // without "&" ???????????????????????????????????????
     else
         newShipNode->ledgerShipNode = NULL;
 
@@ -184,8 +184,8 @@ int main(int argc, char** argv) {
     SharedMemory* sharedMemory = (SharedMemory*)shmat(shmId, NULL, 0);
     doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
-    sem_t* shipTypeSemIn = SEM_FAILED /*, *shipTypeSemOut = SEM_FAILED*/;
-    getShipTypeSems(sharedMemory, shipType, shipTypeSemIn /*, shipTypeSemOut*/);
+    sem_t *shipTypeSemIn = SEM_FAILED, *shipTypeSemPending = SEM_FAILED;
+    getShipTypeSems(sharedMemory, shipTypeSemIn, shipTypeSemPending, shipType);
     sem_t* inOutSem = &sharedMemory->inOutSem;
 
     // add a ship node to shared memory
@@ -193,6 +193,9 @@ int main(int argc, char** argv) {
 
     // shipNode->state = WaitingToEnter;
     sem_wait(shipTypeSemIn);
+    if (shipNode->state == PendingEnter || shipNode->state == PendingLeave) {
+        sem_wait(shipTypeSemPending);
+    }
 
     usleep(manTimePeriodUsecs);  // sleep for manTimePeriod + parkTimePeriod
 

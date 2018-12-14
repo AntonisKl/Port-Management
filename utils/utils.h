@@ -18,7 +18,9 @@ typedef enum State {
     WaitingToEnter,
     Parked,
     WaitingToLeave,
-    Completed
+    Completed,
+    PendingEnter,
+    PendingLeave
 } State;
 
 typedef struct ParkingSpotGroup {
@@ -54,7 +56,7 @@ typedef struct ShipNode {
     suseconds_t manTimePeriod;
     char upgradeFlag;
     State state;
-    LedgerShipNode* ledgerShipNode; // just a pointer to the corresponding ledger node
+    LedgerShipNode* ledgerShipNode;  // just a pointer to the corresponding ledger node
     // suseconds_t departTime;                      // this will get value from the port-master after the departure of the ship
     // ParkingSpotGroup* parkingSpotGroupOccupied;  // just a pointer to a ParkingSpotGroup in the shared memory
 
@@ -69,12 +71,12 @@ typedef struct PublicLedger {
 typedef struct SharedMemory {
     // char shipTypes[3];
     int sizeOfShipNodes, sizeOfLedgerShipNodes;
-    sem_t inOutSem, shipTypesSemIn[3]/*, shipTypesSemOut[3]*/, shmWriteSem;
+    sem_t inOutSem, shipTypesSemIn[3], shipTypesSemPending[3], shmWriteSem;
     PublicLedger* publicLedger;
     ParkingSpotGroup* parkingSpotGroups;  // this will be of size 3 according to the excersize description <-- wrong
     ShipNode* shipNodes;
     // ShipNode** shipNodesOut;
-    unsigned int sizeIn/*, sizeOut*/;
+    unsigned int sizeIn /*, sizeOut*/;
 
 } SharedMemory;
 
@@ -85,7 +87,9 @@ void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsign
 
 void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes, int sizeOfLedgerShipNodes);
 
-sem_t* getShipTypeSem(ParkingSpotGroup parkingSpotGroups[3], sem_t shipTypesSem[3], char shipType);
+void getShipTypeSems(SharedMemory* sharedMemory, sem_t* shipTypeSem, sem_t* shipTypeSemPending, char shipType);
+
+sem_t* getShipTypeSem(SharedMemory* sharedMemory, char shipType);
 
 ParkingSpotGroup* getShipParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3], char shipType);
 
