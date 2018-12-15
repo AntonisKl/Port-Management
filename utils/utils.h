@@ -2,6 +2,7 @@
 #define UTILS_H
 
 #include <semaphore.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +10,7 @@
 #include <sys/shm.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #define MAX_STRING_FLOAT_SIZE 20  // including end of string
@@ -70,8 +72,9 @@ typedef struct PublicLedger {
 
 typedef struct SharedMemory {
     // char shipTypes[3];
+    int shmIdPublicLedger, shmIdParkingSpotGroups, shmIdShipNodes, shmIdLedgerNodes;
     int sizeOfShipNodes, sizeOfLedgerShipNodes;
-    sem_t inOutSem, shipTypesSemIn[3], shipTypesSemPending[3], shmWriteSem;
+    sem_t inOutSem, shipTypesSemIn[3], shipTypesSemPending[3], shmWriteSem, portMasterWakeSem;
     PublicLedger* publicLedger;
     ParkingSpotGroup* parkingSpotGroups;  // this will be of size 3 according to the excersize description <-- wrong
     ShipNode* shipNodes;
@@ -82,14 +85,19 @@ typedef struct SharedMemory {
 
 void initParkingSpot(ParkingSpotGroup* parkingSpotGroups, char type, unsigned int maxCapacity, float cost);
 
-void initPublicLedger(SharedMemory* sharedMemory, char* parkingSpotTypes, unsigned int* capacities, float* costs, sem_t inOutSem,
-                      sem_t shipTypesSemIn[3], sem_t shipTypesSemOut[3], int sizeOfShipNodes, int sizeOfLedgerShipNodes, sem_t shmWriteSem);
+void initPublicLedger(SharedMemory* sharedMemory, PublicLedger* publicLedger, ParkingSpotGroup* parkingSpotGroups, char* parkingSpotTypes,
+                      unsigned int* capacities, float* costs, sem_t inOutSem, sem_t shipTypesSemIn[3], sem_t shipTypesSemOut[3], int sizeOfShipNodes,
+                      int sizeOfLedgerShipNodes, sem_t shmWriteSem, sem_t portMasterWakeSem, int shmIdPublicLedger, int shmIdParkingGroups, int shmIdShipNodes, int shmIdLedgerNodes);
 
 void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes, int sizeOfLedgerShipNodes);
 
-void getShipTypeSems(SharedMemory* sharedMemory, sem_t* shipTypeSem, sem_t* shipTypeSemPending, char shipType);
+void getShipTypeSems(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, sem_t* shipTypeSem, sem_t* shipTypeSemPending, char shipType);
 
-sem_t* getShipTypeSem(SharedMemory* sharedMemory, char shipType);
+void postSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
+
+void waitSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
+
+sem_t* getShipTypeSem(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
 
 ParkingSpotGroup* getShipParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3], char shipType);
 
@@ -97,6 +105,6 @@ void execPortMaster(int shmId, char* logFileName);
 
 void execMonitor(suseconds_t statusPrintTime, suseconds_t statsPrintTime, int shmId, char* logFileName);
 
-void execVessel(char shipType, char upgradeFlag /* 0 or 1 */, suseconds_t parkTime, suseconds_t manTime, int shmId, char* logFileName);
+void execVessel(char shipType, char upgradeFlag /* 0 or 1 */, long parkTime, long manTime, int shmId, char* logFileName);
 
 #endif
