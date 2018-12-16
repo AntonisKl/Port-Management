@@ -12,6 +12,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <time.h>
 
 #define MAX_STRING_FLOAT_SIZE 20  // including end of string
 #define MAX_STRING_INT_SIZE 12    // including end of string

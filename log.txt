@@ -1,0 +1,19 @@
+Timestamp (millis): 1544995054 -> Port master starts handling incoming ship with pid 19906
+Timestamp (millis): 1544995054 -> Port master finished handling incoming ship with pid 19906
+Timestamp (millis): 1544995054 -> Port master starts handling incoming ship with pid 19907
+Timestamp (millis): 1544995054 -> Port master starts handling incoming ship with upgrade with pid 19907
+Timestamp (millis): 1544995054 -> Port master finished handling incoming ship with upgrade with pid 19907
+Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with pid 19911
+Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with upgrade with pid 19911
+Timestamp (millis): 1544995055 -> Port master finished handling incoming ship with upgrade with pid 19911
+Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with pid 19913
+Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with upgrade with pid 19913
+Timestamp (millis): 1544995055 -> Port master finished handling incoming ship with upgrade with pid 19913
+Timestamp (millis): 1544995056 -> Port master starts handling outgoing ship with pid 19906
+Timestamp (millis): 1544995056 -> Port master finished handling outgoing ship with pid 19906
+Timestamp (millis): 1544995056 -> Port master starts handling outgoing ship with pid 19907
+Timestamp (millis): 1544995057 -> Port master finished handling outgoing ship with pid 19907
+Timestamp (millis): 1544995057 -> Port master starts handling outgoing ship with pid 19911
+Timestamp (millis): 1544995057 -> Port master finished handling outgoing ship with pid 19911
+Timestamp (millis): 1544995057 -> Port master starts handling outgoing ship with pid 19913
+Timestamp (millis): 1544995058 -> Port master finished handling outgoing ship with pid 19913

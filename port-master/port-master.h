@@ -15,12 +15,12 @@ LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode
 
 void handleNextShip(SharedMemory* sharedMemory, ShipNode* shipNode, PublicLedger* publicLedger, LedgerShipNode* ledgerShipNodes,
                     ParkingSpotGroup* parkingSpotGroups, unsigned int* sizeOfPendingShipNodes,
-                    unsigned int* nextIndex, ShipNode* pendingShipNodeRequests[100]);
+                    unsigned int* nextIndex, ShipNode* pendingShipNodeRequests[100], FILE* logFileP);
 
-void handleOutGoingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, unsigned int* nextIndex);
+void handleOutGoingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, unsigned int* nextIndex, char withUpgrade);
 
 void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, PublicLedger* publicLedger,
                         LedgerShipNode* ledgerShipNodes, unsigned int* nextIndex,
-                        ShipNode* pendingShipNodeRequests[100], unsigned int* sizeOfPendingShipNodes, char withUpgrade);
-
+                        ShipNode* pendingShipNodeRequests[100], unsigned int* sizeOfPendingShipNodes, char withUpgrade, FILE* logFileP);
+                        
 #endif

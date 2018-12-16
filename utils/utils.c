@@ -111,10 +111,13 @@ void waitSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* park
 unsigned int getShipTypeIndex(ParkingSpotGroup* parkingSpotGroups, char shipType) {
     for (unsigned int i = 0; i < 3; i++) {
         if (shipType == parkingSpotGroups[i].type) {
+            printf("SHIP TYPE GROUP GET type: --------------------------------------------------> |%c|, capacity: %u\n", parkingSpotGroups[i].type, parkingSpotGroups[i].maxCapacity);
+
             // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
             return i;
         }
     }
+    return -1;
 }
 
 sem_t* getShipTypeSem(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
@@ -130,6 +133,7 @@ sem_t* getShipTypeSem(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotG
 ParkingSpotGroup* getShipParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3], char shipType) {
     printf("SHIP TYPE::::::::::::::::::::::::::::::::::::::::::::::: %c\n", shipType);
     for (unsigned int i = 0; i < 3; i++) {
+        printf("PARKING SPOT GROUP GET type: --------------------------------------------------> |%c|, capacity: %u\n", parkingSpotGroups[i].type, parkingSpotGroups[i].maxCapacity);
         if (shipType == parkingSpotGroups[i].type) {
             return &parkingSpotGroups[i];
         }
@@ -164,6 +168,7 @@ void execMonitor(suseconds_t statusPrintTime, suseconds_t statsPrintTime, int sh
 
 void execVessel(char shipType, char upgradeFlag /* 0 or 1 */, long parkTime, long manTime, int shmId, char* logFileName) {
     char shipTypeS[2], upgradeFlagS[2], parkTimeS[MAX_STRING_INT_SIZE], manTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
+    printf("fork = 1110\n");
 
     sprintf(shipTypeS, "%c", shipType);
     sprintf(upgradeFlagS, "%c", upgradeFlag);

@@ -70,13 +70,13 @@ State getNextPendingShipState(State state) {
 
 LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode, LedgerShipNode* ledgerShipNodes, ParkingSpotGroup* curParkingSpotGroup) {
     struct timeval curTime;
-    printf("HI1\n");
+    // printf("HI1\n");
 
     gettimeofday(&curTime, NULL);
-    printf("HI1.5\n");
+    // printf("HI1.5\n");
 
     unsigned int nextLedgerNodeIndex = publicLedger->size;
-    printf("HI2\n");
+    // printf("HI2\n");
     ledgerShipNodes[nextLedgerNodeIndex].shipId = shipNode->shipId;
     ledgerShipNodes[nextLedgerNodeIndex].upgradeFlag = shipNode->upgradeFlag;
     ledgerShipNodes[nextLedgerNodeIndex].shipType = shipNode->shipType;
@@ -91,115 +91,163 @@ LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode
     shipNode->ledgerShipNode = &ledgerShipNodes[nextLedgerNodeIndex];  /// point to ledger node
 
     publicLedger->size++;
-    printf("HI\n");
+    // printf("HI\n");
     return shipNode->ledgerShipNode;
 }
 
 void handleNextShip(SharedMemory* sharedMemory, ShipNode* shipNode, PublicLedger* publicLedger, LedgerShipNode* ledgerShipNodes,
                     ParkingSpotGroup* parkingSpotGroups, unsigned int* sizeOfPendingShipNodes,
-                    unsigned int* nextIndex, ShipNode* pendingShipNodeRequests[100]) {
-    printf("PORT-MASTER: HELLLO 1\n");
+                    unsigned int* nextIndex, ShipNode* pendingShipNodeRequests[100], FILE* logFileP) {
+    // printf("PORT-MASTER: HELLLO 1\n");
     // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
-    printf("PORT-MASTER: HELLLO 2, nextIndex = %d\n", *nextIndex);
+    // printf("PORT-MASTER: HELLLO 2, nextIndex = %d\n", *nextIndex);
     // ShipNode* curShipNode = shipNodes[*nextIndex];
-    printf("PORT-MASTER: HELLLO\n");
+    // printf("PORT-MASTER: HELLLO\n");
     printf("PORT-MASTER: handling ship with pid: %d and state: %d and type: %c\n", shipNode->shipId, shipNode->state, shipNode->shipType);
     State curState = shipNode->state;
     if (curState == WaitingToEnter || curState == PendingEnter) {
-        handleIncomingShip(sharedMemory, shipNode, parkingSpotGroups, publicLedger, ledgerShipNodes, nextIndex, pendingShipNodeRequests, sizeOfPendingShipNodes, 0);
+        handleIncomingShip(sharedMemory, shipNode, parkingSpotGroups, publicLedger, ledgerShipNodes, nextIndex, pendingShipNodeRequests, sizeOfPendingShipNodes, 0, logFileP);
     } else if (curState == WaitingToLeave || curState == PendingLeave) {
-        handleOutGoingShip(sharedMemory, shipNode, parkingSpotGroups, nextIndex);
+        fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling outgoing ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+        handleOutGoingShip(sharedMemory, shipNode, parkingSpotGroups, nextIndex, shipNode->ledgerShipNode->parkingSpotGroupOccupied->type == shipNode->shipType);
+        fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling outgoing ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
     }
 
-    (*nextIndex)++;
+    // (*nextIndex)++;
 }
 
-void handleOutGoingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, unsigned int* nextIndex) {
+void handleOutGoingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, unsigned int* nextIndex, char withUpgrade) {
     printf("PORT-MASTER: handling outgoing ship\n");
 
     char curShipType = shipNode->shipType;
     // sem_t *curShipTypeSem = SEM_FAILED, *curShipTypeSemPending = SEM_FAILED;
     // getShipTypeSems(sharedMemory, parkingSpotGroups, curShipTypeSem, curShipTypeSemPending, curShipType);
-    ParkingSpotGroup* curParkingSpotGroup = getShipParkingSpotGroup(parkingSpotGroups, curShipType);
+    unsigned int curShipTypeIndex;
+    if (withUpgrade == 0)
+        curShipTypeIndex = getShipTypeIndex(parkingSpotGroups, curShipType);
+    else
+        curShipTypeIndex = getShipTypeIndex(parkingSpotGroups, shipNode->upgradeFlag);
+
     LedgerShipNode* curLedgerShipNode = shipNode->ledgerShipNode;
     State curState = shipNode->state;
 
-    printf("PORT MASTER: waiting on inOutSem of outgoing ship ============================================================================\n");
+    // printf("PORT MASTER: waiting on inOutSem of outgoing ship ============================================================================\n");
     sem_wait(&sharedMemory->inOutSem);
     // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
-    printf("PORT-MASTER: outgoing ship handling after wait inOutSem\n");
+    // printf("PORT-MASTER: outgoing ship handling after wait inOutSem\n");
     if (curState == WaitingToLeave)
         postSemByShipType(sharedMemory, parkingSpotGroups, curShipType);
     else if (curState == PendingLeave)
         postSemPendingByShipType(sharedMemory, parkingSpotGroups, curShipType);  /////////////////////////////////////////////////////////// HERE CHANGE IT TO A CUSTOM POST FUNCTION LIKE ABOVE
-    printf("PORT-MASTER: outgoing ship handling after post\n");
+    // printf("PORT-MASTER: outgoing ship handling after post\n");
 
     usleep(shipNode->manTimePeriod);
 
     curLedgerShipNode->state = Completed;
-    curParkingSpotGroup->curCapacity++;
-    // (*nextIndex)++;
+    parkingSpotGroups[curShipTypeIndex].curCapacity++;
+    printf("curCapacity = %u\n", parkingSpotGroups[curShipTypeIndex].curCapacity);
+
+    (*nextIndex)++;
 }
 
 void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, PublicLedger* publicLedger,
                         LedgerShipNode* ledgerShipNodes, unsigned int* nextIndex,
-                        ShipNode* pendingShipNodeRequests[100], unsigned int* sizeOfPendingShipNodes, char withUpgrade) {
-    printf("PORT-MASTER: handling incoming ship\n");
+                        ShipNode* pendingShipNodeRequests[100], unsigned int* sizeOfPendingShipNodes, char withUpgrade, FILE* logFileP) {
+    // printf("PORT MAASTER: handling incoming ship\n");
     // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
     // ShipNode* curShipNodeRequest = &shipNodesIn[*nextInIndex];
 
     char curShipType = shipNode->shipType;
 
-    printf("PORT-MASTER: handling incoming ship 2\n");
+    printf("PORT-MASTER: handling incoming ship 2, withUpgrade = %d\n", withUpgrade);
     // sem_t *curShipTypeSem = SEM_FAILED, *curShipTypeSemPending = SEM_FAILED;
     // getShipTypeSems(sharedMemory, curShipTypeSem, curShipTypeSemPending, curShipType);
-    ParkingSpotGroup* curParkingSpotGroup;
+    unsigned int curShipTypeIndex;
+    // ParkingSpotGroup* curParkingSpotGroup;
     if (withUpgrade == 0)
-        curParkingSpotGroup = getShipParkingSpotGroup(parkingSpotGroups, curShipType);
+        curShipTypeIndex = getShipTypeIndex(parkingSpotGroups, curShipType);
     else if (withUpgrade == 1)
-        curParkingSpotGroup = getShipParkingSpotGroup(parkingSpotGroups, shipNode->upgradeFlag);
+        curShipTypeIndex = getShipTypeIndex(parkingSpotGroups, shipNode->upgradeFlag);
 
-    printf("PORT-MASTER: handling incoming ship 2.5\n");
+    // printf("PORT MAASTER: handling incoming ship 2.5\n");
 
     State curState = shipNode->state;
 
-    printf("PORT-MASTER: handling incoming ship 3\n");
+    printf("PORT-MASTER: handling incoming ship 3 capacity: %u\n", parkingSpotGroups[curShipTypeIndex].curCapacity);
     // check for available place
-    if (curParkingSpotGroup->curCapacity == 0 && curState != PendingEnter) {
+    if (parkingSpotGroups[curShipTypeIndex].curCapacity == 0 && curState != PendingEnter) {
+        if (withUpgrade == 0) {
+            printf("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOO\n\n");
+            fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling incoming ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+        } else if (withUpgrade == 1)
+            fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling incoming ship with upgrade with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+
         if (withUpgrade == 0 && (getShipTypeIndex(parkingSpotGroups, shipNode->upgradeFlag) > getShipTypeIndex(parkingSpotGroups, curShipType))) {
             handleIncomingShip(sharedMemory, shipNode, parkingSpotGroups, publicLedger, ledgerShipNodes, nextIndex, pendingShipNodeRequests,
-                               sizeOfPendingShipNodes, 1);
+                               sizeOfPendingShipNodes, 1, logFileP);
             return;
         }
 
         shipNode->state = getNextPendingShipState(curState);
-        printf("PORT-MASTER: handling incoming ship 4a\n");
+        // printf("PORT MAASTER: handling incoming ship 4a\n");
 
         pendingShipNodeRequests[*sizeOfPendingShipNodes] = shipNode;  // without "&" ???????????????????????
         (*sizeOfPendingShipNodes)++;
 
         postSemByShipType(sharedMemory, parkingSpotGroups, curShipType);  // vessel will then wait for pending semapohore
-    } else if (curParkingSpotGroup->curCapacity > 0) {
-        curParkingSpotGroup->curCapacity--;
+        (*nextIndex)++;
+        if (withUpgrade == 0)
+            fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling incoming ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+        else if (withUpgrade == 1)
+            fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling incoming ship with upgrade with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+    } else if (parkingSpotGroups[curShipTypeIndex].curCapacity > 0) {
+        if (curState == WaitingToEnter) {
+            if (withUpgrade == 0)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling incoming ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+            else if (withUpgrade == 1)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling incoming ship with upgrade with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+        } else if (curState == PendingEnter) {
+            if (withUpgrade == 0)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling pending incoming ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+            else if (withUpgrade == 1)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling pending incoming ship with upgrade with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+        }
+        parkingSpotGroups[curShipTypeIndex].curCapacity--;
         // doshifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
-        LedgerShipNode* curLedgerShipNode = addLedgerShipNode(publicLedger, shipNode, ledgerShipNodes, curParkingSpotGroup);
-        printf("PORT-MASTER: handling incoming ship 4 waiting on inOutSem (incoming ship) ============================================================================\n");
+        LedgerShipNode* curLedgerShipNode = addLedgerShipNode(publicLedger, shipNode, ledgerShipNodes, &parkingSpotGroups[curShipTypeIndex]);
+        // printf("PORT MAASTER: handling incoming ship 4 waiting on inOutSem (incoming ship) ============================================================================\n");
         // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
         sem_wait(&sharedMemory->inOutSem);
         // doshifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
-        printf("PORT-MASTER: after wait of inOutSem, vessel's state = %d\n", curState);
+        // printf("PORT MAASTER: after wait of inOutSem, vessel's state = %d\n", curState);
         if (curState == WaitingToEnter) {
-            printf("PORT-MASTER: before post vessel\n");
+            // printf("PORT MAASTER: before post vessel\n");
             // sem_post(&sharedMemory->shipTypesSemIn[0]);
             postSemByShipType(sharedMemory, parkingSpotGroups, curShipType);
-            printf("PORT-MASTER: after post vessel\n");
-        } else if (curState == PendingEnter)
+            if (withUpgrade == 0)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling incoming ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+            else if (withUpgrade == 1)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling incoming ship with upgrade with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+            // printf("PORT MAASTER: after post vessel\n");
+        } else if (curState == PendingEnter) {
             postSemPendingByShipType(sharedMemory, parkingSpotGroups, curShipType);
+            if (withUpgrade == 0)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling pending incoming ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+            else if (withUpgrade == 1)
+                fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling pending incoming ship with upgrade with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
+        }
+        (*nextIndex)++;
     }
-    // (*nextIndex)++;
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //  else if (parkingSpotGroups[curShipTypeIndex].curCapacity == 0 && curState == PendingEnter) {                                          //
+    //     usleep(1000000); // sleep for 1 second/////////////////////////////////////////////////////////// MAYBE NEEDED //////////////////////
+    // }                                                                                                                                      //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
 }
 
 // void handleOutGoingShip(ShipNode** shipNodesOut, unsigned int* nextOutIndex, ParkingSpotGroup* parkingSpotGroups[3], sem_t* inOutSem, sem_t* shipTypesSemOut[3]) {
@@ -223,7 +271,7 @@ int main(int argc, char** argv) {
     int shmId;
     char* logFileName;
     handleFlags(argc, argv, &shmId, &logFileName);
-    printf("PORT-MASTER handled flags\n");
+    // printf("PORT MAASTER handled flags\n");
 
     SharedMemory* sharedMemory = (SharedMemory*)((uint8_t*)shmat(shmId, 0, 0));  // error checking add <-------------------
 
@@ -240,7 +288,7 @@ int main(int argc, char** argv) {
     // printf("port master: shm address: %p\n", (void*)&sharedMemory);
     // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
-    printf("PORT-MASTER shifted shm structs\n");
+    // printf("PORT MAASTER shifted shm structs\n");
     // sharedMemory->shipNodes[0].shipType = 1;
 
     // sem_t *shipTypesSemIn[3] = &sharedMemory->shipTypesSemIn, *shipTypesSemOut[3] = &sharedMemory->shipTypesSemOut, *inOutSem = &sharedMemory->inOutSem;
@@ -255,17 +303,18 @@ int main(int argc, char** argv) {
 
     // getValuesFromShm(sharedMemory, &shipTypesSemIn[3], &inOutSem, &shmWriteSem, &portMasterWakeSem, ledgerShipNodes,
     //                  shipNodesIn, &sizeIn, &ledgerSize, parkingSpotGroups);
-    printf("PORT-MASTER got values from shm\n");
-
+    // printf("PORT MAASTER got values from shm\n");
     ShipNode* pendingShipNodeRequests[100];  // this will have something relevant with sizeOfShipNodes
     unsigned int nextInIndex = 0, nextPendingIndex = 0, sizeOfPendingShipNodes = 0;
     // nextPendingShipNodeIndex: used for scanning
     // sizeOfPendingShipNodes: used for insertion
+    FILE* logFileP = fopen(logFileName, "a");
 
     while (1) {
         // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
-        printf("PORT-MASTER waiting for vessels\n");
+        printf("PORT MAASTER waiting for vessels\n");
+        fprintf(logFileP, "Timestamp (millis): %lu -> Port master is waiting for vessels\n", (unsigned long)time(NULL));
         sem_wait(&sharedMemory->portMasterWakeSem);
         printf("PORT-MASTER woke up\n");
 
@@ -276,36 +325,47 @@ int main(int argc, char** argv) {
 
         // ledgerSize = sharedMemory->publicLedger->size; // ??????????
 
-        printf("starting PORT-MASTER while loop, sizeIn = %u, nextIndex = %u\n", sizeIn, nextInIndex);
+        printf("starting PORT-MASTER while loop, sizeIn = %u, nextIndex = %u, sizeOfPendingShipNodes = %u, nextPendingIndex = %u\n", sizeIn, nextInIndex, sizeOfPendingShipNodes, nextPendingIndex);
         while (nextInIndex < sizeIn || nextPendingIndex < sizeOfPendingShipNodes /*|| nextOutIndex < (*sizeOut)*/) {
             // FIRST HANDLE PENDING REQUESTS <------------------ to be implemented
+            logFileP = fopen(logFileName, "a");
 
             // handleIncomingShip(sharedMemory, shipNodesIn, parkingSpotGroups, &sizeOfPendingShipNodes,
             //                    shipTypesSemIn, inOutSem, &nextInIndex, pendingShipNodeRequests);
 
             // ShipNode curShipNode = sharedMemory->shipNodes[nextInIndex];
 
+            unsigned int prevNextIndex = nextInIndex, prevNextPendingIndex = nextPendingIndex;
+
             if (nextPendingIndex < sizeOfPendingShipNodes) {
                 State curState = pendingShipNodeRequests[nextPendingIndex]->state;
 
                 if (curState == PendingEnter || curState == PendingLeave) {
                     printf("2nd\n");
-                    handleNextShip(sharedMemory, pendingShipNodeRequests[nextPendingIndex], publicLedger, ledgerShipNodes, parkingSpotGroups, NULL, &nextPendingIndex, NULL);
+                    handleNextShip(sharedMemory, pendingShipNodeRequests[nextPendingIndex], publicLedger, ledgerShipNodes, parkingSpotGroups, NULL, &nextPendingIndex, NULL, logFileP);
                 }
             }
 
+            sizeIn = sharedMemory->sizeIn;
+            printf("nextIndex = %u, sizeIn = %u\n", nextInIndex, sizeIn);
             if (nextInIndex < sizeIn) {
-                printf("1\n");
+                // printf("1\n");
                 // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
                 State curState = shipNodes[nextInIndex].state;
-                printf("2\n");
+                // printf("2\n");
                 printf("PORT-MASTER: state of current vessel: %d\n", curState);
                 if (curState == WaitingToEnter || curState == WaitingToLeave) {
                     printf("1st, ship type = %c\n", shipNodes[nextInIndex].shipType);
-                    handleNextShip(sharedMemory, &shipNodes[nextInIndex], publicLedger, ledgerShipNodes, parkingSpotGroups, &sizeOfPendingShipNodes, &nextInIndex, pendingShipNodeRequests);
+                    handleNextShip(sharedMemory, &shipNodes[nextInIndex], publicLedger, ledgerShipNodes, parkingSpotGroups,
+                                   &sizeOfPendingShipNodes, &nextInIndex, pendingShipNodeRequests, logFileP);
                 }
             }
 
+            if (prevNextIndex == nextInIndex && prevNextPendingIndex == nextPendingIndex) {
+                fclose(logFileP);
+
+                break;
+            }
             // else if (curState == PendingEnter || curState == PendingLeave) {
             //     printf("2nd\n");
             //     handleNextShip(sharedMemory, pendingShipNodeRequests[nextPendingIndex], publicLedger, ledgerShipNodes, parkingSpotGroups, NULL, &nextPendingIndex, NULL);
@@ -326,9 +386,11 @@ int main(int argc, char** argv) {
 
             // nextShipNodeRequestIndex++;
             // nextInIndex++;
+            fclose(logFileP);
         }
     }
 
+    fclose(logFileP);
     shmdt(sharedMemory);
     shmdt(shipNodes);
     shmdt(ledgerShipNodes);

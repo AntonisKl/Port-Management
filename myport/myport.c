@@ -1,7 +1,7 @@
 #include "myport.h"
 
-void handleFlags(int argc, char** argv, char** configFileName) {
-    if (argc != 3) {
+void handleFlags(int argc, char** argv, char** configFileName, unsigned int* vesselsNum, suseconds_t* intervalUsecs) {
+    if (argc != 3 && argc != 7) {
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
@@ -14,15 +14,58 @@ void handleFlags(int argc, char** argv, char** configFileName) {
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
+
+    if (argc == 7) {
+        if (strcmp(argv[3], "-n") == 0) {
+            (*vesselsNum) = atoi(argv[4]);
+            if ((*vesselsNum) == 0) {
+                printf("Invalid flags\nExiting...\n");
+                exit(1);
+            }
+        } else {
+            printf("Invalid flags\nExiting...\n");
+            exit(1);
+        }
+
+        if (strcmp(argv[5], "-i") == 0) {
+            (*intervalUsecs) = atol(argv[6]) * 1000;
+            if ((*intervalUsecs) < 0) {
+                printf("Invalid flags\nExiting...\n");
+                exit(1);
+            }
+        } else {
+            printf("Invalid flags\nExiting...\n");
+            exit(1);
+        }
+    }
+}
+
+void execRandomVessels(unsigned int vesselsNum, suseconds_t intervalUsecs, char* shipTypes, int shmIdSharedMemory, char* logFileName) {
+    srand(time(NULL));
+
+    for (unsigned int i = 0; i < vesselsNum; i++) {
+        // printf("vessel creation\n");
+        if (fork() == 0) {
+            unsigned int typeIndex = rand() % 3;
+            unsigned int upgradeIndex = rand() % 3;
+            // long manTimePeriodMillis = (rand() % 5000) + 1, parkTimePeriodMillis = (rand() % 5000) + 1;
+
+            // printf("type index: %u, uIndex: %u\n", typeIndex, upgradeIndex);
+            // printf("exev vessel\n");
+            execVessel(shipTypes[typeIndex], shipTypes[upgradeIndex], 1500, 500, shmIdSharedMemory, logFileName);
+        }
+        usleep(intervalUsecs);
+    }
 }
 
 int main(int argc, char** argv) {
     char* configFileName;
     char parkingSpotTypes[3];
     float costsPer30minutes[3];
-    unsigned int parkingSpotCapacities[3];
+    unsigned int parkingSpotCapacities[3], vesselsNum = -1;
+    suseconds_t intervalUsecs = -1;
 
-    handleFlags(argc, argv, &configFileName);
+    handleFlags(argc, argv, &configFileName, &vesselsNum, &intervalUsecs);
 
     FILE *configFileP, *logFileP;
     char line[30];
@@ -70,10 +113,12 @@ int main(int argc, char** argv) {
 
     char* logFileName = token;
 
-    if ((logFileP = fopen(logFileName, "a+")) == NULL) {
-        perror("fopen config file");
+    if ((logFileP = fopen(logFileName, "w")) == NULL) {
+        perror("fopen log file");
         return 1;
     }
+    // fprintf(logFileP, "\0"); // empty file
+    fclose(logFileP);
 
     int sizeOfParkingSpotGroups = 3 * sizeof(ParkingSpotGroup);
     int sizeOfShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(ShipNode);
@@ -170,19 +215,35 @@ int main(int argc, char** argv) {
         execPortMaster(shmIdSharedMemory, logFileName);
 
     sleep(1);
-    if (fork() == 0)
-        execVessel(parkingSpotTypes[0], parkingSpotTypes[2], 1500, 500, shmIdSharedMemory, logFileName);
-    // sleep(2);
+    // if (fork() == 0)
+    //     execVessel(parkingSpotTypes[0], parkingSpotTypes[2], 1500, 500, shmIdSharedMemory, logFileName);
+    // // sleep(2);
 
-    if (fork() == 0)
-        execVessel(parkingSpotTypes[0], parkingSpotTypes[1], 1500, 500, shmIdSharedMemory, logFileName);
+    // if (fork() == 0)
+    //     execVessel(parkingSpotTypes[0], parkingSpotTypes[1], 1500, 500, shmIdSharedMemory, logFileName);
+
+    if (vesselsNum > 0 && intervalUsecs > 0)
+        execRandomVessels(vesselsNum, intervalUsecs, parkingSpotTypes, shmIdSharedMemory, logFileName);
+    else
+        execRandomVessels(4, 500000, parkingSpotTypes, shmIdSharedMemory, logFileName);
 
     shmdt(sharedMemory);
-    wait(NULL);
-    wait(NULL);
-    wait(NULL);
+    shmdt(publicLedger);
+    shmdt(parkingSpotGroups);
+    shmdt(shipNodes);
+    shmdt(ledgerShipNodes);
 
-    fclose(logFileP);
+    // wait(NULL);
+    // wait(NULL);
+    // wait(NULL);
+    int status;
+    if (waitpid(pid, &status, WUNTRACED) == -1) {
+        perror("waitpid error");
+        exit(EXIT_FAILURE);
+    } else {
+        printf("port-master exited\n");
+    }
+
     fclose(configFileP);
     // shmctl(shmid, IPC_RMID, NULL);
 }
