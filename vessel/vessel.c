@@ -16,15 +16,16 @@ void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds
     }
 
     if (strcmp(argv[3], "-u") == 0) {
-        int upgradeFlagInt = atoi(argv[4]);
-        if (upgradeFlagInt == 0)
-            (*upgradeFlag) = 0;
-        else if (upgradeFlagInt == 1)
-            (*upgradeFlag) = 1;
-        else {
-            printf("Invalid upgrade flag\nExiting...\n");
-            exit(1);
-        }
+        (*upgradeFlag) = argv[4][0];
+        // int upgradeFlagInt = atoi(argv[4]);
+        // if (upgradeFlagInt == 0)
+        //     (*upgradeFlag) = 0;
+        // else if (upgradeFlagInt == 1)
+        //     (*upgradeFlag) = 1;
+        // else {
+        //     printf("Invalid upgrade flag\nExiting...\n");
+        //     exit(1);
+        // }
     } else {
         printf("Invalid flags\nExiting...\n");
         exit(1);
@@ -240,13 +241,13 @@ int main(int argc, char** argv) {
     // ShipNode* currShipNode = &sharedMemory->shipNodes[sharedMemory->sizeIn - 1];
     if (shipNode->state == PendingEnter || shipNode->state == PendingLeave) {
         printf("hello1\n");
-        sem_wait(shipTypeSemPending);
+        waitSemPendingByShipType(sharedMemory, parkingSpotGroups, shipType);
     }
     printf("hello\n");
 
     usleep(manTimePeriodUsecs);  // sleep for manTimePeriod + parkTimePeriod
 
-    printf("vessel with pid: %d is posting inOutSem after enter, %c\n", getpid(), shipNode->shipType);
+    printf("vessel with pid: %d is posting inOutSem after enter ============================================================================, %c\n", getpid(), shipNode->shipType);
     sem_post(&sharedMemory->inOutSem);
 
     // postSemByShipType(sharedMemory, parkingSpotGroups, shipNode->shipType);
@@ -271,7 +272,7 @@ int main(int argc, char** argv) {
     waitSemByShipType(sharedMemory, parkingSpotGroups, shipNode->shipType);
 
     usleep(manTimePeriodUsecs);
-    printf("vessel with pid: %d is posting inOutSem after leave\n", getpid());
+    printf("vessel with pid: %d is posting inOutSem after leave ============================================================================\n", getpid());
     // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
     shipNode->state = Completed;

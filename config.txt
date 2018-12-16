@@ -1,7 +1,7 @@
 -type1 S
 -type2 M
 -type3 L
--capacity1 2
+-capacity1 1
 -capacity2 3
 -capacity3 5
 -cost1 5

@@ -75,14 +75,44 @@ void postSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpot
     }
 }
 
+void postSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
+    for (unsigned int i = 0; i < 3; i++) {
+        if (shipType == parkingSpotGroups[i].type) {
+            sem_post(&sharedMemory->shipTypesSemPending[i]);  /// maybe remove "&" ????????????????? here and below
+            break;
+        }
+    }
+}
+
 void waitSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
     printf("in waitSemByShipType\n");
     for (unsigned int i = 0; i < 3; i++) {
         if (shipType == parkingSpotGroups[i].type) {
             // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
             printf("vessel is waiting on type semaphore\n");
-            sem_wait(&sharedMemory->shipTypesSemIn[i]);                                                  /// maybe remove "&" ????????????????? here and below
+            sem_wait(&sharedMemory->shipTypesSemIn[i]);  /// maybe remove "&" ????????????????? here and below
             break;
+        }
+    }
+}
+
+void waitSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
+    printf("in waitSemPendingByShipType\n");
+    for (unsigned int i = 0; i < 3; i++) {
+        if (shipType == parkingSpotGroups[i].type) {
+            // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
+            printf("vessel is waiting on type pending semaphore\n");
+            sem_wait(&sharedMemory->shipTypesSemPending[i]);  /// maybe remove "&" ????????????????? here and below
+            break;
+        }
+    }
+}
+
+unsigned int getShipTypeIndex(ParkingSpotGroup* parkingSpotGroups, char shipType) {
+    for (unsigned int i = 0; i < 3; i++) {
+        if (shipType == parkingSpotGroups[i].type) {
+            // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
+            return i;
         }
     }
 }

@@ -95,7 +95,13 @@ void getShipTypeSems(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGr
 
 void postSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
 
+void postSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
+
 void waitSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
+
+void waitSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
+
+unsigned int getShipTypeIndex(ParkingSpotGroup* parkingSpotGroups, char shipType);
 
 sem_t* getShipTypeSem(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType);
 

@@ -171,11 +171,11 @@ int main(int argc, char** argv) {
 
     sleep(1);
     if (fork() == 0)
-        execVessel(parkingSpotTypes[0], 0, 1500, 500, shmIdSharedMemory, logFileName);
+        execVessel(parkingSpotTypes[0], parkingSpotTypes[2], 1500, 500, shmIdSharedMemory, logFileName);
     // sleep(2);
 
     if (fork() == 0)
-        execVessel(parkingSpotTypes[0], 0, 1500, 500, shmIdSharedMemory, logFileName);
+        execVessel(parkingSpotTypes[0], parkingSpotTypes[1], 1500, 500, shmIdSharedMemory, logFileName);
 
     shmdt(sharedMemory);
     wait(NULL);
