@@ -1,0 +1,2 @@
+1. sometimes shipNode->ledgerShipNode is NULL
+2. sometimes parkingSpotGroups are corrupted

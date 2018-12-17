@@ -110,6 +110,7 @@ void waitSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* park
 
 unsigned int getShipTypeIndex(ParkingSpotGroup* parkingSpotGroups, char shipType) {
     for (unsigned int i = 0; i < 3; i++) {
+            printf("parking group type: --------------------------------------------------> |%c|\n", parkingSpotGroups[i].type); //////////////////////// PROBLEM HERE AFTER SOME VESSELS
         if (shipType == parkingSpotGroups[i].type) {
             printf("SHIP TYPE GROUP GET type: --------------------------------------------------> |%c|, capacity: %u\n", parkingSpotGroups[i].type, parkingSpotGroups[i].maxCapacity);
 
@@ -117,6 +118,7 @@ unsigned int getShipTypeIndex(ParkingSpotGroup* parkingSpotGroups, char shipType
             return i;
         }
     }
+	printf("Oops.................. get ship type index failed\n");
     return -1;
 }
 

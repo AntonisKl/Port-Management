@@ -109,6 +109,8 @@ void handleNextShip(SharedMemory* sharedMemory, ShipNode* shipNode, PublicLedger
     if (curState == WaitingToEnter || curState == PendingEnter) {
         handleIncomingShip(sharedMemory, shipNode, parkingSpotGroups, publicLedger, ledgerShipNodes, nextIndex, pendingShipNodeRequests, sizeOfPendingShipNodes, 0, logFileP);
     } else if (curState == WaitingToLeave || curState == PendingLeave) {
+		if (shipNode->ledgerShipNode == NULL)
+			printf("NULLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n");
         fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling outgoing ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
         handleOutGoingShip(sharedMemory, shipNode, parkingSpotGroups, nextIndex, shipNode->ledgerShipNode->parkingSpotGroupOccupied->type == shipNode->shipType);
         fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling outgoing ship with pid %d\n", (unsigned long)time(NULL), shipNode->shipId);
@@ -161,8 +163,8 @@ void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingS
     // ShipNode* curShipNodeRequest = &shipNodesIn[*nextInIndex];
 
     char curShipType = shipNode->shipType;
-
-    printf("PORT-MASTER: handling incoming ship 2, withUpgrade = %d\n", withUpgrade);
+	printf("HEREEEEEEEEEEEEEEEEEEEEEEEEEEE\n");
+    printf("PORT-MASTER: handling incoming ship 2, withUpgrade = %d, type = %c, paking capacity = %u\n", withUpgrade, curShipType, parkingSpotGroups[0].maxCapacity);
     // sem_t *curShipTypeSem = SEM_FAILED, *curShipTypeSemPending = SEM_FAILED;
     // getShipTypeSems(sharedMemory, curShipTypeSem, curShipTypeSemPending, curShipType);
     unsigned int curShipTypeIndex;
@@ -218,7 +220,7 @@ void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingS
         parkingSpotGroups[curShipTypeIndex].curCapacity--;
         // doshifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
         LedgerShipNode* curLedgerShipNode = addLedgerShipNode(publicLedger, shipNode, ledgerShipNodes, parkingSpotGroups);
-        shipNode->ledgerShipNode = curLedgerShipNode;
+
         // printf("PORT MAASTER: handling incoming ship 4 waiting on inOutSem (incoming ship) ============================================================================\n");
         // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
