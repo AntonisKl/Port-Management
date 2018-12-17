@@ -123,7 +123,6 @@ int main(int argc, char** argv) {
     int sizeOfParkingSpotGroups = 3 * sizeof(ParkingSpotGroup);
     int sizeOfShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(ShipNode);
     int sizeOfLedgerShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(LedgerShipNode);
-    // int sizeOfOutShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(ShipNode*);
 
     // ftok to generate unique key
     key_t key = 1;

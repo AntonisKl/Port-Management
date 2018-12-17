@@ -54,6 +54,7 @@ typedef struct ShipNode {
     int shipId;  // this will probably be the pid of the vessel process to be distinct for each ship
     // float stayCost;
     char shipType;
+    char withUpgrade;
     // suseconds_t arrivalTime;
     suseconds_t parkTimePeriod;
     suseconds_t manTimePeriod;

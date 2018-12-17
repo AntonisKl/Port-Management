@@ -230,6 +230,7 @@ int main(int argc, char** argv) {
     // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
     // getShipTypeSems(sharedMemory, shipTypeSemIn, shipTypeSemPending, shipType);
     // printf("shipnode state: %d\n", shipNode->state);
+    fprintf(logFileP, "Timestamp (millis): %lu -> Ship with pid %d and type %c entered the queue as incoming\n", (unsigned long)time(NULL), shipNode->shipId, shipNode->shipType);
     waitSemByShipType(sharedMemory, parkingSpotGroups, shipType);
     //     perror("sem_wait failed\n");
     // }
@@ -240,11 +241,13 @@ int main(int argc, char** argv) {
     // doshifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
     // ShipNode* currShipNode = &sharedMemory->shipNodes[sharedMemory->sizeIn - 1];
-    if (shipNode->state == PendingEnter || shipNode->state == PendingLeave) {
+    if (shipNode->state == PendingEnter /*|| shipNode->state == PendingLeave*/) {
         // printf("hello1\n");
+        fprintf(logFileP, "Timestamp (millis): %lu -> Ship with pid %d and type %c entered the pending queue\n", (unsigned long)time(NULL), shipNode->shipId, shipNode->shipType);
         waitSemPendingByShipType(sharedMemory, parkingSpotGroups, shipType);
     }
     // printf("hello\n");
+    fprintf(logFileP, "Timestamp (millis): %lu -> Ship with pid %d and type %c entered the port\n", (unsigned long)time(NULL), shipNode->shipId, shipNode->shipType);
 
     usleep(manTimePeriodUsecs);  // sleep for manTimePeriod + parkTimePeriod
 
@@ -255,6 +258,7 @@ int main(int argc, char** argv) {
     // printf("HIIIIIIIIIIIIIII\n");
     shipNode->state = Parked;
 
+    fprintf(logFileP, "Timestamp (millis): %lu -> Ship with pid %d and type %c parked in the port\n", (unsigned long)time(NULL), shipNode->shipId, shipNode->shipType);
     usleep(parkTimePeriodUsecs);  // here maybe ask the port-master for the cost ????????????????????????????????
 
     // shipNode->state = WaitingToLeave;
@@ -270,6 +274,7 @@ int main(int argc, char** argv) {
 
     // printf("vessel with pid: %d is waiting to leave\n", getpid());
 
+    fprintf(logFileP, "Timestamp (millis): %lu -> Ship with pid %d and type %c entered the queue as outgoing\n", (unsigned long)time(NULL), shipNode->shipId, shipNode->shipType);
     waitSemByShipType(sharedMemory, parkingSpotGroups, shipNode->shipType);
 
     usleep(manTimePeriodUsecs);
@@ -278,6 +283,7 @@ int main(int argc, char** argv) {
 
     shipNode->state = Completed;
     sem_post(&sharedMemory->inOutSem);
+    fprintf(logFileP, "Timestamp (millis): %lu -> Ship with pid %d and type %c left the port\n", (unsigned long)time(NULL), shipNode->shipId, shipNode->shipType);
 
     // maybe destroy local semaphores ???????
 

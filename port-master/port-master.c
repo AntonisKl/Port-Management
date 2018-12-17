@@ -68,7 +68,7 @@ State getNextPendingShipState(State state) {
         return state;  // this will not happen
 }
 
-LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode, LedgerShipNode* ledgerShipNodes, ParkingSpotGroup* curParkingSpotGroup) {
+LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode, LedgerShipNode* ledgerShipNodes, ParkingSpotGroup* parkingSpotGroups) {
     struct timeval curTime;
     // printf("HI1\n");
 
@@ -83,9 +83,9 @@ LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode
     ledgerShipNodes[nextLedgerNodeIndex].arrivalTime = curTime.tv_usec;
     ledgerShipNodes[nextLedgerNodeIndex].parkTimePeriod = shipNode->parkTimePeriod;
     ledgerShipNodes[nextLedgerNodeIndex].manTimePeriod = shipNode->manTimePeriod;
-    ledgerShipNodes[nextLedgerNodeIndex].parkingSpotGroupOccupied = curParkingSpotGroup;
+    ledgerShipNodes[nextLedgerNodeIndex].parkingSpotGroupOccupied = &parkingSpotGroups[getShipTypeIndex(parkingSpotGroups, shipNode->shipType)];
     // improve cost mechanism
-    ledgerShipNodes[nextLedgerNodeIndex].stayCost = ((shipNode->parkTimePeriod / 1000) / 30) * curParkingSpotGroup->costPer30Min;  // handle minutes as milliseconds
+    ledgerShipNodes[nextLedgerNodeIndex].stayCost = ((shipNode->parkTimePeriod / 1000) / 30) * parkingSpotGroups[getShipTypeIndex(parkingSpotGroups, shipNode->shipType)].costPer30Min;  // handle minutes as milliseconds
     ledgerShipNodes[nextLedgerNodeIndex].state = shipNode->state;
 
     shipNode->ledgerShipNode = &ledgerShipNodes[nextLedgerNodeIndex];  /// point to ledger node
@@ -105,6 +105,7 @@ void handleNextShip(SharedMemory* sharedMemory, ShipNode* shipNode, PublicLedger
     // printf("PORT-MASTER: HELLLO\n");
     printf("PORT-MASTER: handling ship with pid: %d and state: %d and type: %c\n", shipNode->shipId, shipNode->state, shipNode->shipType);
     State curState = shipNode->state;
+    printf("got state: %d\n", shipNode->state);
     if (curState == WaitingToEnter || curState == PendingEnter) {
         handleIncomingShip(sharedMemory, shipNode, parkingSpotGroups, publicLedger, ledgerShipNodes, nextIndex, pendingShipNodeRequests, sizeOfPendingShipNodes, 0, logFileP);
     } else if (curState == WaitingToLeave || curState == PendingLeave) {
@@ -216,7 +217,8 @@ void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingS
         }
         parkingSpotGroups[curShipTypeIndex].curCapacity--;
         // doshifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
-        LedgerShipNode* curLedgerShipNode = addLedgerShipNode(publicLedger, shipNode, ledgerShipNodes, &parkingSpotGroups[curShipTypeIndex]);
+        LedgerShipNode* curLedgerShipNode = addLedgerShipNode(publicLedger, shipNode, ledgerShipNodes, parkingSpotGroups);
+        shipNode->ledgerShipNode = curLedgerShipNode;
         // printf("PORT MAASTER: handling incoming ship 4 waiting on inOutSem (incoming ship) ============================================================================\n");
         // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
@@ -241,13 +243,12 @@ void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingS
         }
         (*nextIndex)++;
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //  else if (parkingSpotGroups[curShipTypeIndex].curCapacity == 0 && curState == PendingEnter) {                                          //
     //     usleep(1000000); // sleep for 1 second/////////////////////////////////////////////////////////// MAYBE NEEDED //////////////////////
     // }                                                                                                                                      //
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
 }
 
 // void handleOutGoingShip(ShipNode** shipNodesOut, unsigned int* nextOutIndex, ParkingSpotGroup* parkingSpotGroups[3], sem_t* inOutSem, sem_t* shipTypesSemOut[3]) {
@@ -310,12 +311,24 @@ int main(int argc, char** argv) {
     // sizeOfPendingShipNodes: used for insertion
     FILE* logFileP = fopen(logFileName, "a");
 
+    char didSomething = 1;
     while (1) {
         // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
 
         printf("PORT MAASTER waiting for vessels\n");
-        fprintf(logFileP, "Timestamp (millis): %lu -> Port master is waiting for vessels\n", (unsigned long)time(NULL));
+        if (didSomething == 1) {
+            fprintf(logFileP, "Timestamp (millis): %lu -> Port master is waiting for vessels\n", (unsigned long)time(NULL));
+            didSomething = 0;
+        }
+        if (fclose(logFileP) == EOF) {
+            perror("fclose failed");
+        }
         sem_wait(&sharedMemory->portMasterWakeSem);
+
+        if ((logFileP = fopen(logFileName, "a")) == NULL) {
+            perror("fopen failed");
+        }
+
         printf("PORT-MASTER woke up\n");
 
         // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
@@ -328,7 +341,6 @@ int main(int argc, char** argv) {
         printf("starting PORT-MASTER while loop, sizeIn = %u, nextIndex = %u, sizeOfPendingShipNodes = %u, nextPendingIndex = %u\n", sizeIn, nextInIndex, sizeOfPendingShipNodes, nextPendingIndex);
         while (nextInIndex < sizeIn || nextPendingIndex < sizeOfPendingShipNodes /*|| nextOutIndex < (*sizeOut)*/) {
             // FIRST HANDLE PENDING REQUESTS <------------------ to be implemented
-            logFileP = fopen(logFileName, "a");
 
             // handleIncomingShip(sharedMemory, shipNodesIn, parkingSpotGroups, &sizeOfPendingShipNodes,
             //                    shipTypesSemIn, inOutSem, &nextInIndex, pendingShipNodeRequests);
@@ -361,11 +373,12 @@ int main(int argc, char** argv) {
                 }
             }
 
-            if (prevNextIndex == nextInIndex && prevNextPendingIndex == nextPendingIndex) {
-                fclose(logFileP);
+            didSomething = 1;
 
+            if (prevNextIndex == nextInIndex && prevNextPendingIndex == nextPendingIndex) {
                 break;
             }
+
             // else if (curState == PendingEnter || curState == PendingLeave) {
             //     printf("2nd\n");
             //     handleNextShip(sharedMemory, pendingShipNodeRequests[nextPendingIndex], publicLedger, ledgerShipNodes, parkingSpotGroups, NULL, &nextPendingIndex, NULL);
@@ -386,7 +399,6 @@ int main(int argc, char** argv) {
 
             // nextShipNodeRequestIndex++;
             // nextInIndex++;
-            fclose(logFileP);
         }
     }
 

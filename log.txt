@@ -1,19 +1,191 @@
-Timestamp (millis): 1544995054 -> Port master starts handling incoming ship with pid 19906
-Timestamp (millis): 1544995054 -> Port master finished handling incoming ship with pid 19906
-Timestamp (millis): 1544995054 -> Port master starts handling incoming ship with pid 19907
-Timestamp (millis): 1544995054 -> Port master starts handling incoming ship with upgrade with pid 19907
-Timestamp (millis): 1544995054 -> Port master finished handling incoming ship with upgrade with pid 19907
-Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with pid 19911
-Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with upgrade with pid 19911
-Timestamp (millis): 1544995055 -> Port master finished handling incoming ship with upgrade with pid 19911
-Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with pid 19913
-Timestamp (millis): 1544995055 -> Port master starts handling incoming ship with upgrade with pid 19913
-Timestamp (millis): 1544995055 -> Port master finished handling incoming ship with upgrade with pid 19913
-Timestamp (millis): 1544995056 -> Port master starts handling outgoing ship with pid 19906
-Timestamp (millis): 1544995056 -> Port master finished handling outgoing ship with pid 19906
-Timestamp (millis): 1544995056 -> Port master starts handling outgoing ship with pid 19907
-Timestamp (millis): 1544995057 -> Port master finished handling outgoing ship with pid 19907
-Timestamp (millis): 1544995057 -> Port master starts handling outgoing ship with pid 19911
-Timestamp (millis): 1544995057 -> Port master finished handling outgoing ship with pid 19911
-Timestamp (millis): 1544995057 -> Port master starts handling outgoing ship with pid 19913
-Timestamp (millis): 1544995058 -> Port master finished handling outgoing ship with pid 19913
+Timestamp (millis): 1545067529 -> Port master is waiting for vessels
+Timestamp (millis): 1545067530 -> Port master starts handling incoming ship with pid 11407
+Timestamp (millis): 1545067530 -> Port master finished handling incoming ship with pid 11407
+Timestamp (millis): 1545067530 -> Port master is waiting for vessels
+Timestamp (millis): 1545067530 -> Port master starts handling incoming ship with pid 11410
+Timestamp (millis): 1545067530 -> Port master finished handling incoming ship with pid 11410
+Timestamp (millis): 1545067530 -> Port master is waiting for vessels
+Timestamp (millis): 1545067530 -> Ship with pid 11407 and type L entered the queue as incoming
+Timestamp (millis): 1545067530 -> Ship with pid 11407 and type L entered the port
+Timestamp (millis): 1545067530 -> Ship with pid 11407 and type L parked in the port
+Timestamp (millis): 1545067532 -> Ship with pid 11407 and type L entered the queue as outgoing
+Timestamp (millis): 1545067533 -> Ship with pid 11407 and type L left the port
+Timestamp (millis): 1545067530 -> Port master starts handling incoming ship with pid 11411
+Timestamp (millis): 1545067531 -> Port master finished handling incoming ship with pid 11411
+Timestamp (millis): 1545067531 -> Port master starts handling incoming ship with pid 11412
+Timestamp (millis): 1545067531 -> Port master finished handling incoming ship with pid 11412
+Timestamp (millis): 1545067531 -> Port master starts handling incoming ship with pid 11413
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11413
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11414
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11414
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11415
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11415
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11416
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11416
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11417
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11417
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11418
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11418
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11419
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11419
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11420
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11420
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11421
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11421
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11422
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11422
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11423
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11423
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11424
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11424
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11428
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11428
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11434
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11434
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11435
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11435
+Timestamp (millis): 1545067532 -> Port master starts handling incoming ship with pid 11436
+Timestamp (millis): 1545067532 -> Port master finished handling incoming ship with pid 11436
+Timestamp (millis): 1545067532 -> Port master starts handling outgoing ship with pid 11407
+Timestamp (millis): 1545067533 -> Port master finished handling outgoing ship with pid 11407
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11437
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11437
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11438
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11438
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11439
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11439
+Timestamp (millis): 1545067533 -> Port master stTimestamp (millis): 1545067530 -> Ship with pid 11410 and type L entered the queue as incoming
+Timestamp (millis): 1545067530 -> Ship with pid 11410 and type L entered the port
+Timestamp (millis): 1545067531 -> Ship with pid 11410 and type L parked in the port
+Timestamp (millis): 1545067532 -> Ship with pid 11410 and type L entered the queue as outgoing
+Timestamp (millis): 1545067533 -> Ship with pid 11410 and type L left the port
+Timestamp (millis): 1545067530 -> Ship with pid 11411 and type L entered the queue as incoming
+Timestamp (millis): 1545067531 -> Ship with pid 11411 and type L entered the port
+Timestamp (millis): 1545067531 -> Ship with pid 11411 and type L parked in the port
+Timestamp (millis): 1545067533 -> Ship with pid 11411 and type L entered the queue as outgoing
+Timestamp (millis): 1545067534 -> Ship with pid 11411 and type L left the port
+Timestamp (millis): 1545067530 -> Ship with pid 11412 and type L entered the queue as incoming
+Timestamp (millis): 1545067531 -> Ship with pid 11412 and type L entered the port
+Timestamp (millis): 1545067532 -> Ship with pid 11412 and type L parked in the port
+Timestamp (millis): 1545067533 -> Ship with pid 11412 and type L entered the queue as outgoing
+Timestamp (millis): 1545067534 -> Ship with pid 11412 and type L left the port
+Timestamp (millis): 1545067530 -> Ship with pid 11413 and type L entered the queue as incoming
+Timestamp (millis): 1545067532 -> Ship with pid 11413 and type L entered the port
+Timestamp (millis): 1545067532 -> Ship with pid 11413 and type L parked in the port
+Timestamp (millis): 1545067534 -> Ship with pid 11413 and type L entered the queue as outgoing
+Timestamp (millis): 1545067535 -> Ship with pid 11413 and type L left the port
+arts handling incoming ship with pid 11440
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11440
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11441
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11441
+Timestamp (millis): 1545067533 -> Port master starts handling outgoing ship with pid 11410
+Timestamp (millis): 1545067533 -> Port master finished handling outgoing ship with pid 11410
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11442
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11442
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11443
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11443
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11444
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11444
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11445
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11445
+Timestamp (millis): 1545067533 -> Port master starts handling incoming ship with pid 11446
+Timestamp (millis): 1545067533 -> Port master finished handling incoming ship with pid 11446
+Timestamp (millis): 1545067533 -> Port master starts handling outgoing ship with pid 11411
+Timestamp (millis): 1545067534 -> Port master finished handling outgoing ship with pid 11411
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11447
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11447
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11448
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11448
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11449
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11449
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11450
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11450
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11451
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11451
+Timestamp (millis): 1545067534 -> Port master starts handling outgoing ship with pid 11412
+Timestamp (millis): 1545067534 -> Port master finished handling outgoing ship with pid 11412
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11452
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11452
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11453
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11453
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11454
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11454
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11456
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11456
+Timestamp (millis): 1545067534 -> Port master starts handling incoming ship with pid 11457
+Timestamp (millis): 1545067534 -> Port master finished handling incoming ship with pid 11457
+Timestamp (millis): 1545067534 -> Port master starts handling outgoing ship with pid 11413
+Timestamp (millis): 1545067535 -> Port master finished handling outgoing ship with pid 11413
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11458
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11458
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11459
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11459
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11460
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11460
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11461
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11461
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11462
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11462
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11463
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11463
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11464
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11464
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11465
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11465
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11466
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11466
+Timestamp (millis): 1545067535 -> Port master starts handling incoming ship with pid 11467
+Timestamp (millis): 1545067535 -> Port master finished handling incoming ship with pid 11467
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
+Timestamp (millis): 1545067535 -> Port master is waiting for vessels
