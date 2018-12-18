@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    long long unsigned int waitingTime = 0;
+    unsigned long long int waitingTime = 0;
     long timeStart, timeStop;  // used for calculating waiting time
 
     FILE* logFileP;

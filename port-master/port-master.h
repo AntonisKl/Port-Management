@@ -6,9 +6,6 @@
 // handles flags and arguments
 void handleFlags(int argc, char** argv, int* shmId, char** logFileName);
 
-// according to current vessel's state, get the right pending state
-State getNextPendingVesselState(State state);
-
 // adds a vessel to the public ledger
 void addLedgerVesselNode(SharedUtils* sharedUtils, VesselNode* vesselNode, LedgerVesselNode* ledgerVesselNodes, ParkingSpotGroup* parkingSpotGroups, char withUpgrade);
 

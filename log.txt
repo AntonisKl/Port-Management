@@ -1,1 +1,859 @@
-Timestamp (millis): 1545150353 -> Port master is waiting for vessels
+Timestamp (millis): 1545166125 -> Port master is waiting for vessels
+Timestamp (millis): 1545166126 -> Port master starts handling incoming vessel with pid 3395
+Timestamp (millis): 1545166126 -> Port master finished handling incoming vessel with pid 3395
+Timestamp (millis): 1545166126 -> Port master is waiting for vessels
+Timestamp (millis): 1545166126 -> Port master starts handling incoming vessel with pid 3396
+Timestamp (millis): 1545166127 -> Port master finished handling incoming vessel with pid 3396
+Timestamp (millis): 1545166127 -> Port master starts handling incoming vessel with pid 3398
+Timestamp (millis): 1545166127 -> Port master finished handling incoming vessel with pid 3398
+Timestamp (millis): 1545166127 -> Port master starts handling incoming vessel with pid 3399
+Timestamp (millis): 1545166127 -> Port master finished handling incoming vessel with pid 3399
+Timestamp (millis): 1545166127 -> Port master starts handling incoming vessel with pid 3400
+Timestamp (millis): 1545166127 -> Port master finished handling incoming vessel with pid 3400
+Timestamp (millis): 1545166127 -> Port master starts handling incoming vessel with pid 3401
+Timestamp (millis): 1545166127 -> Port master finished handling incoming vessel with pid 3401
+Timestamp (millis): 1545166127 -> Port master starts handling outgoing vessel with pid 3396
+Timestamp (millis): 1545166128 -> Port master finished handling outgoing vessel with pid 3396
+Timestamp (millis): 1545166126 -> Vessel with pid 3396 and type M entered the queue as incoming
+Timestamp (millis): 1545166127 -> Vessel with pid 3396 and type M entered the port
+Timestamp (millis): 1545166127 -> Vessel with pid 3396 and type M parked in the port
+Timestamp (millis): 1545166128 -> Vessel with pid 3396 and type M left the port
+Timestamp (millis): 1545166128 -> Port master starts handling incoming vessel with pid 3402
+Timestamp (millis): 1545166128 -> Port master finished handling incoming vessel with pid 3402
+Timestamp (millis): 1545166128 -> Port master starts handling outgoing vessel with pid 3395
+Timestamp (millis): 1545166129 -> Port master finished handling outgoing vessel with pid 3395
+Timestamp (millis): 1545166126 -> Vessel with pid 3395 and type S entered the queue as incoming
+Timestamp (millis): 1545166126 -> Vessel with pid 3395 and type S entered the port
+Timestamp (millis): 1545166127 -> Vessel with pid 3395 and type S parked in the port
+Timestamp (millis): 1545166129 -> Vessel with pid 3395 and type S left the port
+Timestamp (millis): 1545166129 -> Port master starts handling incoming vessel with pid 3403
+Timestamp (millis): 1545166129 -> Port master finished handling incoming vessel with pid 3403
+Timestamp (millis): 1545166129 -> Port master starts handling outgoing vessel with pid 3398
+Timestamp (millis): 1545166129 -> Port master finished handling outgoing vessel with pid 3398
+Timestamp (millis): 1545166126 -> Vessel with pid 3398 and type M entered the queue as incoming
+Timestamp (millis): 1545166127 -> Vessel with pid 3398 and type M entered the port
+Timestamp (millis): 1545166127 -> Vessel with pid 3398 and type M parked in the port
+Timestamp (millis): 1545166129 -> Vessel with pid 3398 and type M left the port
+Timestamp (millis): 1545166129 -> Port master starts handling incoming vessel with pid 3404
+Timestamp (millis): 1545166129 -> Port master finished handling incoming vessel with pid 3404
+Timestamp (millis): 1545166129 -> Port master starts handling incoming vessel with pid 3405
+Timestamp (millis): 1545166129 -> Port master finished handling incoming vessel with pid 3405
+Timestamp (millis): 1545166129 -> Port master starts handling incoming vessel with pid 3409
+Timestamp (millis): 1545166129 -> Port master finished handling incoming vessel with pid 3409
+Timestamp (millis): 1545166129 -> Port master starts handling incoming vessel with pid 3410
+Timestamp (millis): 1545166129 -> Port master finished handling incoming vessel with pid 3410
+Timestamp (millis): 1545166129 -> Port master starts handling incoming vessel with pid 3411
+Timestamp (millis): 1545166130 -> Port master finished handling incoming vessel with pid 3411
+Timestamp (millis): 1545166130 -> Port master starts handling outgoing vessel with pid 3399
+Timestamp (millis): 1545166130 -> Port master finished handling outgoing vessel with pid 3399
+Timestamp (millis): 1545166126 -> Vessel with pid 3399 and type L entered the queue as incoming
+Timestamp (millis): 1545166127 -> Vessel with pid 3399 and type L entered the port
+Timestamp (millis): 1545166127 -> Vessel with pid 3399 and type L parked in the port
+Timestamp (millis): 1545166130 -> Vessel with pid 3399 and type L left the port
+Timestamp (millis): 1545166130 -> Port master starts handling incoming vessel with pid 3412
+Timestamp (millis): 1545166130 -> Port master finished handling incoming vessel with pid 3412
+Timestamp (millis): 1545166130 -> Port master starts handling incoming vessel with pid 3413
+Timestamp (millis): 1545166131 -> Port master finished handling incoming vessel with pid 3413
+Timestamp (millis): 1545166131 -> Port master starts handling incoming vessel with pid 3414
+Timestamp (millis): 1545166131 -> Port master finished handling incoming vessel with pid 3414
+Timestamp (millis): 1545166131 -> Port master starts handling incoming vessel with pid 3415
+Timestamp (millis): 1545166131 -> Port master finished handling incoming vessel with pid 3415
+Timestamp (millis): 1545166131 -> Port master starts handling outgoing vessel with pid 3400
+Timestamp (millis): 1545166132 -> Port master finished handling outgoing vessel with pid 3400
+Timestamp (millis): 1545166127 -> Vessel with pid 3400 and type S entered the queue as incoming
+Timestamp (millis): 1545166127 -> Vessel with pid 3400 and type S entered the port
+Timestamp (millis): 1545166127 -> Vessel with pid 3400 and type S parked in the port
+Timestamp (millis): 1545166132 -> Vessel with pid 3400 and type S left the port
+Timestamp (millis): 1545166132 -> Port master starts handling incoming vessel with pid 3416
+Timestamp (millis): 1545166132 -> Port master finished handling incoming vessel with pid 3416
+Timestamp (millis): 1545166132 -> Port master starts handling incoming vessel with pid 3417
+Timestamp (millis): 1545166133 -> Port master finished handling incoming vessel with pid 3417
+Timestamp (millis): 1545166133 -> Port master starts handling incoming vessel with pid 3418
+Timestamp (millis): 1545166133 -> Port master finished handling incoming vessel with pid 3418
+Timestamp (millis): 1545166133 -> Port master starts handling outgoing vessel with pid 3401
+Timestamp (millis): 1545166133 -> Port master finished handling outgoing vessel with pid 3401
+Timestamp (millis): 1545166127 -> Vessel with pid 3401 and type M entered the queue as incoming
+Timestamp (millis): 1545166127 -> Vessel with pid 3401 and type M entered the port
+Timestamp (millis): 1545166128 -> Vessel with pid 3401 and type M parked in the port
+Timestamp (millis): 1545166133 -> Vessel with pid 3401 and type M left the port
+Timestamp (millis): 1545166133 -> Port master starts handling outgoing vessel with pid 3402
+Timestamp (millis): 1545166134 -> Port master finished handling outgoing vessel with pid 3402
+Timestamp (millis): 1545166127 -> Vessel with pid 3402 and type M entered the queue as incoming
+Timestamp (millis): 1545166128 -> Vessel with pid 3402 and type M entered the port
+Timestamp (millis): 1545166128 -> Vessel with pid 3402 and type M parked in the port
+Timestamp (millis): 1545166134 -> Vessel with pid 3402 and type M left the port
+Timestamp (millis): 1545166134 -> Port master starts handling incoming vessel with pid 3419
+Timestamp (millis): 1545166134 -> Port master finished handling incoming vessel with pid 3419
+Timestamp (millis): 1545166134 -> Port master starts handling incoming vessel with pid 3420
+Timestamp (millis): 1545166134 -> Port master finished handling incoming vessel with pid 3420
+Timestamp (millis): 1545166134 -> Port master starts handling incoming vessel with pid 3421
+Timestamp (millis): 1545166134 -> Port master finished handling incoming vessel with pid 3421
+Timestamp (millis): 1545166134 -> Port master starts handling incoming vessel with pid 3422
+Timestamp (millis): 1545166135 -> Port master finished handling incoming vessel with pid 3422
+Timestamp (millis): 1545166135 -> Port master starts handling incoming vessel with pid 3423
+Timestamp (millis): 1545166135 -> Port master finished handling incoming vessel with pid 3423
+Timestamp (millis): 1545166135 -> Port master starts handling incoming vessel with pid 3424
+Timestamp (millis): 1545166135 -> Port master finished handling incoming vessel with pid 3424
+Timestamp (millis): 1545166135 -> Port master starts handling incoming vessel with pid 3425
+Timestamp (millis): 1545166136 -> Port master finished handling incoming vessel with pid 3425
+Timestamp (millis): 1545166136 -> Port master starts handling outgoing vessel with pid 3403
+Timestamp (millis): 1545166136 -> Port master finished handling outgoing vessel with pid 3403
+Timestamp (millis): 1545166127 -> Vessel with pid 3403 and type M entered the queue as incoming
+Timestamp (millis): 1545166129 -> Vessel with pid 3403 and type M entered the port
+Timestamp (millis): 1545166129 -> Vessel with pid 3403 and type M parked in the port
+Timestamp (millis): 1545166136 -> Vessel with pid 3403 and type M left the port
+Timestamp (millis): 1545166136 -> Port master starts handling incoming vessel with pid 3426
+Timestamp (millis): 1545166136 -> Port master finished handling incoming vessel with pid 3426
+Timestamp (millis): 1545166136 -> Port master starts handling incoming vessel with pid 3427
+Timestamp (millis): 1545166136 -> Port master finished handling incoming vessel with pid 3427
+Timestamp (millis): 1545166136 -> Port master starts handling incoming vessel with pid 3428
+Timestamp (millis): 1545166136 -> Port master finished handling incoming vessel with pid 3428
+Timestamp (millis): 1545166136 -> Port master starts handling incoming vessel with pid 3429
+Timestamp (millis): 1545166137 -> Port master finished handling incoming vessel with pid 3429
+Timestamp (millis): 1545166137 -> Port master starts handling incoming vessel with pid 3430
+Timestamp (millis): 1545166137 -> Port master finished handling incoming vessel with pid 3430
+Timestamp (millis): 1545166137 -> Port master starts handling incoming vessel with pid 3431
+Timestamp (millis): 1545166137 -> Port master finished handling incoming vessel with pid 3431
+Timestamp (millis): 1545166137 -> Port master starts handling incoming vessel with pid 3432
+Timestamp (millis): 1545166138 -> Port master finished handling incoming vessel with pid 3432
+Timestamp (millis): 1545166138 -> Port master starts handling outgoing vessel with pid 3404
+Timestamp (millis): 1545166139 -> Port master finished handling outgoing vessel with pid 3404
+Timestamp (millis): 1545166127 -> Vessel with pid 3404 and type M entered the queue as incoming
+Timestamp (millis): 1545166129 -> Vessel with pid 3404 and type M entered the port
+Timestamp (millis): 1545166129 -> Vessel with pid 3404 and type M parked in the port
+Timestamp (millis): 1545166139 -> Vessel with pid 3404 and type M left the port
+Timestamp (millis): 1545166139 -> Port master starts handling incoming vessel with pid 3433
+Timestamp (millis): 1545166139 -> Port master finished handling incoming vessel with pid 3433
+Timestamp (millis): 1545166139 -> Port master starts handling incoming vessel with pid 3434
+Timestamp (millis): 1545166139 -> Port master finished handling incoming vessel with pid 3434
+Timestamp (millis): 1545166139 -> Port master starts handling incoming vessel with pid 3435
+Timestamp (millis): 1545166139 -> Port master finished handling incoming vessel with pid 3435
+Timestamp (millis): 1545166139 -> Port master starts handling outgoing vessel with pid 3409
+Timestamp (millis): 1545166139 -> Port master finished handling outgoing vessel with pid 3409
+Timestamp (millis): 1545166127 -> Vessel with pid 3409 and type L entered the queue as incoming
+Timestamp (millis): 1545166129 -> Vessel with pid 3409 and type L entered the port
+Timestamp (millis): 1545166129 -> Vessel with pid 3409 and type L parked in the port
+Timestamp (millis): 1545166139 -> Vessel with pid 3409 and type L left the port
+Timestamp (millis): 1545166139 -> Port master starts handling outgoing vessel with pid 3405
+Timestamp (millis): 1545166139 -> Port master finished handling outgoing vessel with pid 3405
+Timestamp (millis): 1545166127 -> Vessel with pid 3405 and type L entered the queue as incoming
+Timestamp (millis): 1545166129 -> Vessel with pid 3405 and type L entered the port
+Timestamp (millis): 1545166129 -> Vessel with pid 3405 and type L parked in the port
+Timestamp (millis): 1545166139 -> Vessel with pid 3405 and type L left the port
+Timestamp (millis): 1545166139 -> Port master starts handling incoming vessel with pid 3436
+Timestamp (millis): 1545166139 -> Port master finished handling incoming vessel with pid 3436
+Timestamp (millis): 1545166139 -> Port master starts handling incoming vessel with pid 3437
+Timestamp (millis): 1545166140 -> Port master finished handling incoming vessel with pid 3437
+Timestamp (millis): 1545166140 -> Port master starts handling outgoing vessel with pid 3410
+Timestamp (millis): 1545166140 -> Port master finished handling outgoing vessel with pid 3410
+Timestamp (millis): 1545166127 -> Vessel with pid 3410 and type S entered the queue as incoming
+Timestamp (millis): 1545166129 -> Vessel with pid 3410 and type S entered the port
+Timestamp (millis): 1545166130 -> Vessel with pid 3410 and type S parked in the port
+Timestamp (millis): 1545166140 -> Vessel with pid 3410 and type S left the port
+Timestamp (millis): 1545166140 -> Port master starts handling incoming vessel with pid 3438
+Timestamp (millis): 1545166140 -> Port master finished handling incoming vessel with pid 3438
+Timestamp (millis): 1545166140 -> Port master starts handling incoming vessel with pid 3439
+Timestamp (millis): 1545166141 -> Port master finished handling incoming vessel with pid 3439
+Timestamp (millis): 1545166141 -> Port master starts handling outgoing vessel with pid 3411
+Timestamp (millis): 1545166141 -> Port master finished handling outgoing vessel with pid 3411
+Timestamp (millis): 1545166127 -> Vessel with pid 3411 and type S entered the queue as incoming
+Timestamp (millis): 1545166130 -> Vessel with pid 3411 and type S entered the port
+Timestamp (millis): 1545166130 -> Vessel with pid 3411 and type S parked in the port
+Timestamp (millis): 1545166141 -> Vessel with pid 3411 and type S left the port
+Timestamp (millis): 1545166141 -> Port master starts handling incoming vessel with pid 3440
+Timestamp (millis): 1545166141 -> Port master finished handling incoming vessel with pid 3440
+Timestamp (millis): 1545166141 -> Port master starts handling incoming vessel with pid 3441
+Timestamp (millis): 1545166142 -> Port master finished handling incoming vessel with pid 3441
+Timestamp (millis): 1545166142 -> Port master starts handling incoming vessel with pid 3442
+Timestamp (millis): 1545166142 -> Port master finished handling incoming vessel with pid 3442
+Timestamp (millis): 1545166142 -> Port master starts handling incoming vessel with pid 3443
+Timestamp (millis): 1545166142 -> Port master finished handling incoming vessel with pid 3443
+Timestamp (millis): 1545166142 -> Port master starts handling incoming vessel with pid 3444
+Timestamp (millis): 1545166142 -> Port master finished handling incoming vessel with pid 3444
+Timestamp (millis): 1545166142 -> Port master starts handling incoming vessel with pid 3445
+Timestamp (millis): 1545166143 -> Port master finished handling incoming vessel with pid 3445
+Timestamp (millis): 1545166143 -> Port master starts handling incoming vessel with pid 3446
+Timestamp (millis): 1545166143 -> Port master finished handling incoming vessel with pid 3446
+Timestamp (millis): 1545166143 -> Port master starts handling incoming vessel with pid 3447
+Timestamp (millis): 1545166144 -> Port master finished handling incoming vessel with pid 3447
+Timestamp (millis): 1545166144 -> Port master starts handling outgoing vessel with pid 3412
+Timestamp (millis): 1545166144 -> Port master finished handling outgoing vessel with pid 3412
+Timestamp (millis): 1545166127 -> Vessel with pid 3412 and type M entered the queue as incoming
+Timestamp (millis): 1545166130 -> Vessel with pid 3412 and type M entered the port
+Timestamp (millis): 1545166131 -> Vessel with pid 3412 and type M parked in the port
+Timestamp (millis): 1545166144 -> Vessel with pid 3412 and type M left the port
+Timestamp (millis): 1545166144 -> Port master starts handling incoming vessel with pid 3448
+Timestamp (millis): 1545166144 -> Port master finished handling incoming vessel with pid 3448
+Timestamp (millis): 1545166144 -> Port master starts handling incoming vessel with pid 3449
+Timestamp (millis): 1545166144 -> Port master finished handling incoming vessel with pid 3449
+Timestamp (millis): 1545166145 -> Port master starts handling incoming vessel with pid 3450
+Timestamp (millis): 1545166145 -> Port master finished handling incoming vessel with pid 3450
+Timestamp (millis): 1545166145 -> Port master starts handling incoming vessel with pid 3451
+Timestamp (millis): 1545166145 -> Port master finished handling incoming vessel with pid 3451
+Timestamp (millis): 1545166146 -> Port master starts handling incoming vessel with pid 3452
+Timestamp (millis): 1545166146 -> Port master finished handling incoming vessel with pid 3452
+Timestamp (millis): 1545166146 -> Port master starts handling outgoing vessel with pid 3413
+Timestamp (millis): 1545166147 -> Port master finished handling outgoing vessel with pid 3413
+Timestamp (millis): 1545166128 -> Vessel with pid 3413 and type M entered the queue as incoming
+Timestamp (millis): 1545166131 -> Vessel with pid 3413 and type M entered the port
+Timestamp (millis): 1545166131 -> Vessel with pid 3413 and type M parked in the port
+Timestamp (millis): 1545166147 -> Vessel with pid 3413 and type M left the port
+Timestamp (millis): 1545166147 -> Port master starts handling incoming vessel with pid 3453
+Timestamp (millis): 1545166147 -> Port master finished handling incoming vessel with pid 3453
+Timestamp (millis): 1545166148 -> Port master starts handling incoming vessel with pid 3454
+Timestamp (millis): 1545166148 -> Port master finished handling incoming vessel with pid 3454
+Timestamp (millis): 1545166148 -> Port master starts handling incoming vessel with pid 3455
+Timestamp (millis): 1545166148 -> Port master finished handling incoming vessel with pid 3455
+Timestamp (millis): 1545166149 -> Port master starts handling outgoing vessel with pid 3415
+Timestamp (millis): 1545166149 -> Port master finished handling outgoing vessel with pid 3415
+Timestamp (millis): 1545166128 -> Vessel with pid 3415 and type M entered the queue as incoming
+Timestamp (millis): 1545166131 -> Vessel with pid 3415 and type M entered the port
+Timestamp (millis): 1545166132 -> Vessel with pid 3415 and type M parked in the port
+Timestamp (millis): 1545166149 -> Vessel with pid 3415 and type M left the port
+Timestamp (millis): 1545166149 -> Port master starts handling incoming vessel with pid 3456
+Timestamp (millis): 1545166149 -> Port master finished handling incoming vessel with pid 3456
+Timestamp (millis): 1545166150 -> Port master starts handling outgoing vessel with pid 3414
+Timestamp (millis): 1545166150 -> Port master finished handling outgoing vessel with pid 3414
+Timestamp (millis): 1545166128 -> Vessel with pid 3414 and type S entered the queue as incoming
+Timestamp (millis): 1545166131 -> Vessel with pid 3414 and type S entered the port
+Timestamp (millis): 1545166131 -> Vessel with pid 3414 and type S parked in the port
+Timestamp (millis): 1545166150 -> Vessel with pid 3414 and type S left the port
+Timestamp (millis): 1545166151 -> Port master starts handling incoming vessel with pid 3457
+Timestamp (millis): 1545166151 -> Port master finished handling incoming vessel with pid 3457
+Timestamp (millis): 1545166151 -> Port master starts handling incoming vessel with pid 3458
+Timestamp (millis): 1545166151 -> Port master finished handling incoming vessel with pid 3458
+Timestamp (millis): 1545166152 -> Port master starts handling incoming vessel with pid 3459
+Timestamp (millis): 1545166152 -> Port master finished handling incoming vessel with pid 3459
+Timestamp (millis): 1545166152 -> Port master starts handling incoming vessel with pid 3460
+Timestamp (millis): 1545166152 -> Port master finished handling incoming vessel with pid 3460
+Timestamp (millis): 1545166153 -> Port master starts handling incoming vessel with pid 3461
+Timestamp (millis): 1545166153 -> Port master finished handling incoming vessel with pid 3461
+Timestamp (millis): 1545166153 -> Port master starts handling incoming vessel with pid 3462
+Timestamp (millis): 1545166153 -> Port master finished handling incoming vessel with pid 3462
+Timestamp (millis): 1545166154 -> Port master starts handling incoming vessel with pid 3463
+Timestamp (millis): 1545166154 -> Port master finished handling incoming vessel with pid 3463
+Timestamp (millis): 1545166154 -> Port master starts handling incoming vessel with pid 3464
+Timestamp (millis): 1545166154 -> Port master finished handling incoming vessel with pid 3464
+Timestamp (millis): 1545166155 -> Port master starts handling incoming vessel with pid 3465
+Timestamp (millis): 1545166155 -> Port master finished handling incoming vessel with pid 3465
+Timestamp (millis): 1545166155 -> Port master starts handling incoming vessel with pid 3466
+Timestamp (millis): 1545166155 -> Port master finished handling incoming vessel with pid 3466
+Timestamp (millis): 1545166156 -> Port master starts handling outgoing vessel with pid 3417
+Timestamp (millis): 1545166156 -> Port master finished handling outgoing vessel with pid 3417
+Timestamp (millis): 1545166128 -> Vessel with pid 3417 and type M entered the queue as incoming
+Timestamp (millis): 1545166133 -> Vessel with pid 3417 and type M entered the port
+Timestamp (millis): 1545166133 -> Vessel with pid 3417 and type M parked in the port
+Timestamp (millis): 1545166156 -> Vessel with pid 3417 and type M left the port
+Timestamp (millis): 1545166156 -> Port master starts handling incoming vessel with pid 3467
+Timestamp (millis): 1545166156 -> Port master finished handling incoming vessel with pid 3467
+Timestamp (millis): 1545166157 -> Port master starts handling outgoing vessel with pid 3416
+Timestamp (millis): 1545166157 -> Port master finished handling outgoing vessel with pid 3416
+Timestamp (millis): 1545166128 -> Vessel with pid 3416 and type L entered the queue as incoming
+Timestamp (millis): 1545166132 -> Vessel with pid 3416 and type L entered the port
+Timestamp (millis): 1545166133 -> Vessel with pid 3416 and type L parked in the port
+Timestamp (millis): 1545166157 -> Vessel with pid 3416 and type L left the port
+Timestamp (millis): 1545166157 -> Port master starts handling pending incoming vessel with pid 3449
+Timestamp (millis): 1545166157 -> Port master finished handling pending incoming vessel with pid 3449
+Timestamp (millis): 1545166157 -> Port master starts handling incoming vessel with pid 3468
+Timestamp (millis): 1545166157 -> Port master finished handling incoming vessel with pid 3468
+Timestamp (millis): 1545166158 -> Port master starts handling incoming vessel with pid 3469
+Timestamp (millis): 1545166158 -> Port master finished handling incoming vessel with pid 3469
+Timestamp (millis): 1545166158 -> Port master starts handling incoming vessel with pid 3470
+Timestamp (millis): 1545166158 -> Port master finished handling incoming vessel with pid 3470
+Timestamp (millis): 1545166159 -> Port master starts handling incoming vessel with pid 3471
+Timestamp (millis): 1545166159 -> Port master finished handling incoming vessel with pid 3471
+Timestamp (millis): 1545166159 -> Port master starts handling incoming vessel with pid 3472
+Timestamp (millis): 1545166159 -> Port master finished handling incoming vessel with pid 3472
+Timestamp (millis): 1545166160 -> Port master starts handling outgoing vessel with pid 3418
+Timestamp (millis): 1545166160 -> Port master finished handling outgoing vessel with pid 3418
+Timestamp (millis): 1545166128 -> Vessel with pid 3418 and type M entered the queue as incoming
+Timestamp (millis): 1545166133 -> Vessel with pid 3418 and type M entered the port
+Timestamp (millis): 1545166133 -> Vessel with pid 3418 and type M parked in the port
+Timestamp (millis): 1545166160 -> Vessel with pid 3418 and type M left the port
+Timestamp (millis): 1545166161 -> Port master starts handling incoming vessel with pid 3473
+Timestamp (millis): 1545166161 -> Port master finished handling incoming vessel with pid 3473
+Timestamp (millis): 1545166161 -> Port master starts handling incoming vessel with pid 3474
+Timestamp (millis): 1545166161 -> Port master finished handling incoming vessel with pid 3474
+Timestamp (millis): 1545166162 -> Port master starts handling incoming vessel with pid 3475
+Timestamp (millis): 1545166162 -> Port master finished handling incoming vessel with pid 3475
+Timestamp (millis): 1545166162 -> Port master starts handling incoming vessel with pid 3476
+Timestamp (millis): 1545166162 -> Port master finished handling incoming vessel with pid 3476
+Timestamp (millis): 1545166163 -> Port master starts handling incoming vessel with pid 3477
+Timestamp (millis): 1545166163 -> Port master finished handling incoming vessel with pid 3477
+Timestamp (millis): 1545166163 -> Port master starts handling incoming vessel with pid 3478
+Timestamp (millis): 1545166163 -> Port master finished handling incoming vessel with pid 3478
+Timestamp (millis): 1545166164 -> Port master starts handling incoming vessel with pid 3479
+Timestamp (millis): 1545166164 -> Port master finished handling incoming vessel with pid 3479
+Timestamp (millis): 1545166164 -> Port master starts handling outgoing vessel with pid 3419
+Timestamp (millis): 1545166164 -> Port master finished handling outgoing vessel with pid 3419
+Timestamp (millis): 1545166128 -> Vessel with pid 3419 and type S entered the queue as incoming
+Timestamp (millis): 1545166134 -> Vessel with pid 3419 and type S entered the port
+Timestamp (millis): 1545166134 -> Vessel with pid 3419 and type S parked in the port
+Timestamp (millis): 1545166164 -> Vessel with pid 3419 and type S left the port
+Timestamp (millis): 1545166165 -> Port master starts handling incoming vessel with pid 3480
+Timestamp (millis): 1545166165 -> Port master finished handling incoming vessel with pid 3480
+Timestamp (millis): 1545166165 -> Port master starts handling incoming vessel with pid 3481
+Timestamp (millis): 1545166165 -> Port master finished handling incoming vessel with pid 3481
+Timestamp (millis): 1545166166 -> Port master starts handling incoming vessel with pid 3482
+Timestamp (millis): 1545166166 -> Port master finished handling incoming vessel with pid 3482
+Timestamp (millis): 1545166166 -> Port master starts handling incoming vessel with pid 3483
+Timestamp (millis): 1545166166 -> Port master finished handling incoming vessel with pid 3483
+Timestamp (millis): 1545166167 -> Port master starts handling incoming vessel with pid 3484
+Timestamp (millis): 1545166167 -> Port master finished handling incoming vessel with pid 3484
+Timestamp (millis): 1545166167 -> Port master starts handling outgoing vessel with pid 3420
+Timestamp (millis): 1545166168 -> Port master finished handling outgoing vessel with pid 3420
+Timestamp (millis): 1545166128 -> Vessel with pid 3420 and type M entered the queue as incoming
+Timestamp (millis): 1545166134 -> Vessel with pid 3420 and type M entered the port
+Timestamp (millis): 1545166134 -> Vessel with pid 3420 and type M parked in the port
+Timestamp (millis): 1545166168 -> Vessel with pid 3420 and type M left the port
+Timestamp (millis): 1545166168 -> Port master starts handling incoming vessel with pid 3485
+Timestamp (millis): 1545166168 -> Port master finished handling incoming vessel with pid 3485
+Timestamp (millis): 1545166169 -> Port master starts handling incoming vessel with pid 3486
+Timestamp (millis): 1545166169 -> Port master finished handling incoming vessel with pid 3486
+Timestamp (millis): 1545166169 -> Port master starts handling outgoing vessel with pid 3421
+Timestamp (millis): 1545166170 -> Port master finished handling outgoing vessel with pid 3421
+Timestamp (millis): 1545166128 -> Vessel with pid 3421 and type M entered the queue as incoming
+Timestamp (millis): 1545166134 -> Vessel with pid 3421 and type M entered the port
+Timestamp (millis): 1545166135 -> Vessel with pid 3421 and type M parked in the port
+Timestamp (millis): 1545166170 -> Vessel with pid 3421 and type M left the port
+Timestamp (millis): 1545166170 -> Port master starts handling incoming vessel with pid 3487
+Timestamp (millis): 1545166170 -> Port master finished handling incoming vessel with pid 3487
+Timestamp (millis): 1545166171 -> Port master starts handling incoming vessel with pid 3488
+Timestamp (millis): 1545166171 -> Port master finished handling incoming vessel with pid 3488
+Timestamp (millis): 1545166171 -> Port master starts handling incoming vessel with pid 3489
+Timestamp (millis): 1545166171 -> Port master finished handling incoming vessel with pid 3489
+Timestamp (millis): 1545166172 -> Port master starts handling incoming vessel with pid 3490
+Timestamp (millis): 1545166172 -> Port master starts handling incoming vessel with upgrade with pid 3490
+Timestamp (millis): 1545166172 -> Port master finished handling incoming vessel with upgrade with pid 3490
+Timestamp (millis): 1545166172 -> Port master starts handling outgoing vessel with pid 3422
+Timestamp (millis): 1545166172 -> Port master finished handling outgoing vessel with pid 3422
+Timestamp (millis): 1545166128 -> Vessel with pid 3422 and type M entered the queue as incoming
+Timestamp (millis): 1545166135 -> Vessel with pid 3422 and type M entered the port
+Timestamp (millis): 1545166135 -> Vessel with pid 3422 and type M parked in the port
+Timestamp (millis): 1545166172 -> Vessel with pid 3422 and type M left the port
+Timestamp (millis): 1545166173 -> Port master starts handling incoming vessel with pid 3491
+Timestamp (millis): 1545166173 -> Port master starts handling incoming vessel with upgrade with pid 3491
+Timestamp (millis): 1545166173 -> Port master finished handling incoming vessel with upgrade with pid 3491
+Timestamp (millis): 1545166173 -> Port master starts handling incoming vessel with pid 3492
+Timestamp (millis): 1545166173 -> Port master finished handling incoming vessel with pid 3492
+Timestamp (millis): 1545166174 -> Port master starts handling outgoing vessel with pid 3423
+Timestamp (millis): 1545166174 -> Port master finished handling outgoing vessel with pid 3423
+Timestamp (millis): 1545166129 -> Vessel with pid 3423 and type L entered the queue as incoming
+Timestamp (millis): 1545166135 -> Vessel with pid 3423 and type L entered the port
+Timestamp (millis): 1545166135 -> Vessel with pid 3423 and type L parked in the port
+Timestamp (millis): 1545166174 -> Vessel with pid 3423 and type L left the port
+Timestamp (millis): 1545166174 -> Port master starts handling pending incoming vessel with pid 3452
+Timestamp (millis): 1545166174 -> Port master finished handling pending incoming vessel with pid 3452
+Timestamp (millis): 1545166174 -> Port master starts handling incoming vessel with pid 3493
+Timestamp (millis): 1545166174 -> Port master finished handling incoming vessel with pid 3493
+Timestamp (millis): 1545166175 -> Port master starts handling incoming vessel with pid 3494
+Timestamp (millis): 1545166175 -> Port master finished handling incoming vessel with pid 3494
+Timestamp (millis): 1545166175 -> Port master starts handling outgoing vessel with pid 3425
+Timestamp (millis): 1545166176 -> Port master finished handling outgoing vessel with pid 3425
+Timestamp (millis): 1545166129 -> Vessel with pid 3425 and type L entered the queue as incoming
+Timestamp (millis): 1545166136 -> Vessel with pid 3425 and type L entered the port
+Timestamp (millis): 1545166136 -> Vessel with pid 3425 and type L parked in the port
+Timestamp (millis): 1545166176 -> Vessel with pid 3425 and type L left the port
+Timestamp (millis): 1545166176 -> Port master starts handling pending incoming vessel with pid 3456
+Timestamp (millis): 1545166176 -> Port master finished handling pending incoming vessel with pid 3456
+Timestamp (millis): 1545166176 -> Port master starts handling incoming vessel with pid 3495
+Timestamp (millis): 1545166176 -> Port master finished handling incoming vessel with pid 3495
+Timestamp (millis): 1545166176 -> Port master starts handling outgoing vessel with pid 3424
+Timestamp (millis): 1545166176 -> Port master finished handling outgoing vessel with pid 3424
+Timestamp (millis): 1545166129 -> Vessel with pid 3424 and type M entered the queue as incoming
+Timestamp (millis): 1545166135 -> Vessel with pid 3424 and type M entered the port
+Timestamp (millis): 1545166136 -> Vessel with pid 3424 and type M parked in the port
+Timestamp (millis): 1545166176 -> Vessel with pid 3424 and type M left the port
+Timestamp (millis): 1545166177 -> Port master starts handling incoming vessel with pid 3496
+Timestamp (millis): 1545166177 -> Port master finished handling incoming vessel with pid 3496
+Timestamp (millis): 1545166177 -> Port master starts handling incoming vessel with pid 3497
+Timestamp (millis): 1545166177 -> Port master finished handling incoming vessel with pid 3497
+Timestamp (millis): 1545166178 -> Port master starts handling incoming vessel with pid 3498
+Timestamp (millis): 1545166178 -> Port master finished handling incoming vessel with pid 3498
+Timestamp (millis): 1545166178 -> Port master starts handling outgoing vessel with pid 3426
+Timestamp (millis): 1545166179 -> Port master finished handling outgoing vessel with pid 3426
+Timestamp (millis): 1545166129 -> Vessel with pid 3426 and type L entered the queue as incoming
+Timestamp (millis): 1545166136 -> Vessel with pid 3426 and type L entered the port
+Timestamp (millis): 1545166136 -> Vessel with pid 3426 and type L parked in the port
+Timestamp (millis): 1545166179 -> Vessel with pid 3426 and type L left the port
+Timestamp (millis): 1545166179 -> Port master starts handling pending incoming vessel with pid 3460
+Timestamp (millis): 1545166179 -> Port master finished handling pending incoming vessel with pid 3460
+Timestamp (millis): 1545166179 -> Port master starts handling outgoing vessel with pid 3427
+Timestamp (millis): 1545166180 -> Port master finished handling outgoing vessel with pid 3427
+Timestamp (millis): 1545166129 -> Vessel with pid 3427 and type S entered the queue as incoming
+Timestamp (millis): 1545166136 -> Vessel with pid 3427 and type S entered the port
+Timestamp (millis): 1545166136 -> Vessel with pid 3427 and type S parked in the port
+Timestamp (millis): 1545166180 -> Vessel with pid 3427 and type S left the port
+Timestamp (millis): 1545166180 -> Port master starts handling outgoing vessel with pid 3428
+Timestamp (millis): 1545166180 -> Port master finished handling outgoing vessel with pid 3428
+Timestamp (millis): 1545166129 -> Vessel with pid 3428 and type M entered the queue as incoming
+Timestamp (millis): 1545166136 -> Vessel with pid 3428 and type M entered the port
+Timestamp (millis): 1545166137 -> Vessel with pid 3428 and type M parked in the port
+Timestamp (millis): 1545166180 -> Vessel with pid 3428 and type M left the port
+Timestamp (millis): 1545166181 -> Port master starts handling outgoing vessel with pid 3429
+Timestamp (millis): 1545166181 -> Port master finished handling outgoing vessel with pid 3429
+Timestamp (millis): 1545166129 -> Vessel with pid 3429 and type S entered the queue as incoming
+Timestamp (millis): 1545166137 -> Vessel with pid 3429 and type S entered the port
+Timestamp (millis): 1545166137 -> Vessel with pid 3429 and type S parked in the port
+Timestamp (millis): 1545166181 -> Vessel with pid 3429 and type S left the port
+Timestamp (millis): 1545166182 -> Port master starts handling outgoing vessel with pid 3430
+Timestamp (millis): 1545166182 -> Port master finished handling outgoing vessel with pid 3430
+Timestamp (millis): 1545166129 -> Vessel with pid 3430 and type L entered the queue as incoming
+Timestamp (millis): 1545166137 -> Vessel with pid 3430 and type L entered the port
+Timestamp (millis): 1545166137 -> Vessel with pid 3430 and type L parked in the port
+Timestamp (millis): 1545166182 -> Vessel with pid 3430 and type L left the port
+Timestamp (millis): 1545166182 -> Port master starts handling pending incoming vessel with pid 3461
+Timestamp (millis): 1545166182 -> Port master finished handling pending incoming vessel with pid 3461
+Timestamp (millis): 1545166182 -> Port master starts handling outgoing vessel with pid 3431
+Timestamp (millis): 1545166183 -> Port master finished handling outgoing vessel with pid 3431
+Timestamp (millis): 1545166129 -> Vessel with pid 3431 and type M entered the queue as incoming
+Timestamp (millis): 1545166137 -> Vessel with pid 3431 and type M entered the port
+Timestamp (millis): 1545166138 -> Vessel with pid 3431 and type M parked in the port
+Timestamp (millis): 1545166183 -> Vessel with pid 3431 and type M left the port
+Timestamp (millis): 1545166183 -> Port master starts handling outgoing vessel with pid 3432
+Timestamp (millis): 1545166184 -> Port master finished handling outgoing vessel with pid 3432
+Timestamp (millis): 1545166129 -> Vessel with pid 3432 and type S entered the queue as incoming
+Timestamp (millis): 1545166138 -> Vessel with pid 3432 and type S entered the port
+Timestamp (millis): 1545166138 -> Vessel with pid 3432 and type S parked in the port
+Timestamp (millis): 1545166184 -> Vessel with pid 3432 and type S left the port
+Timestamp (millis): 1545166184 -> Port master starts handling outgoing vessel with pid 3434
+Timestamp (millis): 1545166184 -> Port master finished handling outgoing vessel with pid 3434
+Timestamp (millis): 1545166130 -> Vessel with pid 3434 and type M entered the queue as incoming
+Timestamp (millis): 1545166139 -> Vessel with pid 3434 and type M entered the port
+Timestamp (millis): 1545166139 -> Vessel with pid 3434 and type M parked in the port
+Timestamp (millis): 1545166184 -> Vessel with pid 3434 and type M left the port
+Timestamp (millis): 1545166185 -> Port master starts handling outgoing vessel with pid 3433
+Timestamp (millis): 1545166185 -> Port master finished handling outgoing vessel with pid 3433
+Timestamp (millis): 1545166130 -> Vessel with pid 3433 and type L entered the queue as incoming
+Timestamp (millis): 1545166139 -> Vessel with pid 3433 and type L entered the port
+Timestamp (millis): 1545166139 -> Vessel with pid 3433 and type L parked in the port
+Timestamp (millis): 1545166185 -> Vessel with pid 3433 and type L left the port
+Timestamp (millis): 1545166185 -> Port master starts handling pending incoming vessel with pid 3462
+Timestamp (millis): 1545166185 -> Port master finished handling pending incoming vessel with pid 3462
+Timestamp (millis): 1545166185 -> Port master starts handling outgoing vessel with pid 3435
+Timestamp (millis): 1545166185 -> Port master finished handling outgoing vessel with pid 3435
+Timestamp (millis): 1545166130 -> Vessel with pid 3435 and type L entered the queue as incoming
+Timestamp (millis): 1545166139 -> Vessel with pid 3435 and type L entered the port
+Timestamp (millis): 1545166139 -> Vessel with pid 3435 and type L parked in the port
+Timestamp (millis): 1545166185 -> Vessel with pid 3435 and type L left the port
+Timestamp (millis): 1545166185 -> Port master starts handling pending incoming vessel with pid 3465
+Timestamp (millis): 1545166185 -> Port master finished handling pending incoming vessel with pid 3465
+Timestamp (millis): 1545166185 -> Port master starts handling outgoing vessel with pid 3436
+Timestamp (millis): 1545166186 -> Port master finished handling outgoing vessel with pid 3436
+Timestamp (millis): 1545166130 -> Vessel with pid 3436 and type M entered the queue as incoming
+Timestamp (millis): 1545166139 -> Vessel with pid 3436 and type M entered the port
+Timestamp (millis): 1545166140 -> Vessel with pid 3436 and type M parked in the port
+Timestamp (millis): 1545166186 -> Vessel with pid 3436 and type M left the port
+Timestamp (millis): 1545166187 -> Port master starts handling outgoing vessel with pid 3437
+Timestamp (millis): 1545166187 -> Port master finished handling outgoing vessel with pid 3437
+Timestamp (millis): 1545166130 -> Vessel with pid 3437 and type L entered the queue as incoming
+Timestamp (millis): 1545166140 -> Vessel with pid 3437 and type L entered the port
+Timestamp (millis): 1545166140 -> Vessel with pid 3437 and type L parked in the port
+Timestamp (millis): 1545166187 -> Vessel with pid 3437 and type L left the port
+Timestamp (millis): 1545166187 -> Port master starts handling pending incoming vessel with pid 3467
+Timestamp (millis): 1545166187 -> Port master finished handling pending incoming vessel with pid 3467
+Timestamp (millis): 1545166187 -> Port master starts handling outgoing vessel with pid 3438
+Timestamp (millis): 1545166188 -> Port master finished handling outgoing vessel with pid 3438
+Timestamp (millis): 1545166130 -> Vessel with pid 3438 and type L entered the queue as incoming
+Timestamp (millis): 1545166140 -> Vessel with pid 3438 and type L entered the port
+Timestamp (millis): 1545166141 -> Vessel with pid 3438 and type L parked in the port
+Timestamp (millis): 1545166188 -> Vessel with pid 3438 and type L left the port
+Timestamp (millis): 1545166188 -> Port master starts handling pending incoming vessel with pid 3468
+Timestamp (millis): 1545166188 -> Port master finished handling pending incoming vessel with pid 3468
+Timestamp (millis): 1545166188 -> Port master starts handling outgoing vessel with pid 3439
+Timestamp (millis): 1545166188 -> Port master finished handling outgoing vessel with pid 3439
+Timestamp (millis): 1545166130 -> Vessel with pid 3439 and type L entered the queue as incoming
+Timestamp (millis): 1545166141 -> Vessel with pid 3439 and type L entered the port
+Timestamp (millis): 1545166141 -> Vessel with pid 3439 and type L parked in the port
+Timestamp (millis): 1545166188 -> Vessel with pid 3439 and type L left the port
+Timestamp (millis): 1545166188 -> Port master starts handling pending incoming vessel with pid 3471
+Timestamp (millis): 1545166188 -> Port master finished handling pending incoming vessel with pid 3471
+Timestamp (millis): 1545166188 -> Port master starts handling outgoing vessel with pid 3440
+Timestamp (millis): 1545166189 -> Port master finished handling outgoing vessel with pid 3440
+Timestamp (millis): 1545166130 -> Vessel with pid 3440 and type S entered the queue as incoming
+Timestamp (millis): 1545166141 -> Vessel with pid 3440 and type S entered the port
+Timestamp (millis): 1545166142 -> Vessel with pid 3440 and type S parked in the port
+Timestamp (millis): 1545166189 -> Vessel with pid 3440 and type S left the port
+Timestamp (millis): 1545166189 -> Port master starts handling outgoing vessel with pid 3441
+Timestamp (millis): 1545166189 -> Port master finished handling outgoing vessel with pid 3441
+Timestamp (millis): 1545166130 -> Vessel with pid 3441 and type S entered the queue as incoming
+Timestamp (millis): 1545166142 -> Vessel with pid 3441 and type S entered the port
+Timestamp (millis): 1545166142 -> Vessel with pid 3441 and type S parked in the port
+Timestamp (millis): 1545166189 -> Vessel with pid 3441 and type S left the port
+Timestamp (millis): 1545166190 -> Port master starts handling outgoing vessel with pid 3443
+Timestamp (millis): 1545166190 -> Port master finished handling outgoing vessel with pid 3443
+Timestamp (millis): 1545166131 -> Vessel with pid 3443 and type M entered the queue as incoming
+Timestamp (millis): 1545166142 -> Vessel with pid 3443 and type M entered the port
+Timestamp (millis): 1545166142 -> Vessel with pid 3443 and type M parked in the port
+Timestamp (millis): 1545166190 -> Vessel with pid 3443 and type M left the port
+Timestamp (millis): 1545166190 -> Port master starts handling outgoing vessel with pid 3442
+Timestamp (millis): 1545166191 -> Port master finished handling outgoing vessel with pid 3442
+Timestamp (millis): 1545166130 -> Vessel with pid 3442 and type S entered the queue as incoming
+Timestamp (millis): 1545166142 -> Vessel with pid 3442 and type S entered the port
+Timestamp (millis): 1545166142 -> Vessel with pid 3442 and type S parked in the port
+Timestamp (millis): 1545166191 -> Vessel with pid 3442 and type S left the port
+Timestamp (millis): 1545166191 -> Port master starts handling outgoing vessel with pid 3444
+Timestamp (millis): 1545166192 -> Port master finished handling outgoing vessel with pid 3444
+Timestamp (millis): 1545166131 -> Vessel with pid 3444 and type M entered the queue as incoming
+Timestamp (millis): 1545166142 -> Vessel with pid 3444 and type M entered the port
+Timestamp (millis): 1545166143 -> Vessel with pid 3444 and type M parked in the port
+Timestamp (millis): 1545166192 -> Vessel with pid 3444 and type M left the port
+Timestamp (millis): 1545166192 -> Port master starts handling outgoing vessel with pid 3446
+Timestamp (millis): 1545166192 -> Port master finished handling outgoing vessel with pid 3446
+Timestamp (millis): 1545166131 -> Vessel with pid 3446 and type L entered the queue as incoming
+Timestamp (millis): 1545166143 -> Vessel with pid 3446 and type L entered the port
+Timestamp (millis): 1545166144 -> Vessel with pid 3446 and type L parked in the port
+Timestamp (millis): 1545166192 -> Vessel with pid 3446 and type L left the port
+Timestamp (millis): 1545166192 -> Port master starts handling pending incoming vessel with pid 3476
+Timestamp (millis): 1545166192 -> Port master finished handling pending incoming vessel with pid 3476
+Timestamp (millis): 1545166192 -> Port master starts handling outgoing vessel with pid 3445
+Timestamp (millis): 1545166193 -> Port master finished handling outgoing vessel with pid 3445
+Timestamp (millis): 1545166131 -> Vessel with pid 3445 and type S entered the queue as incoming
+Timestamp (millis): 1545166143 -> Vessel with pid 3445 and type S entered the port
+Timestamp (millis): 1545166143 -> Vessel with pid 3445 and type S parked in the port
+Timestamp (millis): 1545166193 -> Vessel with pid 3445 and type S left the port
+Timestamp (millis): 1545166194 -> Port master starts handling outgoing vessel with pid 3447
+Timestamp (millis): 1545166194 -> Port master finished handling outgoing vessel with pid 3447
+Timestamp (millis): 1545166131 -> Vessel with pid 3447 and type L entered the queue as incoming
+Timestamp (millis): 1545166144 -> Vessel with pid 3447 and type L entered the port
+Timestamp (millis): 1545166144 -> Vessel with pid 3447 and type L parked in the port
+Timestamp (millis): 1545166194 -> Vessel with pid 3447 and type L left the port
+Timestamp (millis): 1545166194 -> Port master starts handling pending incoming vessel with pid 3477
+Timestamp (millis): 1545166194 -> Port master finished handling pending incoming vessel with pid 3477
+Timestamp (millis): 1545166194 -> Port master starts handling outgoing vessel with pid 3448
+Timestamp (millis): 1545166194 -> Port master finished handling outgoing vessel with pid 3448
+Timestamp (millis): 1545166131 -> Vessel with pid 3448 and type L entered the queue as incoming
+Timestamp (millis): 1545166144 -> Vessel with pid 3448 and type L entered the port
+Timestamp (millis): 1545166144 -> Vessel with pid 3448 and type L parked in the port
+Timestamp (millis): 1545166194 -> Vessel with pid 3448 and type L left the port
+Timestamp (millis): 1545166194 -> Port master starts handling pending incoming vessel with pid 3491
+Timestamp (millis): 1545166194 -> Port master finished handling pending incoming vessel with pid 3491
+Timestamp (millis): 1545166194 -> Port master starts handling outgoing vessel with pid 3450
+Timestamp (millis): 1545166195 -> Port master finished handling outgoing vessel with pid 3450
+Timestamp (millis): 1545166131 -> Vessel with pid 3450 and type S entered the queue as incoming
+Timestamp (millis): 1545166145 -> Vessel with pid 3450 and type S entered the port
+Timestamp (millis): 1545166145 -> Vessel with pid 3450 and type S parked in the port
+Timestamp (millis): 1545166195 -> Vessel with pid 3450 and type S left the port
+Timestamp (millis): 1545166195 -> Port master starts handling pending incoming vessel with pid 3492
+Timestamp (millis): 1545166195 -> Port master finished handling pending incoming vessel with pid 3492
+Timestamp (millis): 1545166195 -> Port master starts handling outgoing vessel with pid 3451
+Timestamp (millis): 1545166196 -> Port master finished handling outgoing vessel with pid 3451
+Timestamp (millis): 1545166131 -> Vessel with pid 3451 and type M entered the queue as incoming
+Timestamp (millis): 1545166145 -> Vessel with pid 3451 and type M entered the port
+Timestamp (millis): 1545166145 -> Vessel with pid 3451 and type M parked in the port
+Timestamp (millis): 1545166196 -> Vessel with pid 3451 and type M left the port
+Timestamp (millis): 1545166196 -> Port master starts handling pending incoming vessel with pid 3495
+Timestamp (millis): 1545166196 -> Port master finished handling pending incoming vessel with pid 3495
+Timestamp (millis): 1545166196 -> Port master starts handling outgoing vessel with pid 3453
+Timestamp (millis): 1545166196 -> Port master finished handling outgoing vessel with pid 3453
+Timestamp (millis): 1545166132 -> Vessel with pid 3453 and type S entered the queue as incoming
+Timestamp (millis): 1545166147 -> Vessel with pid 3453 and type S entered the port
+Timestamp (millis): 1545166148 -> Vessel with pid 3453 and type S parked in the port
+Timestamp (millis): 1545166196 -> Vessel with pid 3453 and type S left the port
+Timestamp (millis): 1545166196 -> Port master starts handling pending incoming vessel with pid 3496
+Timestamp (millis): 1545166196 -> Port master finished handling pending incoming vessel with pid 3496
+Timestamp (millis): 1545166196 -> Port master starts handling outgoing vessel with pid 3454
+Timestamp (millis): 1545166197 -> Port master finished handling outgoing vessel with pid 3454
+Timestamp (millis): 1545166132 -> Vessel with pid 3454 and type S entered the queue as incoming
+Timestamp (millis): 1545166148 -> Vessel with pid 3454 and type S entered the port
+Timestamp (millis): 1545166148 -> Vessel with pid 3454 and type S parked in the port
+Timestamp (millis): 1545166197 -> Vessel with pid 3454 and type S left the port
+Timestamp (millis): 1545166198 -> Port master starts handling outgoing vessel with pid 3455
+Timestamp (millis): 1545166198 -> Port master finished handling outgoing vessel with pid 3455
+Timestamp (millis): 1545166132 -> Vessel with pid 3455 and type M entered the queue as incoming
+Timestamp (millis): 1545166148 -> Vessel with pid 3455 and type M entered the port
+Timestamp (millis): 1545166148 -> Vessel with pid 3455 and type M parked in the port
+Timestamp (millis): 1545166198 -> Vessel with pid 3455 and type M left the port
+Timestamp (millis): 1545166198 -> Port master starts handling outgoing vessel with pid 3457
+Timestamp (millis): 1545166198 -> Port master finished handling outgoing vessel with pid 3457
+Timestamp (millis): 1545166132 -> Vessel with pid 3457 and type M entered the queue as incoming
+Timestamp (millis): 1545166151 -> Vessel with pid 3457 and type M entered the port
+Timestamp (millis): 1545166151 -> Vessel with pid 3457 and type M parked in the port
+Timestamp (millis): 1545166198 -> Vessel with pid 3457 and type M left the port
+Timestamp (millis): 1545166199 -> Port master starts handling outgoing vessel with pid 3458
+Timestamp (millis): 1545166199 -> Port master finished handling outgoing vessel with pid 3458
+Timestamp (millis): 1545166132 -> Vessel with pid 3458 and type M entered the queue as incoming
+Timestamp (millis): 1545166151 -> Vessel with pid 3458 and type M entered the port
+Timestamp (millis): 1545166151 -> Vessel with pid 3458 and type M parked in the port
+Timestamp (millis): 1545166199 -> Vessel with pid 3458 and type M left the port
+Timestamp (millis): 1545166199 -> Port master starts handling outgoing vessel with pid 3459
+Timestamp (millis): 1545166200 -> Port master finished handling outgoing vessel with pid 3459
+Timestamp (millis): 1545166132 -> Vessel with pid 3459 and type M entered the queue as incoming
+Timestamp (millis): 1545166152 -> Vessel with pid 3459 and type M entered the port
+Timestamp (millis): 1545166152 -> Vessel with pid 3459 and type M parked in the port
+Timestamp (millis): 1545166200 -> Vessel with pid 3459 and type M left the port
+Timestamp (millis): 1545166200 -> Port master starts handling outgoing vessel with pid 3463
+Timestamp (millis): 1545166201 -> Port master finished handling outgoing vessel with pid 3463
+Timestamp (millis): 1545166133 -> Vessel with pid 3463 and type M entered the queue as incoming
+Timestamp (millis): 1545166154 -> Vessel with pid 3463 and type M entered the port
+Timestamp (millis): 1545166154 -> Vessel with pid 3463 and type M parked in the port
+Timestamp (millis): 1545166201 -> Vessel with pid 3463 and type M left the port
+Timestamp (millis): 1545166201 -> Port master starts handling outgoing vessel with pid 3464
+Timestamp (millis): 1545166201 -> Port master finished handling outgoing vessel with pid 3464
+Timestamp (millis): 1545166133 -> Vessel with pid 3464 and type S entered the queue as incoming
+Timestamp (millis): 1545166154 -> Vessel with pid 3464 and type S entered the port
+Timestamp (millis): 1545166154 -> Vessel with pid 3464 and type S parked in the port
+Timestamp (millis): 1545166201 -> Vessel with pid 3464 and type S left the port
+Timestamp (millis): 1545166202 -> Port master starts handling outgoing vessel with pid 3466
+Timestamp (millis): 1545166202 -> Port master finished handling outgoing vessel with pid 3466
+Timestamp (millis): 1545166133 -> Vessel with pid 3466 and type S entered the queue as incoming
+Timestamp (millis): 1545166155 -> Vessel with pid 3466 and type S entered the port
+Timestamp (millis): 1545166155 -> Vessel with pid 3466 and type S parked in the port
+Timestamp (millis): 1545166202 -> Vessel with pid 3466 and type S left the port
+Timestamp (millis): 1545166202 -> Port master starts handling outgoing vessel with pid 3449
+Timestamp (millis): 1545166203 -> Port master finished handling outgoing vessel with pid 3449
+Timestamp (millis): 1545166131 -> Vessel with pid 3449 and type L entered the queue as incoming
+Timestamp (millis): 1545166144 -> Vessel with pid 3449 and type L entered the pending queue
+Timestamp (millis): 1545166157 -> Vessel with pid 3449 and type L entered the port
+Timestamp (millis): 1545166158 -> Vessel with pid 3449 and type L parked in the port
+Timestamp (millis): 1545166203 -> Vessel with pid 3449 and type L left the port
+Timestamp (millis): 1545166203 -> Port master starts handling pending incoming vessel with pid 3497
+Timestamp (millis): 1545166203 -> Port master finished handling pending incoming vessel with pid 3497
+Timestamp (millis): 1545166203 -> Port master starts handling outgoing vessel with pid 3469
+Timestamp (millis): 1545166203 -> Port master finished handling outgoing vessel with pid 3469
+Timestamp (millis): 1545166133 -> Vessel with pid 3469 and type S entered the queue as incoming
+Timestamp (millis): 1545166158 -> Vessel with pid 3469 and type S entered the port
+Timestamp (millis): 1545166158 -> Vessel with pid 3469 and type S parked in the port
+Timestamp (millis): 1545166203 -> Vessel with pid 3469 and type S left the port
+Timestamp (millis): 1545166204 -> Port master starts handling outgoing vessel with pid 3470
+Timestamp (millis): 1545166204 -> Port master finished handling outgoing vessel with pid 3470
+Timestamp (millis): 1545166133 -> Vessel with pid 3470 and type S entered the queue as incoming
+Timestamp (millis): 1545166158 -> Vessel with pid 3470 and type S entered the port
+Timestamp (millis): 1545166159 -> Vessel with pid 3470 and type S parked in the port
+Timestamp (millis): 1545166204 -> Vessel with pid 3470 and type S left the port
+Timestamp (millis): 1545166205 -> Port master starts handling outgoing vessel with pid 3472
+Timestamp (millis): 1545166205 -> Port master finished handling outgoing vessel with pid 3472
+Timestamp (millis): 1545166133 -> Vessel with pid 3472 and type S entered the queue as incoming
+Timestamp (millis): 1545166159 -> Vessel with pid 3472 and type S entered the port
+Timestamp (millis): 1545166160 -> Vessel with pid 3472 and type S parked in the port
+Timestamp (millis): 1545166205 -> Vessel with pid 3472 and type S left the port
+Timestamp (millis): 1545166205 -> Port master starts handling outgoing vessel with pid 3473
+Timestamp (millis): 1545166206 -> Port master finished handling outgoing vessel with pid 3473
+Timestamp (millis): 1545166134 -> Vessel with pid 3473 and type M entered the queue as incoming
+Timestamp (millis): 1545166161 -> Vessel with pid 3473 and type M entered the port
+Timestamp (millis): 1545166161 -> Vessel with pid 3473 and type M parked in the port
+Timestamp (millis): 1545166206 -> Vessel with pid 3473 and type M left the port
+Timestamp (millis): 1545166206 -> Port master starts handling outgoing vessel with pid 3474
+Timestamp (millis): 1545166207 -> Port master finished handling outgoing vessel with pid 3474
+Timestamp (millis): 1545166134 -> Vessel with pid 3474 and type S entered the queue as incoming
+Timestamp (millis): 1545166161 -> Vessel with pid 3474 and type S entered the port
+Timestamp (millis): 1545166161 -> Vessel with pid 3474 and type S parked in the port
+Timestamp (millis): 1545166207 -> Vessel with pid 3474 and type S left the port
+Timestamp (millis): 1545166207 -> Port master starts handling outgoing vessel with pid 3475
+Timestamp (millis): 1545166207 -> Port master finished handling outgoing vessel with pid 3475
+Timestamp (millis): 1545166134 -> Vessel with pid 3475 and type S entered the queue as incoming
+Timestamp (millis): 1545166162 -> Vessel with pid 3475 and type S entered the port
+Timestamp (millis): 1545166162 -> Vessel with pid 3475 and type S parked in the port
+Timestamp (millis): 1545166207 -> Vessel with pid 3475 and type S left the port
+Timestamp (millis): 1545166208 -> Port master starts handling outgoing vessel with pid 3478
+Timestamp (millis): 1545166208 -> Port master finished handling outgoing vessel with pid 3478
+Timestamp (millis): 1545166134 -> Vessel with pid 3478 and type S entered the queue as incoming
+Timestamp (millis): 1545166163 -> Vessel with pid 3478 and type S entered the port
+Timestamp (millis): 1545166163 -> Vessel with pid 3478 and type S parked in the port
+Timestamp (millis): 1545166208 -> Vessel with pid 3478 and type S left the port
+Timestamp (millis): 1545166209 -> Port master starts handling outgoing vessel with pid 3479
+Timestamp (millis): 1545166209 -> Port master finished handling outgoing vessel with pid 3479
+Timestamp (millis): 1545166134 -> Vessel with pid 3479 and type S entered the queue as incoming
+Timestamp (millis): 1545166164 -> Vessel with pid 3479 and type S entered the port
+Timestamp (millis): 1545166164 -> Vessel with pid 3479 and type S parked in the port
+Timestamp (millis): 1545166209 -> Vessel with pid 3479 and type S left the port
+Timestamp (millis): 1545166210 -> Port master starts handling outgoing vessel with pid 3480
+Timestamp (millis): 1545166210 -> Port master finished handling outgoing vessel with pid 3480
+Timestamp (millis): 1545166134 -> Vessel with pid 3480 and type M entered the queue as incoming
+Timestamp (millis): 1545166165 -> Vessel with pid 3480 and type M entered the port
+Timestamp (millis): 1545166165 -> Vessel with pid 3480 and type M parked in the port
+Timestamp (millis): 1545166210 -> Vessel with pid 3480 and type M left the port
+Timestamp (millis): 1545166210 -> Port master starts handling outgoing vessel with pid 3481
+Timestamp (millis): 1545166211 -> Port master finished handling outgoing vessel with pid 3481
+Timestamp (millis): 1545166134 -> Vessel with pid 3481 and type M entered the queue as incoming
+Timestamp (millis): 1545166165 -> Vessel with pid 3481 and type M entered the port
+Timestamp (millis): 1545166166 -> Vessel with pid 3481 and type M parked in the port
+Timestamp (millis): 1545166211 -> Vessel with pid 3481 and type M left the port
+Timestamp (millis): 1545166211 -> Port master starts handling outgoing vessel with pid 3482
+Timestamp (millis): 1545166211 -> Port master finished handling outgoing vessel with pid 3482
+Timestamp (millis): 1545166134 -> Vessel with pid 3482 and type S entered the queue as incoming
+Timestamp (millis): 1545166166 -> Vessel with pid 3482 and type S entered the port
+Timestamp (millis): 1545166166 -> Vessel with pid 3482 and type S parked in the port
+Timestamp (millis): 1545166211 -> Vessel with pid 3482 and type S left the port
+Timestamp (millis): 1545166212 -> Port master starts handling outgoing vessel with pid 3483
+Timestamp (millis): 1545166212 -> Port master finished handling outgoing vessel with pid 3483
+Timestamp (millis): 1545166135 -> Vessel with pid 3483 and type S entered the queue as incoming
+Timestamp (millis): 1545166166 -> Vessel with pid 3483 and type S entered the port
+Timestamp (millis): 1545166167 -> Vessel with pid 3483 and type S parked in the port
+Timestamp (millis): 1545166212 -> Vessel with pid 3483 and type S left the port
+Timestamp (millis): 1545166212 -> Port master starts handling outgoing vessel with pid 3484
+Timestamp (millis): 1545166212 -> Port master finished handling outgoing vessel with pid 3484
+Timestamp (millis): 1545166135 -> Vessel with pid 3484 and type S entered the queue as incoming
+Timestamp (millis): 1545166167 -> Vessel with pid 3484 and type S entered the port
+Timestamp (millis): 1545166167 -> Vessel with pid 3484 and type S parked in the port
+Timestamp (millis): 1545166212 -> Vessel with pid 3484 and type S left the port
+Timestamp (millis): 1545166213 -> Port master starts handling outgoing vessel with pid 3485
+Timestamp (millis): 1545166213 -> Port master finished handling outgoing vessel with pid 3485
+Timestamp (millis): 1545166135 -> Vessel with pid 3485 and type S entered the queue as incoming
+Timestamp (millis): 1545166168 -> Vessel with pid 3485 and type S entered the port
+Timestamp (millis): 1545166168 -> Vessel with pid 3485 and type S parked in the port
+Timestamp (millis): 1545166213 -> Vessel with pid 3485 and type S left the port
+Timestamp (millis): 1545166213 -> Port master starts handling outgoing vessel with pid 3486
+Timestamp (millis): 1545166214 -> Port master finished handling outgoing vessel with pid 3486
+Timestamp (millis): 1545166135 -> Vessel with pid 3486 and type S entered the queue as incoming
+Timestamp (millis): 1545166169 -> Vessel with pid 3486 and type S entered the port
+Timestamp (millis): 1545166169 -> Vessel with pid 3486 and type S parked in the port
+Timestamp (millis): 1545166214 -> Vessel with pid 3486 and type S left the port
+Timestamp (millis): 1545166214 -> Port master starts handling outgoing vessel with pid 3487
+Timestamp (millis): 1545166215 -> Port master finished handling outgoing vessel with pid 3487
+Timestamp (millis): 1545166135 -> Vessel with pid 3487 and type S entered the queue as incoming
+Timestamp (millis): 1545166170 -> Vessel with pid 3487 and type S entered the port
+Timestamp (millis): 1545166171 -> Vessel with pid 3487 and type S parked in the port
+Timestamp (millis): 1545166215 -> Vessel with pid 3487 and type S left the port
+Timestamp (millis): 1545166215 -> Port master starts handling outgoing vessel with pid 3488
+Timestamp (millis): 1545166215 -> Port master finished handling outgoing vessel with pid 3488
+Timestamp (millis): 1545166135 -> Vessel with pid 3488 and type M entered the queue as incoming
+Timestamp (millis): 1545166171 -> Vessel with pid 3488 and type M entered the port
+Timestamp (millis): 1545166171 -> Vessel with pid 3488 and type M parked in the port
+Timestamp (millis): 1545166215 -> Vessel with pid 3488 and type M left the port
+Timestamp (millis): 1545166216 -> Port master starts handling outgoing vessel with pid 3489
+Timestamp (millis): 1545166216 -> Port master finished handling outgoing vessel with pid 3489
+Timestamp (millis): 1545166135 -> Vessel with pid 3489 and type M entered the queue as incoming
+Timestamp (millis): 1545166171 -> Vessel with pid 3489 and type M entered the port
+Timestamp (millis): 1545166171 -> Vessel with pid 3489 and type M parked in the port
+Timestamp (millis): 1545166216 -> Vessel with pid 3489 and type M left the port
+Timestamp (millis): 1545166135 -> Vessel with pid 3490 and type S entered the queue as incoming
+Timestamp (millis): 1545166172 -> Vessel with pid 3490 and type S entered the port
+Timestamp (millis): 1545166172 -> Vessel with pid 3490 and type S parked in the port
+Timestamp (millis): 1545166217 -> Vessel with pid 3490 and type S left the port
+Timestamp (millis): 1545166217 -> Port master starts handling outgoing vessel with pid 3490
+Timestamp (millis): 1545166217 -> Port master finished handling outgoing vessel with pid 3490
+Timestamp (millis): 1545166217 -> Port master starts handling outgoing vessel with pid 3452
+Timestamp (millis): 1545166218 -> Port master finished handling outgoing vessel with pid 3452
+Timestamp (millis): 1545166131 -> Vessel with pid 3452 and type L entered the queue as incoming
+Timestamp (millis): 1545166146 -> Vessel with pid 3452 and type L entered the pending queue
+Timestamp (millis): 1545166174 -> Vessel with pid 3452 and type L entered the port
+Timestamp (millis): 1545166174 -> Vessel with pid 3452 and type L parked in the port
+Timestamp (millis): 1545166218 -> Vessel with pid 3452 and type L left the port
+Timestamp (millis): 1545166218 -> Port master starts handling pending incoming vessel with pid 3498
+Timestamp (millis): 1545166218 -> Port master finished handling pending incoming vessel with pid 3498
+Timestamp (millis): 1545166218 -> Port master starts handling outgoing vessel with pid 3493
+Timestamp (millis): 1545166218 -> Port master finished handling outgoing vessel with pid 3493
+Timestamp (millis): 1545166136 -> Vessel with pid 3493 and type M entered the queue as incoming
+Timestamp (millis): 1545166174 -> Vessel with pid 3493 and type M entered the port
+Timestamp (millis): 1545166175 -> Vessel with pid 3493 and type M parked in the port
+Timestamp (millis): 1545166218 -> Vessel with pid 3493 and type M left the port
+Timestamp (millis): 1545166218 -> Port master starts handling outgoing vessel with pid 3494
+Timestamp (millis): 1545166219 -> Port master finished handling outgoing vessel with pid 3494
+Timestamp (millis): 1545166136 -> Vessel with pid 3494 and type M entered the queue as incoming
+Timestamp (millis): 1545166175 -> Vessel with pid 3494 and type M entered the port
+Timestamp (millis): 1545166175 -> Vessel with pid 3494 and type M parked in the port
+Timestamp (millis): 1545166219 -> Vessel with pid 3494 and type M left the port
+Timestamp (millis): 1545166219 -> Port master starts handling outgoing vessel with pid 3456
+Timestamp (millis): 1545166219 -> Port master finished handling outgoing vessel with pid 3456
+Timestamp (millis): 1545166132 -> Vessel with pid 3456 and type L entered the queue as incoming
+Timestamp (millis): 1545166149 -> Vessel with pid 3456 and type L entered the pending queue
+Timestamp (millis): 1545166176 -> Vessel with pid 3456 and type L entered the port
+Timestamp (millis): 1545166176 -> Vessel with pid 3456 and type L parked in the port
+Timestamp (millis): 1545166219 -> Vessel with pid 3456 and type L left the port
+Timestamp (millis): 1545166219 -> Port master starts handling outgoing vessel with pid 3460
+Timestamp (millis): 1545166219 -> Port master finished handling outgoing vessel with pid 3460
+Timestamp (millis): 1545166132 -> Vessel with pid 3460 and type L entered the queue as incoming
+Timestamp (millis): 1545166152 -> Vessel with pid 3460 and type L entered the pending queue
+Timestamp (millis): 1545166179 -> Vessel with pid 3460 and type L entered the port
+Timestamp (millis): 1545166179 -> Vessel with pid 3460 and type L parked in the port
+Timestamp (millis): 1545166219 -> Vessel with pid 3460 and type L left the port
+Timestamp (millis): 1545166219 -> Port master starts handling outgoing vessel with pid 3461
+Timestamp (millis): 1545166220 -> Port master finished handling outgoing vessel with pid 3461
+Timestamp (millis): 1545166132 -> Vessel with pid 3461 and type L entered the queue as incoming
+Timestamp (millis): 1545166153 -> Vessel with pid 3461 and type L entered the pending queue
+Timestamp (millis): 1545166182 -> Vessel with pid 3461 and type L entered the port
+Timestamp (millis): 1545166182 -> Vessel with pid 3461 and type L parked in the port
+Timestamp (millis): 1545166220 -> Vessel with pid 3461 and type L left the port
+Timestamp (millis): 1545166220 -> Port master starts handling outgoing vessel with pid 3462
+Timestamp (millis): 1545166220 -> Port master finished handling outgoing vessel with pid 3462
+Timestamp (millis): 1545166132 -> Vessel with pid 3462 and type L entered the queue as incoming
+Timestamp (millis): 1545166153 -> Vessel with pid 3462 and type L entered the pending queue
+Timestamp (millis): 1545166185 -> Vessel with pid 3462 and type L entered the port
+Timestamp (millis): 1545166185 -> Vessel with pid 3462 and type L parked in the port
+Timestamp (millis): 1545166220 -> Vessel with pid 3462 and type L left the port
+Timestamp (millis): 1545166220 -> Port master starts handling outgoing vessel with pid 3465
+Timestamp (millis): 1545166220 -> Port master finished handling outgoing vessel with pid 3465
+Timestamp (millis): 1545166133 -> Vessel with pid 3465 and type L entered the queue as incoming
+Timestamp (millis): 1545166155 -> Vessel with pid 3465 and type L entered the pending queue
+Timestamp (millis): 1545166185 -> Vessel with pid 3465 and type L entered the port
+Timestamp (millis): 1545166186 -> Vessel with pid 3465 and type L parked in the port
+Timestamp (millis): 1545166220 -> Vessel with pid 3465 and type L left the port
+Timestamp (millis): 1545166220 -> Port master starts handling outgoing vessel with pid 3467
+Timestamp (millis): 1545166221 -> Port master finished handling outgoing vessel with pid 3467
+Timestamp (millis): 1545166133 -> Vessel with pid 3467 and type L entered the queue as incoming
+Timestamp (millis): 1545166156 -> Vessel with pid 3467 and type L entered the pending queue
+Timestamp (millis): 1545166187 -> Vessel with pid 3467 and type L entered the port
+Timestamp (millis): 1545166187 -> Vessel with pid 3467 and type L parked in the port
+Timestamp (millis): 1545166221 -> Vessel with pid 3467 and type L left the port
+Timestamp (millis): 1545166133 -> Vessel with pid 3468 and type L entered the queue as incoming
+Timestamp (millis): 1545166157 -> Vessel with pid 3468 and type L entered the pending queue
+Timestamp (millis): 1545166188 -> Vessel with pid 3468 and type L entered the port
+Timestamp (millis): 1545166188 -> Vessel with pid 3468 and type L parked in the port
+Timestamp (millis): 1545166221 -> Vessel with pid 3468 and type L left the port
+Timestamp (millis): 1545166221 -> Port master starts handling outgoing vessel with pid 3468
+Timestamp (millis): 1545166221 -> Port master finished handling outgoing vessel with pid 3468
+Timestamp (millis): 1545166221 -> Port master starts handling outgoing vessel with pid 3471
+Timestamp (millis): 1545166221 -> Port master finished handling outgoing vessel with pid 3471
+Timestamp (millis): 1545166133 -> Vessel with pid 3471 and type L entered the queue as incoming
+Timestamp (millis): 1545166159 -> Vessel with pid 3471 and type L entered the pending queue
+Timestamp (millis): 1545166188 -> Vessel with pid 3471 and type L entered the port
+Timestamp (millis): 1545166188 -> Vessel with pid 3471 and type L parked in the port
+Timestamp (millis): 1545166221 -> Vessel with pid 3471 and type L left the port
+Timestamp (millis): 1545166221 -> Port master starts handling outgoing vessel with pid 3476
+Timestamp (millis): 1545166221 -> Port master finished handling outgoing vessel with pid 3476
+Timestamp (millis): 1545166134 -> Vessel with pid 3476 and type L entered the queue as incoming
+Timestamp (millis): 1545166162 -> Vessel with pid 3476 and type L entered the pending queue
+Timestamp (millis): 1545166192 -> Vessel with pid 3476 and type L entered the port
+Timestamp (millis): 1545166193 -> Vessel with pid 3476 and type L parked in the port
+Timestamp (millis): 1545166221 -> Vessel with pid 3476 and type L left the port
+Timestamp (millis): 1545166221 -> Port master starts handling outgoing vessel with pid 3477
+Timestamp (millis): 1545166221 -> Port master finished handling outgoing vessel with pid 3477
+Timestamp (millis): 1545166134 -> Vessel with pid 3477 and type L entered the queue as incoming
+Timestamp (millis): 1545166163 -> Vessel with pid 3477 and type L entered the pending queue
+Timestamp (millis): 1545166194 -> Vessel with pid 3477 and type L entered the port
+Timestamp (millis): 1545166194 -> Vessel with pid 3477 and type L parked in the port
+Timestamp (millis): 1545166221 -> Vessel with pid 3477 and type L left the port
+Timestamp (millis): 1545166221 -> Port master starts handling outgoing vessel with pid 3491
+Timestamp (millis): 1545166222 -> Port master finished handling outgoing vessel with pid 3491
+Timestamp (millis): 1545166135 -> Vessel with pid 3491 and type S entered the queue as incoming
+Timestamp (millis): 1545166173 -> Vessel with pid 3491 and type S entered the pending queue
+Timestamp (millis): 1545166194 -> Vessel with pid 3491 and type S entered the port
+Timestamp (millis): 1545166195 -> Vessel with pid 3491 and type S parked in the port
+Timestamp (millis): 1545166222 -> Vessel with pid 3491 and type S left the port
+Timestamp (millis): 1545166222 -> Port master starts handling outgoing vessel with pid 3492
+Timestamp (millis): 1545166222 -> Port master finished handling outgoing vessel with pid 3492
+Timestamp (millis): 1545166135 -> Vessel with pid 3492 and type S entered the queue as incoming
+Timestamp (millis): 1545166173 -> Vessel with pid 3492 and type S entered the pending queue
+Timestamp (millis): 1545166195 -> Vessel with pid 3492 and type S entered the port
+Timestamp (millis): 1545166195 -> Vessel with pid 3492 and type S parked in the port
+Timestamp (millis): 1545166222 -> Vessel with pid 3492 and type S left the port
+Timestamp (millis): 1545166222 -> Port master starts handling outgoing vessel with pid 3495
+Timestamp (millis): 1545166222 -> Port master finished handling outgoing vessel with pid 3495
+Timestamp (millis): 1545166136 -> Vessel with pid 3495 and type L entered the queue as incoming
+Timestamp (millis): 1545166176 -> Vessel with pid 3495 and type L entered the pending queue
+Timestamp (millis): 1545166196 -> Vessel with pid 3495 and type L entered the port
+Timestamp (millis): 1545166196 -> Vessel with pid 3495 and type L parked in the port
+Timestamp (millis): 1545166222 -> Vessel with pid 3495 and type L left the port
+Timestamp (millis): 1545166222 -> Port master starts handling outgoing vessel with pid 3496
+Timestamp (millis): 1545166223 -> Port master finished handling outgoing vessel with pid 3496
+Timestamp (millis): 1545166136 -> Vessel with pid 3496 and type S entered the queue as incoming
+Timestamp (millis): 1545166177 -> Vessel with pid 3496 and type S entered the pending queue
+Timestamp (millis): 1545166196 -> Vessel with pid 3496 and type S entered the port
+Timestamp (millis): 1545166197 -> Vessel with pid 3496 and type S parked in the port
+Timestamp (millis): 1545166223 -> Vessel with pid 3496 and type S left the port
+Timestamp (millis): 1545166223 -> Port master starts handling outgoing vessel with pid 3497
+Timestamp (millis): 1545166223 -> Port master finished handling outgoing vessel with pid 3497
+Timestamp (millis): 1545166136 -> Vessel with pid 3497 and type L entered the queue as incoming
+Timestamp (millis): 1545166177 -> Vessel with pid 3497 and type L entered the pending queue
+Timestamp (millis): 1545166203 -> Vessel with pid 3497 and type L entered the port
+Timestamp (millis): 1545166203 -> Vessel with pid 3497 and type L parked in the port
+Timestamp (millis): 1545166223 -> Vessel with pid 3497 and type L left the port
+Timestamp (millis): 1545166223 -> Port master starts handling outgoing vessel with pid 3498
+Timestamp (millis): 1545166223 -> Port master finished handling outgoing vessel with pid 3498
+Timestamp (millis): 1545166223 -> Port master is waiting for vessels
+Timestamp (millis): 1545166136 -> Vessel with pid 3498 and type L entered the queue as incoming
+Timestamp (millis): 1545166178 -> Vessel with pid 3498 and type L entered the pending queue
+Timestamp (millis): 1545166218 -> Vessel with pid 3498 and type L entered the port
+Timestamp (millis): 1545166218 -> Vessel with pid 3498 and type L parked in the port
+Timestamp (millis): 1545166223 -> Vessel with pid 3498 and type L left the port

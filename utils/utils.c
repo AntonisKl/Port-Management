@@ -31,6 +31,7 @@ void initSharedUtilsAndParkingSpotGroups(SharedUtils* sharedUtils, ParkingSpotGr
 
     sharedUtils->queueSize = 0;
     sharedUtils->ledgerSize = 0;
+    sharedUtils->monitorDone = 0;
 
     for (unsigned int i = 0; i < 3; i++) {
         initParkingSpotGroup(&(parkingSpotGroups[i]), parkingSpotTypes[i], capacities[i], costs[i]);
@@ -126,13 +127,13 @@ void execPortMaster(int shmId, char* logFileName) {
     }
 }
 
-void execMonitor(long statsPrintTime, int shmId, char* logFileName) {
+void execMonitor(long statsPrintTime, int shmId) {
     char statsPrintTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
 
     sprintf(statsPrintTimeS, "%ld", statsPrintTime);
     sprintf(shmIdS, "%d", shmId);
 
-    char* args[] = {"executables/monitor", "-t", statsPrintTimeS, "-s", shmIdS, "-lf", logFileName, NULL};
+    char* args[] = {"executables/monitor", "-t", statsPrintTimeS, "-s", shmIdS, NULL};
     if (execvp(args[0], args) < 0) {
         printf("Exec monitor failed\n");
     }

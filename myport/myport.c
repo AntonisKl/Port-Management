@@ -1,7 +1,7 @@
 #include "myport.h"
 
-#define MAX_PARK_TIME 500
-#define MAX_MAN_TIME 500
+#define MAX_PARK_TIME 500 // max park time value for random generation
+#define MAX_MAN_TIME 500 // max man time value for random generation
 
 void handleFlags(int argc, char** argv, char** configFileName, unsigned int* vesselsNum, suseconds_t* vesselIntervalUsecs, suseconds_t* monitorIntervalUsecs) {
     if (argc != 3 && argc != 9) {
@@ -153,8 +153,8 @@ int main(int argc, char** argv) {
 
     key = 2;
 
-    int shmIdParkingGroups = shmget(key, sizeOfParkingSpotGroups, 0666 | IPC_CREAT);  // 100: to be changed probably
-    if (shmIdParkingGroups == -1) {
+    int shmIdParkingSpotGroups = shmget(key, sizeOfParkingSpotGroups, 0666 | IPC_CREAT);  // 100: to be changed probably
+    if (shmIdParkingSpotGroups == -1) {
         perror("shmget failed");
         return 1;
     }
@@ -210,7 +210,7 @@ int main(int argc, char** argv) {
         perror("shmat failed");
         exit(1);
     }
-    ParkingSpotGroup* parkingSpotGroups = (ParkingSpotGroup*)((uint8_t*)shmat(shmIdParkingGroups, 0, 0));
+    ParkingSpotGroup* parkingSpotGroups = (ParkingSpotGroup*)((uint8_t*)shmat(shmIdParkingSpotGroups, 0, 0));
     if (parkingSpotGroups == (void*)-1) {
         perror("shmat failed");
         exit(1);
@@ -228,7 +228,7 @@ int main(int argc, char** argv) {
 
     // initialize shared utils and parking spot groups
     initSharedUtilsAndParkingSpotGroups(sharedUtils, parkingSpotGroups, parkingSpotTypes, parkingSpotCapacities, costsPer30Millis, inOutSem, vesselTypesSem, vesselTypesSemOut,
-                                        sizeOfVesselNodes, sizeOfLedgerVesselNodes, writeSem, portMasterWakeSem, shmIdParkingGroups, shmIdVesselNodes, shmIdLedgerNodes);
+                                        sizeOfVesselNodes, sizeOfLedgerVesselNodes, writeSem, portMasterWakeSem, shmIdParkingSpotGroups, shmIdVesselNodes, shmIdLedgerNodes);
 
     // start port-master and monitor
     int pid1 = fork();
@@ -238,7 +238,7 @@ int main(int argc, char** argv) {
 
     int pid2 = fork();
     if (pid2 == 0) {
-        execMonitor(monitorIntervalUsecs, shmIdSharedUtils, logFileName);
+        execMonitor(monitorIntervalUsecs, shmIdSharedUtils);
     }
 
     sleep(1);
@@ -281,8 +281,31 @@ int main(int argc, char** argv) {
         perror("waitpid error");
         exit(EXIT_FAILURE);
     } else {
-        printf("port-master exited\n");
+        printf("monitor exited\n");
     }
-    
+
+    struct shmid_ds shmidDs;
+
+    // destroy shared memory segments as they are not needed anymore
+    if (shmctl(shmIdSharedUtils, IPC_RMID, &shmidDs) == -1) {
+        perror("shmctl failed");
+        exit(1);
+    }
+
+    if (shmctl(shmIdVesselNodes, IPC_RMID, &shmidDs) == -1) {
+        perror("shmctl failed");
+        exit(1);
+    }
+
+    if (shmctl(shmIdLedgerNodes, IPC_RMID, &shmidDs) == -1) {
+        perror("shmctl failed");
+        exit(1);
+    }
+
+    if (shmctl(shmIdParkingSpotGroups, IPC_RMID, &shmidDs) == -1) {
+        perror("shmctl failed");
+        exit(1);
+    }
+
     // system("./rmAllShmAndSems.sh");
 }

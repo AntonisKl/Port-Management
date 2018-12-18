@@ -26,13 +26,6 @@ void handleFlags(int argc, char** argv, int* shmId, char** logFileName) {
     }
 }
 
-State getNextPendingVesselState(State state) {
-    if (state == WaitingToEnter)
-        return PendingEnter;
-    else
-        return state;  // this will not happen
-}
-
 void addLedgerVesselNode(SharedUtils* sharedUtils, VesselNode* vesselNode, LedgerVesselNode* ledgerVesselNodes, ParkingSpotGroup* parkingSpotGroups, char withUpgrade) {
     if (sharedUtils->ledgerSize >= sharedUtils->sizeOfLedgerVesselNodes) {
         printf("Public ledger full\n");
@@ -52,7 +45,7 @@ void addLedgerVesselNode(SharedUtils* sharedUtils, VesselNode* vesselNode, Ledge
     ledgerVesselNodes[nextLedgerNodeIndex].upgradeType = vesselNode->upgradeType;
     ledgerVesselNodes[nextLedgerNodeIndex].vesselType = vesselNode->vesselType;
     ledgerVesselNodes[nextLedgerNodeIndex].arrivalTime = time(NULL);  // current time
-    ledgerVesselNodes[nextLedgerNodeIndex].departTime = -1;           // not yet available
+    ledgerVesselNodes[nextLedgerNodeIndex].departTime = 0;            // not yet available
     ledgerVesselNodes[nextLedgerNodeIndex].waitingTime = 0;           // not yet available
     ledgerVesselNodes[nextLedgerNodeIndex].parkTime = vesselNode->parkTime;
     ledgerVesselNodes[nextLedgerNodeIndex].manTime = vesselNode->manTime;
@@ -79,13 +72,15 @@ void handleNextVessel(SharedUtils* sharedUtils, VesselNode* vesselNode, LedgerVe
     } else if (curState == WaitingToLeave) {
         char withUpgrade = vesselNode->withUpgrade;
         // in this point, vesselNode->ledgerNodeIndex should be >0 but sometimes it isn't because the FIFO order is not always kept on the semaphores waiting
-        if (vesselNode->ledgerNodeIndex == -1) {  // for by-passing POSIX non-FIFO semaphores
+        if (vesselNode->ledgerNodeIndex == -1) {  // for by-passing POSIX non-FIFO semaphores problem
             addLedgerVesselNode(sharedUtils, vesselNode, ledgerVesselNodes, parkingSpotGroups, withUpgrade);
         }
 
         fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling outgoing vessel with pid %d\n", (unsigned long)time(NULL), vesselNode->vesselId);
         handleOutGoingVessel(sharedUtils, vesselNode, parkingSpotGroups, ledgerVesselNodes, nextIndex, withUpgrade);
         fprintf(logFileP, "Timestamp (millis): %lu -> Port master finished handling outgoing vessel with pid %d\n", (unsigned long)time(NULL), vesselNode->vesselId);
+    } else if (curState == Completed) {
+        (*nextIndex)++;
     }
 }
 
@@ -100,6 +95,8 @@ void handleOutGoingVessel(SharedUtils* sharedUtils, VesselNode* vesselNode, Park
     sem_wait(&sharedUtils->inOutSem);
 
     postSemByVesselType(sharedUtils, parkingSpotGroups, curVesselType);
+
+    ledgerVesselNodes[vesselNode->ledgerNodeIndex].state = Leaving;
 
     usleep(vesselNode->manTime);
 
@@ -127,13 +124,13 @@ void handleIncomingVessel(SharedUtils* sharedUtils, VesselNode* vesselNode, Park
     vesselNode->withUpgrade = withUpgrade;
 
     State curState = vesselNode->state;
-
     // check for available place
     if (parkingSpotGroups[curVesselTypeIndex].curCapacity == 0 && curState != PendingEnter) {  // no capcity and vessel is waiting in the normal queue
         if (withUpgrade == 0) {
             fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling incoming vessel with pid %d\n", (unsigned long)time(NULL), vesselNode->vesselId);
-        } else if (withUpgrade == 1)
+        } else if (withUpgrade == 1) {
             fprintf(logFileP, "Timestamp (millis): %lu -> Port master starts handling incoming vessel with upgrade with pid %d\n", (unsigned long)time(NULL), vesselNode->vesselId);
+        }
 
         // if there is ability for upgrade, call this function recursively with withUpgrade = 1
         if (withUpgrade == 0 && (getVesselTypeIndex(parkingSpotGroups, vesselNode->upgradeType) > getVesselTypeIndex(parkingSpotGroups, curVesselType))) {
@@ -143,7 +140,7 @@ void handleIncomingVessel(SharedUtils* sharedUtils, VesselNode* vesselNode, Park
         }
 
         // add vessel to the pending queue
-        vesselNode->state = getNextPendingVesselState(curState);
+        vesselNode->state = PendingEnter;
 
         pendingVesselNodeRequests[*numOfPendingVesselNodes] = vesselNode;
         (*numOfPendingVesselNodes)++;
@@ -254,6 +251,10 @@ int main(int argc, char** argv) {
         // wait for vessel to wake port-master up
         sem_wait(&sharedUtils->portMasterWakeSem);
 
+        if (sharedUtils->monitorDone == 1) {  // job done so break the loop and exit
+            break;
+        }
+
         while (keepRunningPortMaster && (nextIndex < sharedUtils->queueSize || nextPendingIndex < numOfPendingVesselNodes)) {
             unsigned int prevNextIndex = nextIndex, prevNextPendingIndex = nextPendingIndex;  // used for not logging duplicate strings
 
@@ -262,16 +263,16 @@ int main(int argc, char** argv) {
             }
 
             if (nextIndex < sharedUtils->queueSize) {
-                State curState = vesselNodes[nextIndex].state;
-                if (curState == WaitingToEnter || curState == WaitingToLeave) {
-                    handleNextVessel(sharedUtils, &vesselNodes[nextIndex], ledgerVesselNodes, parkingSpotGroups,
-                                     &numOfPendingVesselNodes, &nextIndex, pendingVesselNodeRequests, logFileP);
-                }
+                handleNextVessel(sharedUtils, &vesselNodes[nextIndex], ledgerVesselNodes, parkingSpotGroups,
+                                 &numOfPendingVesselNodes, &nextIndex, pendingVesselNodeRequests, logFileP);
             }
 
             if (prevNextIndex != nextIndex || prevNextPendingIndex != nextPendingIndex) {
                 didSomething = 1;
-                fflush(logFileP);
+                if (fflush(logFileP) == EOF) {
+                    perror("fflush failed");
+                    exit(1);
+                }
             }
         }
     }
@@ -288,11 +289,6 @@ int main(int argc, char** argv) {
         sem_destroy(&sharedUtils->vesselTypesSemPending[i]);
     }
 
-    // keep shared memory segments' ids
-    int shmIdVesselNodes = sharedUtils->shmIdVesselNodes;
-    int shmIdLedgerNodes = sharedUtils->shmIdLedgerNodes;
-    int shmIdParkingSpotGroups = sharedUtils->shmIdParkingSpotGroups;
-
     // dettach shared memory segments
     if (shmdt(sharedUtils) == -1) {
         perror("shmdt failed");
@@ -308,29 +304,6 @@ int main(int argc, char** argv) {
     }
     if (shmdt(parkingSpotGroups) == -1) {
         perror("shmdt failed");
-        exit(1);
-    }
-
-    struct shmid_ds shmidDs;
-    
-    // destroy shared memory segments as they are not needed anymore    
-    if (shmctl(shmId, IPC_RMID, &shmidDs) == -1) {
-        perror("shmctl failed");
-        exit(1);
-    }
-
-    if (shmctl(shmIdVesselNodes, IPC_RMID, &shmidDs) == -1) {
-        perror("shmctl failed");
-        exit(1);
-    }
-
-    if (shmctl(shmIdLedgerNodes, IPC_RMID, &shmidDs) == -1) {
-        perror("shmctl failed");
-        exit(1);
-    }
-
-    if (shmctl(shmIdParkingSpotGroups, IPC_RMID, &shmidDs) == -1) {
-        perror("shmctl failed");
         exit(1);
     }
 }

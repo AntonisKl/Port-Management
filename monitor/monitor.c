@@ -1,7 +1,7 @@
 #include "monitor.h"
 
-void handleFlags(int argc, char** argv, suseconds_t* statsPrintTimeUsecs, int* shmId, char** logFileName) {
-    if (argc != 7) {
+void handleFlags(int argc, char** argv, suseconds_t* statsPrintTimeUsecs, int* shmId) {
+    if (argc != 5) {
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
@@ -33,13 +33,6 @@ void handleFlags(int argc, char** argv, suseconds_t* statsPrintTimeUsecs, int* s
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
-
-    if (strcmp(argv[5], "-lf") == 0) {
-        (*logFileName) = argv[6];
-    } else {
-        printf("Invalid flags\nExiting...\n");
-        exit(1);
-    }
 }
 
 static volatile int keepRunningMonitor = 1;
@@ -53,16 +46,14 @@ int main(int argc, char** argv) {
 
     suseconds_t statsPrintTimeUsecs;
     int shmId;
-    char* logFileName;
 
-    handleFlags(argc, argv, &statsPrintTimeUsecs, &shmId, &logFileName);
+    handleFlags(argc, argv, &statsPrintTimeUsecs, &shmId);
 
     SharedUtils* sharedUtils = (SharedUtils*)((uint8_t*)shmat(shmId, 0, 0));
     if (sharedUtils == (void*)-1) {
         perror("shmat failed");
         exit(1);
     }
-
     ParkingSpotGroup* parkingSpotGroups = (ParkingSpotGroup*)((uint8_t*)shmat(sharedUtils->shmIdParkingSpotGroups, 0, 0));
     if (parkingSpotGroups == (void*)-1) {
         perror("shmat failed");
@@ -80,12 +71,15 @@ int main(int argc, char** argv) {
     }
 
     while (keepRunningMonitor) {
+        unsigned long long int vesselsCompleted;
         if (sharedUtils->ledgerSize > 0) {
             printf("\nMonitor's Report:\n\n");
             long double totalIncome = 0;
-            unsigned long long int waitingTimesPerType[3], totalWaitingTime = 0, vesselsCompleted = 0, vesselsEntered = 0;
+            unsigned long long int waitingTimesPerType[3], totalWaitingTime = 0, vesselsEntered = 0;
             for (unsigned int i = 0; i < 3; i++)
                 waitingTimesPerType[i] = 0;
+
+            vesselsCompleted = 0;
 
             for (unsigned int i = 0; i < sharedUtils->ledgerSize; i++) {
                 printf("Vessel with id %d in the Public Ledger:\nType->%c, Upgrade Type->%c, State->%s, Parking Cost->%f, Arrival Time->%ld ms, Depart Time->%ld ms, Waiting Time->%llu ms, Man Time->%ld ms, Park Time->%ld ms, Parking Spot Type->%c\n",
@@ -97,7 +91,7 @@ int main(int argc, char** argv) {
 
                 totalIncome += (long double)ledgerVesselNodes[i].stayCost;
                 vesselsEntered++;
-                if (ledgerVesselNodes[i].waitingTime > 0) {
+                if (ledgerVesselNodes[i].departTime > 0) {
                     waitingTimesPerType[ledgerVesselNodes[i].parkingSpotGroupIndex] += ledgerVesselNodes[i].waitingTime;
                     totalWaitingTime += ledgerVesselNodes[i].waitingTime;
                     vesselsCompleted++;
@@ -107,6 +101,15 @@ int main(int argc, char** argv) {
                    sharedUtils->ledgerSize, totalIncome, totalIncome / vesselsEntered, totalWaitingTime, vesselsCompleted > 0 ? (long double)totalWaitingTime / vesselsCompleted : 0,
                    parkingSpotGroups[0].type, waitingTimesPerType[0], parkingSpotGroups[1].type, waitingTimesPerType[1], parkingSpotGroups[2].type,
                    waitingTimesPerType[2]);
+        }
+        if (sharedUtils->ledgerSize > 0 && sharedUtils->ledgerSize == vesselsCompleted) {  // job done, so break the loop and exit
+            sharedUtils->monitorDone = 1;
+            // wake the port-master up to break his loop
+            if (sem_post(&sharedUtils->portMasterWakeSem) < 0) {
+                perror("sem_post failed");
+                exit(1);
+            }
+            break;
         }
         usleep(statsPrintTimeUsecs);
     }

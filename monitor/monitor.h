@@ -3,6 +3,6 @@
 
 #include "../utils/utils.h"
 
-void handleFlags(int argc, char** argv, suseconds_t* statsPrintTimeUsecs, int* shmId, char** logFileName);
+void handleFlags(int argc, char** argv, suseconds_t* statsPrintTimeUsecs, int* shmId);
 
 #endif

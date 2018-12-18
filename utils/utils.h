@@ -62,7 +62,7 @@ typedef struct VesselNode {
     suseconds_t manTime;
     char upgradeType;
     State state;
-    suseconds_t waitingTime;       // waiting time of vessel so far
+    unsigned long long int waitingTime;       // waiting time of vessel so far
     unsigned int ledgerNodeIndex;  // just a pointer to the corresponding ledger node
 } VesselNode;
 
@@ -77,6 +77,7 @@ typedef struct SharedUtils {
     // shmWriteSem: for only one vessel to be able to add its node to the shared memory each time
     // portMasterWakeSem: vessels are using this semaphore to wake up the port-master who is sem_waiting on this semaphore while there is no job to do
     unsigned int queueSize, ledgerSize;  // queueSize: number of vessel nodes currently in the queue, ledgerSize: number of ledger nodes currently in the public ledger
+    char monitorDone; // 0: monitor still running, 1: monitor finished
 } SharedUtils;
 
 // initializes a group of parking spots
@@ -109,7 +110,7 @@ char* vesselStateToString(State state);
 void execPortMaster(int shmId, char* logFileName);
 
 // handles the necessary arguments executes monitor
-void execMonitor(long statsPrintTime, int shmId, char* logFileName);
+void execMonitor(long statsPrintTime, int shmId);
 
 // handles the necessary arguments executes vessel
 void execVessel(char vesselType, char upgradeType, long parkTime, long manTime, int shmId, char* logFileName);
