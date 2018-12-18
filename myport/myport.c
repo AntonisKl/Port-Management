@@ -1,12 +1,10 @@
 #include "myport.h"
 
-void handleFlags(int argc, char** argv, char** configFileName, unsigned int* vesselsNum, suseconds_t* intervalUsecs) {
-    if (argc != 3 && argc != 7) {
+void handleFlags(int argc, char** argv, char** configFileName, unsigned int* vesselsNum, suseconds_t* vesselIntervalUsecs, suseconds_t* monitorIntervalUsecs) {
+    if (argc != 3 && argc != 9) {
         printf("Invalid flags\nExiting...\n");
         exit(1);
     }
-
-    // char* ptr;
 
     if (strcmp(argv[1], "-l") == 0) {
         (*configFileName) = argv[2];
@@ -15,7 +13,7 @@ void handleFlags(int argc, char** argv, char** configFileName, unsigned int* ves
         exit(1);
     }
 
-    if (argc == 7) {
+    if (argc == 9) {
         if (strcmp(argv[3], "-n") == 0) {
             (*vesselsNum) = atoi(argv[4]);
             if ((*vesselsNum) == 0) {
@@ -28,8 +26,19 @@ void handleFlags(int argc, char** argv, char** configFileName, unsigned int* ves
         }
 
         if (strcmp(argv[5], "-i") == 0) {
-            (*intervalUsecs) = atol(argv[6]) * 1000;
-            if ((*intervalUsecs) < 0) {
+            (*vesselIntervalUsecs) = atol(argv[6]) * 1000;
+            if ((*vesselIntervalUsecs) < 0) {
+                printf("Invalid flags\nExiting...\n");
+                exit(1);
+            }
+        } else {
+            printf("Invalid flags\nExiting...\n");
+            exit(1);
+        }
+
+        if (strcmp(argv[7], "-m") == 0) {
+            (*monitorIntervalUsecs) = atol(argv[8]) * 1000;
+            if ((*monitorIntervalUsecs) < 0) {
                 printf("Invalid flags\nExiting...\n");
                 exit(1);
             }
@@ -40,19 +49,17 @@ void handleFlags(int argc, char** argv, char** configFileName, unsigned int* ves
     }
 }
 
-void execRandomVessels(unsigned int vesselsNum, suseconds_t intervalUsecs, char* shipTypes, int shmIdSharedMemory, char* logFileName) {
+void execRandomVessels(unsigned int vesselsNum, suseconds_t intervalUsecs, char* vesselTypes, int shmIdSharedUtils, char* logFileName) {
     srand(time(NULL));
 
     for (unsigned int i = 0; i < vesselsNum; i++) {
-        // printf("vessel creation\n");
-        if (fork() == 0) {
-            unsigned int typeIndex = rand() % 3;
-            unsigned int upgradeIndex = rand() % 3;
-            // long manTimePeriodMillis = (rand() % 5000) + 1, parkTimePeriodMillis = (rand() % 5000) + 1;
+        unsigned int typeIndex = rand() % 3;
+        unsigned int upgradeIndex = rand() % 3;
+        long parkTimeMillis = (rand() % 500) + 1;
+        long manTimePeriodMillis = (rand() % 500) + 1;
 
-            // printf("type index: %u, uIndex: %u\n", typeIndex, upgradeIndex);
-            // printf("exev vessel\n");
-            execVessel(shipTypes[typeIndex], shipTypes[upgradeIndex], 1500, 500, shmIdSharedMemory, logFileName);
+        if (fork() == 0) {
+            execVessel(vesselTypes[typeIndex], vesselTypes[upgradeIndex], parkTimeMillis, manTimePeriodMillis, shmIdSharedUtils, logFileName);
         }
         usleep(intervalUsecs);
     }
@@ -63,9 +70,9 @@ int main(int argc, char** argv) {
     char parkingSpotTypes[3];
     float costsPer30minutes[3];
     unsigned int parkingSpotCapacities[3], vesselsNum = -1;
-    suseconds_t intervalUsecs = -1;
+    suseconds_t spawnIntervalUsecs = -1, monitorIntervalUsecs = -1;
 
-    handleFlags(argc, argv, &configFileName, &vesselsNum, &intervalUsecs);
+    handleFlags(argc, argv, &configFileName, &vesselsNum, &spawnIntervalUsecs, &monitorIntervalUsecs);
 
     FILE *configFileP, *logFileP;
     char line[30];
@@ -117,60 +124,51 @@ int main(int argc, char** argv) {
         perror("fopen log file");
         return 1;
     }
-    // fprintf(logFileP, "\0"); // empty file
     fclose(logFileP);
 
     int sizeOfParkingSpotGroups = 3 * sizeof(ParkingSpotGroup);
-    int sizeOfShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(ShipNode);
-    int sizeOfLedgerShipNodes = 10 * (parkingSpotCapacities[0] + parkingSpotCapacities[1] + parkingSpotCapacities[2]) * sizeof(LedgerShipNode);
+    int sizeOfVesselNodes, sizeOfLedgerVesselNodes;
+    if (vesselsNum > 0) {
+        sizeOfVesselNodes = 2 * vesselsNum * sizeof(VesselNode);
+        sizeOfLedgerVesselNodes = 2 * vesselsNum * sizeof(LedgerVesselNode);
+    } else {
+        sizeOfVesselNodes = 2 * 4 * sizeof(VesselNode);
+        sizeOfLedgerVesselNodes = 2 * 4 * sizeof(LedgerVesselNode);
+    }
 
-    // ftok to generate unique key
     key_t key = 1;
 
-    // shmget returns an identifier in shmid
-    int shmIdSharedMemory = shmget(key, sizeof(SharedMemory), 0666 | IPC_CREAT);  // 100: to be changed probably
-    if (shmIdSharedMemory == -1) {
+    int shmIdSharedUtils = shmget(key, sizeof(SharedUtils), 0666 | IPC_CREAT);  // 100: to be changed probably
+    if (shmIdSharedUtils == -1) {
         perror("shmget failed");
         return 1;
     }
 
     key = 2;
 
-    // shmget returns an identifier in shmid
-    int shmIdPublicLedger = shmget(key, sizeof(PublicLedger), 0666 | IPC_CREAT);  // 100: to be changed probably
-    if (shmIdPublicLedger == -1) {
-        perror("shmget failed");
-        return 1;
-    }
-
-    key = 3;
-
-    // shmget returns an identifier in shmid
     int shmIdParkingGroups = shmget(key, sizeOfParkingSpotGroups, 0666 | IPC_CREAT);  // 100: to be changed probably
     if (shmIdParkingGroups == -1) {
         perror("shmget failed");
         return 1;
     }
 
-    key = 4;
+    key = 3;
 
-    // shmget returns an identifier in shmid
-    int shmIdShipNodes = shmget(key, sizeOfShipNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
-    if (shmIdShipNodes == -1) {
+    int shmIdVesselNodes = shmget(key, sizeOfVesselNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
+    if (shmIdVesselNodes == -1) {
         perror("shmget failed");
         return 1;
     }
 
-    key = 5;
+    key = 4;
 
-    // shmget returns an identifier in shmid
-    int shmIdLedgerNodes = shmget(key, sizeOfLedgerShipNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
+    int shmIdLedgerNodes = shmget(key, sizeOfLedgerVesselNodes, 0666 | IPC_CREAT);  // 100: to be changed probably
     if (shmIdLedgerNodes == -1) {
         perror("shmget failed");
         return 1;
     }
 
-    sem_t inOutSem, shipTypesSemIn[3], shipTypesSemOut[3], writeSem, portMasterWakeSem;
+    sem_t inOutSem, vesselTypesSemIn[3], vesselTypesSemOut[3], writeSem, portMasterWakeSem;
 
     if (sem_init(&inOutSem, 1, 1) == -1) {
         perror("sem_init failed");
@@ -178,11 +176,11 @@ int main(int argc, char** argv) {
     }
 
     for (unsigned int i = 0; i < 3; i++) {
-        if (sem_init(&shipTypesSemIn[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
+        if (sem_init(&vesselTypesSemIn[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
             perror("sem_init failed");
             return 1;
         }
-        if (sem_init(&shipTypesSemOut[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
+        if (sem_init(&vesselTypesSemOut[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
             perror("sem_init failed");
             return 1;
         }
@@ -193,48 +191,41 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    if (sem_init(&portMasterWakeSem, 1, 0) == -1) {  // port-master will wait until the first ship comes
+    if (sem_init(&portMasterWakeSem, 1, 0) == -1) {  // port-master will wait until the first vessel comes
         perror("sem_init failed");
         return 1;
     }
 
-    SharedMemory* sharedMemory = (SharedMemory*)((uint8_t*)shmat(shmIdSharedMemory, 0, 0));  // error checking add <-------------------
-    PublicLedger* publicLedger = (PublicLedger*)((uint8_t*)shmat(shmIdPublicLedger, 0, 0));
+    SharedUtils* sharedUtils = (SharedUtils*)((uint8_t*)shmat(shmIdSharedUtils, 0, 0));  // error checking add <-------------------
     ParkingSpotGroup* parkingSpotGroups = (ParkingSpotGroup*)((uint8_t*)shmat(shmIdParkingGroups, 0, 0));
-    ShipNode* shipNodes = (ShipNode*)((uint8_t*)shmat(shmIdShipNodes, 0, 0));
-    LedgerShipNode* ledgerShipNodes = (LedgerShipNode*)((uint8_t*)shmat(shmIdLedgerNodes, 0, 0));
+    VesselNode* vesselNodes = (VesselNode*)((uint8_t*)shmat(shmIdVesselNodes, 0, 0));
+    LedgerVesselNode* ledgerVesselNodes = (LedgerVesselNode*)((uint8_t*)shmat(shmIdLedgerNodes, 0, 0));
 
-    // doShifts(sharedMemory, sizeOfShipNodes, sizeOfLedgerShipNodes);  // do necessary shifts
-    initPublicLedger(sharedMemory, publicLedger, parkingSpotGroups, parkingSpotTypes, parkingSpotCapacities, costsPer30minutes, inOutSem, shipTypesSemIn, shipTypesSemOut,
-                     sizeOfShipNodes, sizeOfLedgerShipNodes, writeSem, portMasterWakeSem, shmIdPublicLedger, shmIdParkingGroups, shmIdShipNodes, shmIdLedgerNodes);
+    initSharedUtils(sharedUtils, parkingSpotGroups, parkingSpotTypes, parkingSpotCapacities, costsPer30minutes, inOutSem, vesselTypesSemIn, vesselTypesSemOut,
+                    sizeOfVesselNodes, sizeOfLedgerVesselNodes, writeSem, portMasterWakeSem, shmIdParkingGroups, shmIdVesselNodes, shmIdLedgerNodes);
 
     // start monitor and port-master
     int pid = fork();
-    if (pid == 0)
-        execPortMaster(shmIdSharedMemory, logFileName);
+    if (pid == 0) {
+        execPortMaster(shmIdSharedUtils, logFileName);
+    }
+
+    if (fork() == 0) {
+        execMonitor(monitorIntervalUsecs, shmIdSharedUtils, logFileName);
+    }
 
     sleep(1);
-    // if (fork() == 0)
-    //     execVessel(parkingSpotTypes[0], parkingSpotTypes[2], 1500, 500, shmIdSharedMemory, logFileName);
-    // // sleep(2);
-
-    // if (fork() == 0)
-    //     execVessel(parkingSpotTypes[0], parkingSpotTypes[1], 1500, 500, shmIdSharedMemory, logFileName);
-
-    if (vesselsNum > 0 && intervalUsecs > 0)
-        execRandomVessels(vesselsNum, intervalUsecs, parkingSpotTypes, shmIdSharedMemory, logFileName);
+    printf("vessels num = %d\n", vesselsNum);
+    if (vesselsNum > 0 && spawnIntervalUsecs > 0)
+        execRandomVessels(vesselsNum, spawnIntervalUsecs, parkingSpotTypes, shmIdSharedUtils, logFileName);
     else
-        execRandomVessels(4, 500000, parkingSpotTypes, shmIdSharedMemory, logFileName);
+        execRandomVessels(4, 500000, parkingSpotTypes, shmIdSharedUtils, logFileName);
 
-    shmdt(sharedMemory);
-    shmdt(publicLedger);
+    shmdt(sharedUtils);
     shmdt(parkingSpotGroups);
-    shmdt(shipNodes);
-    shmdt(ledgerShipNodes);
+    shmdt(vesselNodes);
+    shmdt(ledgerVesselNodes);
 
-    // wait(NULL);
-    // wait(NULL);
-    // wait(NULL);
     int status;
     if (waitpid(pid, &status, WUNTRACED) == -1) {
         perror("waitpid error");
@@ -244,5 +235,4 @@ int main(int argc, char** argv) {
     }
 
     fclose(configFileP);
-    // shmctl(shmid, IPC_RMID, NULL);
 }

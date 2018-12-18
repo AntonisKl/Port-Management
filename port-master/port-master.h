@@ -3,24 +3,20 @@
 
 #include "../utils/utils.h"
 
-void handleFlags(int argc, char** argv, /* char** chargesFileName,*/ int* shmId, char** logFileName);
+void handleFlags(int argc, char** argv, int* shmId, char** logFileName);
 
-void getValuesFromShm(SharedMemory* sharedMemory, sem_t* shipTypesSemIn[3] /*, sem_t* shipTypesSemOut[3]*/, sem_t** inOutSem, sem_t** shmWriteSem,
-                      sem_t** portMasterWakeSem, LedgerShipNode** ledgerShipNodes, ShipNode** shipNodesIn /*, ShipNode** shipNodesOut*/,
-                      unsigned int* nextInIndex /*, unsigned int* nextOutIndex*/, unsigned int* nextLedgerShipNodeIndex, ParkingSpotGroup* parkingSpotGroups[3]);
+State getNextPendingVesselState(State state);
 
-State getNextPendingShipState(State state);
+void addLedgerVesselNode(SharedUtils* sharedUtils, VesselNode* vesselNode, LedgerVesselNode* ledgerVesselNodes, ParkingSpotGroup* parkingSpotGroups, char withUpgrade);
 
-LedgerShipNode* addLedgerShipNode(PublicLedger* publicLedger, ShipNode* shipNode, LedgerShipNode* ledgerShipNodes, ParkingSpotGroup* parkingSpotGroups);
+void handleNextVessel(SharedUtils* sharedUtils, VesselNode* vesselNode, LedgerVesselNode* ledgerVesselNodes,
+                    ParkingSpotGroup* parkingSpotGroups, unsigned int* sizeOfPendingVesselNodes,
+                    unsigned int* nextIndex, VesselNode* pendingVesselNodeRequests[100], FILE* logFileP);
 
-void handleNextShip(SharedMemory* sharedMemory, ShipNode* shipNode, PublicLedger* publicLedger, LedgerShipNode* ledgerShipNodes,
-                    ParkingSpotGroup* parkingSpotGroups, unsigned int* sizeOfPendingShipNodes,
-                    unsigned int* nextIndex, ShipNode* pendingShipNodeRequests[100], FILE* logFileP);
+void handleOutGoingVessel(SharedUtils* sharedUtils, VesselNode* vesselNode, ParkingSpotGroup* parkingSpotGroups, LedgerVesselNode* ledgerVesselNodes, unsigned int* nextIndex, char withUpgrade);
 
-void handleOutGoingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, unsigned int* nextIndex, char withUpgrade);
-
-void handleIncomingShip(SharedMemory* sharedMemory, ShipNode* shipNode, ParkingSpotGroup* parkingSpotGroups, PublicLedger* publicLedger,
-                        LedgerShipNode* ledgerShipNodes, unsigned int* nextIndex,
-                        ShipNode* pendingShipNodeRequests[100], unsigned int* sizeOfPendingShipNodes, char withUpgrade, FILE* logFileP);
+void handleIncomingVessel(SharedUtils* sharedUtils, VesselNode* vesselNode, ParkingSpotGroup* parkingSpotGroups,
+                        LedgerVesselNode* ledgerVesselNodes, unsigned int* nextIndex,
+                        VesselNode* pendingVesselNodeRequests[100], unsigned int* sizeOfPendingVesselNodes, char withUpgrade, FILE* logFileP);
                         
 #endif

@@ -1,10 +1,10 @@
 -type1 S
 -type2 M
 -type3 L
--capacity1 1
--capacity2 3
--capacity3 5
--cost1 5
--cost2 10
--cost3 15
+-capacity1 25
+-capacity2 55
+-capacity3 13
+-cost1 5.6
+-cost2 10.35
+-cost3 54.67
 -logFile log.txt

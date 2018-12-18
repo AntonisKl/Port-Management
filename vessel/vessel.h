@@ -5,14 +5,14 @@
 
 void handleFlags(int argc, char** argv, char* type, char* upgradeFlag, suseconds_t* parkTime, suseconds_t* manTime, int* shmId, char** logFileName);
 
-// void getShipTypeSem(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn /*, sem_t* shipTypeSemOut*/);
+// void getVesselTypeSem(SharedUtils* sharedUtils, char vesselType, sem_t* vesselTypeSemIn /*, sem_t* vesselTypeSemOut*/);
 
-// ShipNode* addShipNodeToShm(SharedMemory* sharedMemory, char shipType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime);
+// VesselNode* addVesselNodeToShm(SharedUtils* sharedUtils, char vesselType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime);
 
-// void getShipTypeSems(SharedMemory* sharedMemory, char shipType, sem_t* shipTypeSemIn, sem_t* shipTypeSemOut);
+// void getVesselTypeSems(SharedUtils* sharedUtils, char vesselType, sem_t* vesselTypeSemIn, sem_t* vesselTypeSemOut);
 
-ShipNode* addShipNodeToShmByShipNode(SharedMemory* sharedMemory, ShipNode* shipNodes, ShipNode shipNode);
+VesselNode* addVesselNodeToShmByVesselNode(SharedUtils* sharedUtils, VesselNode* vesselNodes, VesselNode vesselNode);
 
-ShipNode* addShipNodeToShmByValues(SharedMemory* sharedMemory, ShipNode* shipNodes, char shipType, char upgradeFlag, suseconds_t parkTimePeriod, suseconds_t manTimePeriod, State state);
+VesselNode* addVesselNodeToShmByValues(SharedUtils* sharedUtils, VesselNode* vesselNodes, char vesselType, char upgradeFlag, suseconds_t parkTime, suseconds_t manTime, State state);
 
 #endif

@@ -2,146 +2,169 @@
 
 void initParkingSpotGroup(ParkingSpotGroup* parkingSpot, char type, unsigned int maxCapacity, float cost) {
     parkingSpot->maxCapacity = maxCapacity;
-    parkingSpot->costPer30Min = cost;
+    parkingSpot->costPer30Millis = cost;
     parkingSpot->type = type;
     parkingSpot->curCapacity = maxCapacity;
     // parkingSpot->occupied = 0;
 }
 
-void initPublicLedger(SharedMemory* sharedMemory, PublicLedger* publicLedger, ParkingSpotGroup* parkingSpotGroups, char* parkingSpotTypes,
-                      unsigned int* capacities, float* costs, sem_t inOutSem, sem_t shipTypesSemIn[3], sem_t shipTypesSemOut[3], int sizeOfShipNodes,
-                      int sizeOfLedgerShipNodes, sem_t shmWriteSem, sem_t portMasterWakeSem, int shmIdPublicLedger, int shmIdParkingGroups, int shmIdShipNodes, int shmIdLedgerNodes) {
-    sharedMemory->inOutSem = inOutSem;
-    sharedMemory->shmWriteSem = shmWriteSem;
-    sharedMemory->sizeOfShipNodes = sizeOfShipNodes;
-    sharedMemory->sizeOfLedgerShipNodes = sizeOfLedgerShipNodes;
-    // maybe provide sizeOfOutShipNodes as well ....................
-    sharedMemory->shipTypesSemIn[0] = shipTypesSemIn[0];
-    sharedMemory->shipTypesSemIn[1] = shipTypesSemIn[1];
-    sharedMemory->shipTypesSemIn[2] = shipTypesSemIn[2];
+void initSharedUtils(SharedUtils* sharedUtils, ParkingSpotGroup* parkingSpotGroups, char* parkingSpotTypes,
+                      unsigned int* capacities, float* costs, sem_t inOutSem, sem_t vesselTypesSemIn[3], sem_t vesselTypesSemOut[3], int sizeOfVesselNodes,
+                      int sizeOfLedgerVesselNodes, sem_t shmWriteSem, sem_t portMasterWakeSem, int shmIdParkingGroups, int shmIdVesselNodes, int shmIdLedgerNodes) {
+    sharedUtils->inOutSem = inOutSem;
+    sharedUtils->shmWriteSem = shmWriteSem;
+    sharedUtils->sizeOfVesselNodes = sizeOfVesselNodes;
+    sharedUtils->sizeOfLedgerVesselNodes = sizeOfLedgerVesselNodes;
 
-    sharedMemory->shipTypesSemPending[0] = shipTypesSemOut[0];
-    sharedMemory->shipTypesSemPending[1] = shipTypesSemOut[1];
-    sharedMemory->shipTypesSemPending[2] = shipTypesSemOut[2];
+    sharedUtils->vesselTypesSemIn[0] = vesselTypesSemIn[0];
+    sharedUtils->vesselTypesSemIn[1] = vesselTypesSemIn[1];
+    sharedUtils->vesselTypesSemIn[2] = vesselTypesSemIn[2];
 
-    sharedMemory->shmIdPublicLedger = shmIdPublicLedger;
-    sharedMemory->shmIdParkingSpotGroups = shmIdParkingGroups;
-    sharedMemory->shmIdShipNodes = shmIdShipNodes;
-    sharedMemory->shmIdLedgerNodes = shmIdLedgerNodes;
+    sharedUtils->vesselTypesSemPending[0] = vesselTypesSemOut[0];
+    sharedUtils->vesselTypesSemPending[1] = vesselTypesSemOut[1];
+    sharedUtils->vesselTypesSemPending[2] = vesselTypesSemOut[2];
 
-    sharedMemory->portMasterWakeSem = portMasterWakeSem;
+    sharedUtils->shmIdParkingSpotGroups = shmIdParkingGroups;
+    sharedUtils->shmIdVesselNodes = shmIdVesselNodes;
+    sharedUtils->shmIdLedgerNodes = shmIdLedgerNodes;
 
-    // sharedMemory->sizeOut = 0;
-    sharedMemory->sizeIn = 0;
-    publicLedger->size = 0;
-    printf("1\n");
+    sharedUtils->portMasterWakeSem = portMasterWakeSem;
 
-    // sharedMemory->shipTypes[0] = parkingSpotTypes[0];
-    // sharedMemory->shipTypes[1] = parkingSpotTypes[1];
-    // sharedMemory->shipTypes[2] = parkingSpotTypes[2];
+    // sharedUtils->sizeOut = 0;
+    sharedUtils->queueSize = 0;
+    sharedUtils->ledgerSize = 0;
+    // printf("1\n");
+
+    // sharedUtils->vesselTypes[0] = parkingSpotTypes[0];
+    // sharedUtils->vesselTypes[1] = parkingSpotTypes[1];
+    // sharedUtils->vesselTypes[2] = parkingSpotTypes[2];
 
     for (unsigned int i = 0; i < 3; i++) {
-        printf("i = %d\n", i);
+        // printf("i = %d\n", i);
         initParkingSpotGroup(&(parkingSpotGroups[i]), parkingSpotTypes[i], capacities[i], costs[i]);
     }
 }
 
-void doShifts(SharedMemory* sharedMemory, int sizeOfShipNodes, int sizeOfLedgerShipNodes) {
-    printf("in doShifts: sizeOfShipNodes = %d, sizeOfLedgerNodes = %d\n", sizeOfShipNodes, sizeOfLedgerShipNodes);
-    // sharedMemory = (SharedMemory*)((uint8_t*)sharedMemory);
-    sharedMemory->publicLedger = (PublicLedger*)(((uint8_t*)sharedMemory) + sizeof(SharedMemory));
+// void doShifts(SharedUtils* sharedUtils, int sizeOfVesselNodes, int sizeOfLedgerVesselNodes) {
+//     printf("in doShifts: sizeOfVesselNodes = %d, sizeOfLedgerNodes = %d\n", sizeOfVesselNodes, sizeOfLedgerVesselNodes);
+//     // sharedUtils = (SharedUtils*)((uint8_t*)sharedUtils);
+//     sharedUtils->publicLedger = (PublicLedger*)(((uint8_t*)sharedUtils) + sizeof(SharedUtils));
 
-    sharedMemory->parkingSpotGroups = (ParkingSpotGroup*)(((uint8_t*)sharedMemory->publicLedger) + sizeof(PublicLedger));
-    sharedMemory->shipNodes = (ShipNode*)(((uint8_t*)sharedMemory->parkingSpotGroups) + (3 * sizeof(ParkingSpotGroup)));
-    sharedMemory->publicLedger->ledgerShipNodes = (LedgerShipNode*)(((uint8_t*)sharedMemory->shipNodes) + sizeOfShipNodes);  // sharedMemory->shipNodesOut = (ShipNode**)sharedMemory + sizeof(SharedMemory) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfShipNodes + sizeOfLedgerShipNodes;
-}
+//     sharedUtils->parkingSpotGroups = (ParkingSpotGroup*)(((uint8_t*)sharedUtils->publicLedger) + sizeof(PublicLedger));
+//     sharedUtils->vesselNodes = (VesselNode*)(((uint8_t*)sharedUtils->parkingSpotGroups) + (3 * sizeof(ParkingSpotGroup)));
+//     sharedUtils->publicLedger->ledgerVesselNodes = (LedgerVesselNode*)(((uint8_t*)sharedUtils->vesselNodes) + sizeOfVesselNodes);  // sharedUtils->vesselNodesOut = (VesselNode**)sharedUtils + sizeof(SharedUtils) + sizeof(PublicLedger) + 3 * sizeof(ParkingSpotGroup) + sizeOfVesselNodes + sizeOfLedgerVesselNodes;
+// }
 
-void getShipTypeSems(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, sem_t* shipTypeSem, sem_t* shipTypeSemPending, char shipType) {
+void getVesselTypeSems(SharedUtils* sharedUtils, ParkingSpotGroup* parkingSpotGroups, sem_t* vesselTypeSem, sem_t* vesselTypeSemPending, char vesselType) {
     for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == parkingSpotGroups[i].type) {
-            shipTypeSem = &sharedMemory->shipTypesSemIn[i];  /// maybe remove "&" ????????????????? here and below
-            shipTypeSemPending = &sharedMemory->shipTypesSemPending[i];
+        if (vesselType == parkingSpotGroups[i].type) {
+            vesselTypeSem = &sharedUtils->vesselTypesSemIn[i];  /// maybe remove "&" ????????????????? here and below
+            vesselTypeSemPending = &sharedUtils->vesselTypesSemPending[i];
             break;
         }
     }
 }
 
-void postSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
+void postSemByVesselType(SharedUtils* sharedUtils, ParkingSpotGroup* parkingSpotGroups, char vesselType) {
     for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == parkingSpotGroups[i].type) {
-            sem_post(&sharedMemory->shipTypesSemIn[i]);  /// maybe remove "&" ????????????????? here and below
+        if (vesselType == parkingSpotGroups[i].type) {
+            sem_post(&sharedUtils->vesselTypesSemIn[i]);  /// maybe remove "&" ????????????????? here and below
             break;
         }
     }
 }
 
-void postSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
+void postSemPendingByVesselType(SharedUtils* sharedUtils, ParkingSpotGroup* parkingSpotGroups, char vesselType) {
     for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == parkingSpotGroups[i].type) {
-            sem_post(&sharedMemory->shipTypesSemPending[i]);  /// maybe remove "&" ????????????????? here and below
+        if (vesselType == parkingSpotGroups[i].type) {
+            sem_post(&sharedUtils->vesselTypesSemPending[i]);  /// maybe remove "&" ????????????????? here and below
             break;
         }
     }
 }
 
-void waitSemByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
-    printf("in waitSemByShipType\n");
+void waitSemByVesselType(SharedUtils* sharedUtils, ParkingSpotGroup* parkingSpotGroups, char vesselType) {
+    // printf("in waitSemByVesselType\n");
     for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == parkingSpotGroups[i].type) {
-            // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
-            printf("vessel is waiting on type semaphore\n");
-            sem_wait(&sharedMemory->shipTypesSemIn[i]);  /// maybe remove "&" ????????????????? here and below
+        if (vesselType == parkingSpotGroups[i].type) {
+            // doShifts(sharedUtils, sharedUtils->sizeOfVesselNodes, sharedUtils->sizeOfLedgerVesselNodes);  // do necessary shifts
+            // printf("vessel is waiting on type semaphore\n");
+            sem_wait(&sharedUtils->vesselTypesSemIn[i]);  /// maybe remove "&" ????????????????? here and below
             break;
         }
     }
 }
 
-void waitSemPendingByShipType(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
-    printf("in waitSemPendingByShipType\n");
+void waitSemPendingByVesselType(SharedUtils* sharedUtils, ParkingSpotGroup* parkingSpotGroups, char vesselType) {
+    // printf("in waitSemPendingByVesselType\n");
     for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == parkingSpotGroups[i].type) {
-            // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
-            printf("vessel is waiting on type pending semaphore\n");
-            sem_wait(&sharedMemory->shipTypesSemPending[i]);  /// maybe remove "&" ????????????????? here and below
+        if (vesselType == parkingSpotGroups[i].type) {
+            // doShifts(sharedUtils, sharedUtils->sizeOfVesselNodes, sharedUtils->sizeOfLedgerVesselNodes);  // do necessary shifts
+            // printf("vessel is waiting on type pending semaphore\n");
+            sem_wait(&sharedUtils->vesselTypesSemPending[i]);  /// maybe remove "&" ????????????????? here and below
             break;
         }
     }
 }
 
-unsigned int getShipTypeIndex(ParkingSpotGroup* parkingSpotGroups, char shipType) {
+unsigned int getVesselTypeIndex(ParkingSpotGroup* parkingSpotGroups, char vesselType) {
     for (unsigned int i = 0; i < 3; i++) {
-            printf("parking group type: --------------------------------------------------> |%c|\n", parkingSpotGroups[i].type); //////////////////////// PROBLEM HERE AFTER SOME VESSELS
-        if (shipType == parkingSpotGroups[i].type) {
-            printf("SHIP TYPE GROUP GET type: --------------------------------------------------> |%c|, capacity: %u\n", parkingSpotGroups[i].type, parkingSpotGroups[i].maxCapacity);
+        // printf("parking group type: --------------------------------------------------> |%c|\n", parkingSpotGroups[i].type);  //////////////////////// PROBLEM HERE AFTER SOME VESSELS
+        if (vesselType == parkingSpotGroups[i].type) {
+            // printf("SHIP TYPE GROUP GET type: --------------------------------------------------> |%c|, capacity: %u\n", parkingSpotGroups[i].type, parkingSpotGroups[i].maxCapacity);
 
-            // doShifts(sharedMemory, sharedMemory->sizeOfShipNodes, sharedMemory->sizeOfLedgerShipNodes);  // do necessary shifts
+            // doShifts(sharedUtils, sharedUtils->sizeOfVesselNodes, sharedUtils->sizeOfLedgerVesselNodes);  // do necessary shifts
             return i;
         }
     }
-	printf("Oops.................. get ship type index failed\n");
+    printf("Oops.................. get vessel type index failed\n");
     return -1;
 }
 
-sem_t* getShipTypeSem(SharedMemory* sharedMemory, ParkingSpotGroup* parkingSpotGroups, char shipType) {
+sem_t* getVesselTypeSem(SharedUtils* sharedUtils, ParkingSpotGroup* parkingSpotGroups, char vesselType) {
     for (unsigned int i = 0; i < 3; i++) {
-        if (shipType == parkingSpotGroups[i].type) {
-            return &sharedMemory->shipTypesSemIn[i];
+        if (vesselType == parkingSpotGroups[i].type) {
+            return &sharedUtils->vesselTypesSemIn[i];
         }
     }
-    printf("Oops ship type sem get\n");
+    printf("Oops vessel type sem get\n");
     return NULL;
 }
 
-ParkingSpotGroup* getShipParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3], char shipType) {
-    printf("SHIP TYPE::::::::::::::::::::::::::::::::::::::::::::::: %c\n", shipType);
+ParkingSpotGroup* getVesselParkingSpotGroup(ParkingSpotGroup parkingSpotGroups[3], char vesselType) {
+    // printf("SHIP TYPE::::::::::::::::::::::::::::::::::::::::::::::: %c\n", vesselType);
     for (unsigned int i = 0; i < 3; i++) {
-        printf("PARKING SPOT GROUP GET type: --------------------------------------------------> |%c|, capacity: %u\n", parkingSpotGroups[i].type, parkingSpotGroups[i].maxCapacity);
-        if (shipType == parkingSpotGroups[i].type) {
+        // printf("PARKING SPOT GROUP GET type: --------------------------------------------------> |%c|, capacity: %u\n", parkingSpotGroups[i].type, parkingSpotGroups[i].maxCapacity);
+        if (vesselType == parkingSpotGroups[i].type) {
             return &parkingSpotGroups[i];
         }
     }
     printf("Oops parking spot group get\n");
     return NULL;
+}
+
+char* vesselStateToString(State state) {
+    if (state == WaitingToEnter) {
+        return "Waiting to Enter";
+    } else if (state == WaitingToLeave) {
+        return "Waiting to Leave";
+    } else if (state == PendingEnter) {
+        return "Pending to Enter";
+    } else if (state == Parked) {
+        return "Parked";
+    } else if (state == Completed) {
+        return "Completed";
+    } else if (state == Entering) {
+        return "Entering";
+    } else if (state == Leaving) {
+        return "Leaving";
+    } else {
+        return "N/A";
+    }
+}
+
+suseconds_t caculateWaitingTime(suseconds_t arrivalTime, suseconds_t departTime, suseconds_t manTime, suseconds_t parkTime) {
+    return departTime - arrivalTime - (2 * manTime) - parkTime;
 }
 
 void execPortMaster(int shmId, char* logFileName) {
@@ -155,30 +178,29 @@ void execPortMaster(int shmId, char* logFileName) {
     }
 }
 
-void execMonitor(suseconds_t statusPrintTime, suseconds_t statsPrintTime, int shmId, char* logFileName) {
-    char statusPrintTimeS[MAX_STRING_INT_SIZE], statsPrintTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
+void execMonitor(long statsPrintTime, int shmId, char* logFileName) {
+    char statsPrintTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
 
-    sprintf(statusPrintTimeS, "%ld", statusPrintTime);
     sprintf(statsPrintTimeS, "%ld", statsPrintTime);
     sprintf(shmIdS, "%d", shmId);
 
-    char* args[] = {"executables/monitor", "-d", statusPrintTimeS, "-t", statsPrintTimeS, "-s", shmIdS, "-lf", logFileName, NULL};
+    char* args[] = {"executables/monitor", "-t", statsPrintTimeS, "-s", shmIdS, "-lf", logFileName, NULL};
     if (execvp(args[0], args) < 0) {
         printf("Exec monitor failed\n");
     }
 }
 
-void execVessel(char shipType, char upgradeFlag /* 0 or 1 */, long parkTime, long manTime, int shmId, char* logFileName) {
-    char shipTypeS[2], upgradeFlagS[2], parkTimeS[MAX_STRING_INT_SIZE], manTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
-    printf("fork = 1110\n");
+void execVessel(char vesselType, char upgradeType, long parkTime, long manTime, int shmId, char* logFileName) {
+    char vesselTypeS[2], upgradeTypeS[2], parkTimeS[MAX_STRING_INT_SIZE], manTimeS[MAX_STRING_INT_SIZE], shmIdS[MAX_STRING_INT_SIZE];
+    // printf("fork = 1110\n");
 
-    sprintf(shipTypeS, "%c", shipType);
-    sprintf(upgradeFlagS, "%c", upgradeFlag);
+    sprintf(vesselTypeS, "%c", vesselType);
+    sprintf(upgradeTypeS, "%c", upgradeType);
     sprintf(parkTimeS, "%ld", parkTime);
     sprintf(manTimeS, "%ld", manTime);
     sprintf(shmIdS, "%d", shmId);
 
-    char* args[] = {"executables/vessel", "-t", shipTypeS, "-u", upgradeFlagS, "-p", parkTimeS, "-m", manTimeS, "-s", shmIdS, "-lf", logFileName, NULL};
+    char* args[] = {"executables/vessel", "-t", vesselTypeS, "-u", upgradeTypeS, "-p", parkTimeS, "-m", manTimeS, "-s", shmIdS, "-lf", logFileName, NULL};
     if (execvp(args[0], args) < 0) {
         printf("Exec vessel failed\n");
     }
