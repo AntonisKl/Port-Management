@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
                 waitingTimesPerType[i] = 0;
 
             for (unsigned int i = 0; i < sharedUtils->ledgerSize; i++) {
-                printf("Vessel with id %d in ledger:\nType->%c, Upgrade Type->%c, State->%s, Parking Cost->%f, Arrival Time->%ld ms, Depart Time->%ld ms, Waiting Time->%llu ms, Man Time->%ld ms, Park Time->%ld ms, Parking Spot Type->%c\n",
+                printf("Vessel with id %d in the Public Ledger:\nType->%c, Upgrade Type->%c, State->%s, Parking Cost->%f, Arrival Time->%ld ms, Depart Time->%ld ms, Waiting Time->%llu ms, Man Time->%ld ms, Park Time->%ld ms, Parking Spot Type->%c\n",
                        ledgerVesselNodes[i].vesselId, ledgerVesselNodes[i].vesselType,
                        getVesselTypeIndex(parkingSpotGroups, ledgerVesselNodes[i].upgradeType) > getVesselTypeIndex(parkingSpotGroups, ledgerVesselNodes[i].vesselType) ? ledgerVesselNodes[i].upgradeType : '-',
                        vesselStateToString(ledgerVesselNodes[i].state), ledgerVesselNodes[i].stayCost, ledgerVesselNodes[i].arrivalTime,

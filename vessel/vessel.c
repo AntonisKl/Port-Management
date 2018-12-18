@@ -70,7 +70,8 @@ void handleFlags(int argc, char** argv, char* type, char* upgradeType, suseconds
 }
 
 VesselNode* addVesselNodeToShmByVesselNode(SharedUtils* sharedUtils, VesselNode* vesselNodes, VesselNode vesselNode) {
-    sem_wait(&sharedUtils->shmWriteSem);
+    sem_wait(&sharedUtils->shmWriteSem);  // start of critical section
+
     unsigned int nextVesselNodeIndex = sharedUtils->queueSize;
 
     vesselNodes[nextVesselNodeIndex].vesselType = vesselNode.vesselType;
@@ -81,12 +82,12 @@ VesselNode* addVesselNodeToShmByVesselNode(SharedUtils* sharedUtils, VesselNode*
     vesselNodes[nextVesselNodeIndex].state = vesselNode.state;
     vesselNodes[nextVesselNodeIndex].withUpgrade = vesselNode.withUpgrade;
     vesselNodes[nextVesselNodeIndex].waitingTime = vesselNode.waitingTime;
-
     vesselNodes[nextVesselNodeIndex].ledgerNodeIndex = vesselNode.ledgerNodeIndex;
 
+    // update queue's size
     sharedUtils->queueSize++;
 
-    sem_post(&sharedUtils->shmWriteSem);
+    sem_post(&sharedUtils->shmWriteSem);  // end of critical section
 
     return &vesselNodes[nextVesselNodeIndex];
 }
@@ -110,7 +111,8 @@ VesselNode* addVesselNodeToShmByValues(SharedUtils* sharedUtils, VesselNode* ves
 
     if (sem_post(&sharedUtils->shmWriteSem) < 0)
         perror("sem post failed");
-    return &vesselNodes[nextVesselNodeIndex];
+
+    return &vesselNodes[nextVesselNodeIndex];  // return a ponter that points to the added vessel node
 }
 
 int main(int argc, char** argv) {
@@ -120,6 +122,7 @@ int main(int argc, char** argv) {
 
     handleFlags(argc, argv, &vesselType, &upgradeType, &parkTimeUsecs, &manTimeUsecs, &shmId, &logFileName);
 
+    // attach shared memory segments
     SharedUtils* sharedUtils = (SharedUtils*)((uint8_t*)shmat(shmId, 0, 0));
     if (sharedUtils == (void*)-1) {
         perror("shmat failed");
@@ -138,7 +141,7 @@ int main(int argc, char** argv) {
     }
 
     long long unsigned int waitingTime = 0;
-    long timeStart, timeStop;
+    long timeStart, timeStop;  // used for calculating waiting time
 
     FILE* logFileP;
     if ((logFileP = fopen(logFileName, "a")) == NULL) {
@@ -147,16 +150,18 @@ int main(int argc, char** argv) {
 
     VesselNode* vesselNode = addVesselNodeToShmByValues(sharedUtils, vesselNodes, vesselType, upgradeType, parkTimeUsecs, manTimeUsecs, WaitingToEnter);
 
-    if (sem_post(&sharedUtils->portMasterWakeSem) < 0)
+    if (sem_post(&sharedUtils->portMasterWakeSem) < 0) {
         perror("portMasterWakeSem failed");
+        exit(1);
+    }
 
     fprintf(logFileP, "Timestamp (millis): %lu -> Vessel with pid %d and type %c entered the queue as incoming\n", (unsigned long)time(NULL), vesselNode->vesselId, vesselNode->vesselType);
     timeStart = time(NULL);
-    waitSemByVesselType(sharedUtils, parkingSpotGroups, vesselType);
+    waitSemByVesselType(sharedUtils, parkingSpotGroups, vesselType);  // wait for port-master to allow the vessel to get into the port OR to wait on the pending semaphore
 
     if (vesselNode->state == PendingEnter) {
         fprintf(logFileP, "Timestamp (millis): %lu -> Vessel with pid %d and type %c entered the pending queue\n", (unsigned long)time(NULL), vesselNode->vesselId, vesselNode->vesselType);
-        waitSemPendingByVesselType(sharedUtils, parkingSpotGroups, vesselType);
+        waitSemPendingByVesselType(sharedUtils, parkingSpotGroups, vesselType);  // port-master ordered the vessel to wait further on the pending semaphore
     }
     timeStop = time(NULL);
 
@@ -167,22 +172,25 @@ int main(int argc, char** argv) {
 
     usleep(manTimeUsecs);  // sleep for manTime + parkTime
 
-    sem_post(&sharedUtils->inOutSem);
+    if (sem_post(&sharedUtils->inOutSem) < 0) {  // allow the port-master to get another vessel in/out of the port
+        perror("sem_post failed");
+        exit(1);
+    }
 
     vesselNode->state = Parked;
 
     fprintf(logFileP, "Timestamp (millis): %lu -> Vessel with pid %d and type %c parked in the port\n", (unsigned long)time(NULL), vesselNode->vesselId, vesselNode->vesselType);
+
     usleep(parkTimeUsecs);
 
     vesselNode->state = WaitingToLeave;
-    vesselNode = addVesselNodeToShmByVesselNode(sharedUtils, vesselNodes, *vesselNode);
+    vesselNode = addVesselNodeToShmByVesselNode(sharedUtils, vesselNodes, *vesselNode);  // add the vessel node again but with updated values
 
     if (sem_post(&sharedUtils->portMasterWakeSem) < 0)
         perror("portMasterWakeSem failed");
 
     timeStart = time(NULL);
     waitSemByVesselType(sharedUtils, parkingSpotGroups, vesselNode->vesselType);
-
     timeStop = time(NULL);
 
     waitingTime += ((unsigned long long int)timeStop - timeStart);
@@ -191,23 +199,28 @@ int main(int argc, char** argv) {
     usleep(manTimeUsecs);
 
     vesselNode->state = Completed;
-    sem_post(&sharedUtils->inOutSem);
+    if (sem_post(&sharedUtils->inOutSem) < 0) {  // allow the port-master to get another vessel in/out of the port
+        perror("sem_post failed");
+        exit(1);
+    }
     fprintf(logFileP, "Timestamp (millis): %lu -> Vessel with pid %d and type %c left the port\n", (unsigned long)time(NULL), vesselNode->vesselId, vesselNode->vesselType);
 
+    // close log file
     if (fclose(logFileP) == EOF) {
         perror("fclose failed");
     }
 
+    // detach shared memory segments
     if (shmdt(sharedUtils) == -1) {
-        perror("shmat failed");
+        perror("shmdt failed");
         exit(1);
     }
     if (shmdt(vesselNodes) == -1) {
-        perror("shmat failed");
+        perror("shmdt failed");
         exit(1);
     }
     if (shmdt(parkingSpotGroups) == -1) {
-        perror("shmat failed");
+        perror("shmdt failed");
         exit(1);
     }
 

@@ -1,5 +1,8 @@
 #include "myport.h"
 
+#define MAX_PARK_TIME 500
+#define MAX_MAN_TIME 500
+
 void handleFlags(int argc, char** argv, char** configFileName, unsigned int* vesselsNum, suseconds_t* vesselIntervalUsecs, suseconds_t* monitorIntervalUsecs) {
     if (argc != 3 && argc != 9) {
         printf("Invalid flags\nExiting...\n");
@@ -54,9 +57,9 @@ void execRandomVessels(unsigned int vesselsNum, suseconds_t intervalUsecs, char*
 
     for (unsigned int i = 0; i < vesselsNum; i++) {
         unsigned int typeIndex = rand() % 3;
-        unsigned int upgradeIndex = rand() % 3;
-        long parkTimeMillis = (rand() % 500) + 1;
-        long manTimePeriodMillis = (rand() % 500) + 1;
+        unsigned int upgradeIndex = rand() % 3;  // if upgradeIndex <= typeIndex then later the vessel is not considered upgradeable by the port-master
+        long parkTimeMillis = (rand() % MAX_PARK_TIME) + 1;
+        long manTimePeriodMillis = (rand() % MAX_MAN_TIME) + 1;
 
         if (fork() == 0) {
             execVessel(vesselTypes[typeIndex], vesselTypes[upgradeIndex], parkTimeMillis, manTimePeriodMillis, shmIdSharedUtils, logFileName);
@@ -68,7 +71,7 @@ void execRandomVessels(unsigned int vesselsNum, suseconds_t intervalUsecs, char*
 int main(int argc, char** argv) {
     char* configFileName;
     char parkingSpotTypes[3];
-    float costsPer30minutes[3];
+    float costsPer30Millis[3];
     unsigned int parkingSpotCapacities[3], vesselsNum = -1;
     suseconds_t spawnIntervalUsecs = -1, monitorIntervalUsecs = -1;
 
@@ -88,9 +91,9 @@ int main(int argc, char** argv) {
     while (fgets(line, sizeof(line), configFileP) != NULL && index < 9) {
         line[strlen(line) - 1] = '\0';  // cut newline character
         printf("%s\n", line);
-        if (index >= 0 && index < 3)
+        if (index >= 0 && index < 3) {  // first 3 lines
             parkingSpotTypes[index] = line[strlen(line) - 1];
-        else if (index >= 3 && index < 6) {
+        } else if (index >= 3 && index < 6) {  // next 3 lines
             char* token = strtok(line, " ");
             token = strtok(NULL, " ");
             unsigned int capacity = atoi(token);
@@ -100,7 +103,7 @@ int main(int argc, char** argv) {
             }
 
             parkingSpotCapacities[index - 3] = capacity;
-        } else if (index >= 6 && index < 9) {
+        } else if (index >= 6 && index < 9) {  // next 3 lines
             char* token = strtok(line, " ");
             token = strtok(NULL, " ");
             float cost = atof(token);
@@ -109,23 +112,26 @@ int main(int argc, char** argv) {
                 return 1;
             }
 
-            costsPer30minutes[index - 6] = cost;
+            costsPer30Millis[index - 6] = cost;
         }
         index++;
     }
     printf("%s\n", line);
 
+    // last line
     char* token = strtok(line, " ");
     token = strtok(NULL, " ");
 
     char* logFileName = token;
 
+    // empty the log file
     if ((logFileP = fopen(logFileName, "w")) == NULL) {
         perror("fopen log file");
         return 1;
     }
     fclose(logFileP);
 
+    // determine size of shared memory segments
     int sizeOfParkingSpotGroups = 3 * sizeof(ParkingSpotGroup);
     int sizeOfVesselNodes, sizeOfLedgerVesselNodes;
     if (vesselsNum > 0) {
@@ -136,6 +142,7 @@ int main(int argc, char** argv) {
         sizeOfLedgerVesselNodes = 2 * 4 * sizeof(LedgerVesselNode);
     }
 
+    // create shared memory segments with different keys
     key_t key = 1;
 
     int shmIdSharedUtils = shmget(key, sizeof(SharedUtils), 0666 | IPC_CREAT);  // 100: to be changed probably
@@ -168,7 +175,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    sem_t inOutSem, vesselTypesSemIn[3], vesselTypesSemOut[3], writeSem, portMasterWakeSem;
+    // initialize semaphores
+    sem_t inOutSem, vesselTypesSem[3], vesselTypesSemOut[3], writeSem, portMasterWakeSem;
 
     if (sem_init(&inOutSem, 1, 1) == -1) {
         perror("sem_init failed");
@@ -176,7 +184,7 @@ int main(int argc, char** argv) {
     }
 
     for (unsigned int i = 0; i < 3; i++) {
-        if (sem_init(&vesselTypesSemIn[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
+        if (sem_init(&vesselTypesSem[i], 1, 0) == -1) {  // initialize with 0 because the port-master will handle these semaphores
             perror("sem_init failed");
             return 1;
         }
@@ -196,21 +204,40 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    SharedUtils* sharedUtils = (SharedUtils*)((uint8_t*)shmat(shmIdSharedUtils, 0, 0));  // error checking add <-------------------
+    // attach shared memory segments
+    SharedUtils* sharedUtils = (SharedUtils*)((uint8_t*)shmat(shmIdSharedUtils, 0, 0));
+    if (sharedUtils == (void*)-1) {
+        perror("shmat failed");
+        exit(1);
+    }
     ParkingSpotGroup* parkingSpotGroups = (ParkingSpotGroup*)((uint8_t*)shmat(shmIdParkingGroups, 0, 0));
+    if (parkingSpotGroups == (void*)-1) {
+        perror("shmat failed");
+        exit(1);
+    }
     VesselNode* vesselNodes = (VesselNode*)((uint8_t*)shmat(shmIdVesselNodes, 0, 0));
+    if (vesselNodes == (void*)-1) {
+        perror("shmat failed");
+        exit(1);
+    }
     LedgerVesselNode* ledgerVesselNodes = (LedgerVesselNode*)((uint8_t*)shmat(shmIdLedgerNodes, 0, 0));
+    if (ledgerVesselNodes == (void*)-1) {
+        perror("shmat failed");
+        exit(1);
+    }
 
-    initSharedUtils(sharedUtils, parkingSpotGroups, parkingSpotTypes, parkingSpotCapacities, costsPer30minutes, inOutSem, vesselTypesSemIn, vesselTypesSemOut,
-                    sizeOfVesselNodes, sizeOfLedgerVesselNodes, writeSem, portMasterWakeSem, shmIdParkingGroups, shmIdVesselNodes, shmIdLedgerNodes);
+    // initialize shared utils and parking spot groups
+    initSharedUtilsAndParkingSpotGroups(sharedUtils, parkingSpotGroups, parkingSpotTypes, parkingSpotCapacities, costsPer30Millis, inOutSem, vesselTypesSem, vesselTypesSemOut,
+                                        sizeOfVesselNodes, sizeOfLedgerVesselNodes, writeSem, portMasterWakeSem, shmIdParkingGroups, shmIdVesselNodes, shmIdLedgerNodes);
 
-    // start monitor and port-master
-    int pid = fork();
-    if (pid == 0) {
+    // start port-master and monitor
+    int pid1 = fork();
+    if (pid1 == 0) {
         execPortMaster(shmIdSharedUtils, logFileName);
     }
 
-    if (fork() == 0) {
+    int pid2 = fork();
+    if (pid2 == 0) {
         execMonitor(monitorIntervalUsecs, shmIdSharedUtils, logFileName);
     }
 
@@ -221,18 +248,41 @@ int main(int argc, char** argv) {
     else
         execRandomVessels(4, 500000, parkingSpotTypes, shmIdSharedUtils, logFileName);
 
-    shmdt(sharedUtils);
-    shmdt(parkingSpotGroups);
-    shmdt(vesselNodes);
-    shmdt(ledgerVesselNodes);
+    // detach shared memory segments
+    if (shmdt(sharedUtils) == -1) {
+        perror("shmdt failed");
+        exit(1);
+    }
+    if (shmdt(vesselNodes) == -1) {
+        perror("shmdt failed");
+        exit(1);
+    }
+    if (shmdt(ledgerVesselNodes) == -1) {
+        perror("shmdt failed");
+        exit(1);
+    }
+    if (shmdt(parkingSpotGroups) == -1) {
+        perror("shmdt failed");
+        exit(1);
+    }
+    fclose(configFileP);
 
     int status;
-    if (waitpid(pid, &status, WUNTRACED) == -1) {
+    // wait for port-master to finish
+    if (waitpid(pid1, &status, WUNTRACED) == -1) {
         perror("waitpid error");
         exit(EXIT_FAILURE);
     } else {
         printf("port-master exited\n");
     }
 
-    fclose(configFileP);
+    // wait for monitor to finish
+    if (waitpid(pid2, &status, WUNTRACED) == -1) {
+        perror("waitpid error");
+        exit(EXIT_FAILURE);
+    } else {
+        printf("port-master exited\n");
+    }
+    
+    // system("./rmAllShmAndSems.sh");
 }
